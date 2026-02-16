@@ -136,7 +136,7 @@ const stats = [
         {team.map((member, i) => (
           <div class="bg-primary rounded-2xl overflow-hidden border border-border opacity-0 animate-slide-up" style={`animation-delay: ${i * 100}ms`}>
             <div class="h-48 bg-gradient-to-br from-accent/20 to-secondary flex items-center justify-center">
-              <span class="text-4xl">👤</span>
+              <svg class="w-12 h-12 text-accent/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
             </div>
             <div class="p-4 text-center">
               <h3 class="font-semibold mb-1">{member.name}</h3>
