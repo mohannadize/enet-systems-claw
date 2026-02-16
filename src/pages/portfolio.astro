@@ -1,0 +1,143 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+
+const portfolio = {
+  ecommerce: [
+    { name: "Fly Up Cosmetics", url: "https://flyupcosmeticskw.com", desc: "Premium cosmetics e-commerce platform" },
+    { name: "Beautika Secret", url: "https://beautikasecret.com", desc: "Beauty products online store" },
+    { name: "Henzadem", url: "https://henzadem.com", desc: "Fashion and lifestyle e-commerce" },
+    { name: "Wafi", url: "https://wafi.com.kw", desc: "Multi-category e-commerce platform" }
+  ],
+  companyProfiles: [
+    { name: "OGM Kuwait", url: "https://ogmkw.com", desc: "Corporate website for OGM" },
+    { name: "CTR Map", url: "https://ctrmap.com", desc: "Mapping and location services" },
+    { name: "Raz Car", url: "https://raz-car.com", desc: "Automotive dealership website" },
+    { name: "Wafi Corporate", url: "https://company.wafi.com.kw", desc: "Corporate profile for Wafi" },
+    { name: "Najm Al Tamayoz", url: "https://najmaltamayoz.com", desc: "Company profile website" }
+  ],
+  odoo: [
+    { name: "Wafi General Trading", desc: "Complete ERP implementation with inventory, accounting, and sales modules" },
+    { name: "Beautika Secret", desc: "Odoo POS and inventory management for retail operations" },
+    { name: "Sora International", desc: "Custom Odoo modules for trading business" },
+    { name: "Feeders Kuwait", desc: "Supply chain management with Odoo" },
+    { name: "Al Enizy Farms", desc: "Agriculture management ERP solution" },
+    { name: "HealthyGO KSA", desc: "Healthcare sector ERP implementation" }
+  ]
+};
+
+const categories = [
+  { 
+    id: "ecommerce", 
+    title: "E-commerce", 
+    desc: "Online stores with secure payments, inventory management, and responsive design",
+    icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>`
+  },
+  { 
+    id: "companyProfiles", 
+    title: "Company Profiles", 
+    desc: "Professional corporate websites that showcase your brand and services",
+    icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>`
+  },
+  { 
+    id: "odoo", 
+    title: "Odoo ERP", 
+    desc: "Enterprise resource planning solutions for streamlined operations",
+    icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/></svg>`
+  }
+];
+---
+
+<Layout title="Portfolio | ENET Systems LTD">
+  <Navbar />
+  
+  <!-- Page Header -->
+  <section class="pt-32 pb-16 relative overflow-hidden">
+    <div class="absolute inset-0">
+      <div class="absolute top-1/4 -right-32 w-96 h-96 bg-accent/10 rounded-full blur-3xl"></div>
+    </div>
+    <div class="container-custom relative z-10 text-center">
+      <h1 class="text-5xl md:text-6xl font-bold font-[family-name:var(--font-display)] mb-4 opacity-0 animate-slide-up">
+        Our Portfolio
+      </h1>
+      <p class="text-muted text-lg opacity-0 animate-slide-up animate-delay-100">
+        A showcase of our work across e-commerce, corporate websites, and ERP solutions
+      </p>
+    </div>
+  </section>
+
+  <!-- Portfolio Categories -->
+  <section class="section-padding">
+    <div class="container-custom">
+      {categories.map((cat, catIndex) => (
+        <div class="mb-20 last:mb-0 opacity-0 animate-slide-up" style={`animation-delay: ${catIndex * 100}ms`}>
+          <div class="flex items-center gap-4 mb-8">
+            <div class="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center text-accent" set:html={cat.icon} />
+            <div>
+              <h2 class="text-3xl font-bold font-[family-name:var(--font-display)]">{cat.title}</h2>
+              <p class="text-muted">{cat.desc}</p>
+            </div>
+          </div>
+          
+          {cat.id === 'ecommerce' && (
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {portfolio.ecommerce.map((project, i) => (
+                <a href={project.url} target="_blank" rel="noopener" class="card group" style={`animation-delay: ${(catIndex * 4 + i) * 50}ms`}>
+                  <div class="h-32 rounded-xl bg-gradient-to-br from-accent/20 to-secondary flex items-center justify-center mb-4 group-hover:from-accent/30 transition-all">
+                    <svg class="w-12 h-12 text-accent/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                  </div>
+                  <h3 class="text-lg font-semibold mb-1 group-hover:text-accent transition-colors">{project.name}</h3>
+                  <p class="text-muted text-sm">{project.desc}</p>
+                </a>
+              ))}
+            </div>
+          )}
+          
+          {cat.id === 'companyProfiles' && (
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {portfolio.companyProfiles.map((project, i) => (
+                <a href={project.url} target="_blank" rel="noopener" class="card group" style={`animation-delay: ${(catIndex * 4 + i) * 50}ms`}>
+                  <div class="h-32 rounded-xl bg-gradient-to-br from-blue-500/20 to-secondary flex items-center justify-center mb-4 group-hover:from-blue-500/30 transition-all">
+                    <svg class="w-12 h-12 text-blue-400/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                  </div>
+                  <h3 class="text-lg font-semibold mb-1 group-hover:text-accent transition-colors">{project.name}</h3>
+                  <p class="text-muted text-sm">{project.desc}</p>
+                </a>
+              ))}
+            </div>
+          )}
+          
+          {cat.id === 'odoo' && (
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {portfolio.odoo.map((project, i) => (
+                <div class="card" style={`animation-delay: ${(catIndex * 4 + i) * 50}ms`}>
+                  <div class="h-32 rounded-xl bg-gradient-to-br from-purple-500/20 to-secondary flex items-center justify-center mb-4">
+                    <svg class="w-12 h-12 text-purple-400/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/></svg>
+                  </div>
+                  <h3 class="text-lg font-semibold mb-1">{project.name}</h3>
+                  <p class="text-muted text-sm">{project.desc}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section-padding bg-secondary">
+    <div class="container-custom text-center">
+      <h2 class="text-3xl md:text-4xl font-bold font-[family-name:var(--font-display)] mb-6">
+        Start Your Project
+      </h2>
+      <p class="text-muted mb-8 max-w-xl mx-auto">
+        Ready to build something amazing? Let's discuss your next project.
+      </p>
+      <a href="/contact" class="btn-primary">Get In Touch</a>
+    </div>
+  </section>
+
+  <Footer />
+</Layout>

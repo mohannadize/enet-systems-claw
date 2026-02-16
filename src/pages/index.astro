@@ -1,0 +1,240 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+
+const services = [
+  {
+    title: "Web Development",
+    desc: "Custom websites and web applications built with modern technologies for optimal performance and user experience.",
+    icon: `<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>`
+  },
+  {
+    title: "Odoo ERP Partner",
+    desc: "Official Odoo partner providing enterprise resource planning solutions to streamline your business operations.",
+    icon: `<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/></svg>`
+  },
+  {
+    title: "Mobile Applications",
+    desc: "Native and cross-platform mobile apps that deliver seamless experiences across iOS and Android devices.",
+    icon: `<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>`
+  }
+];
+
+const portfolio = {
+  ecommerce: [
+    { name: "Fly Up Cosmetics", url: "flyupcosmeticskw.com" },
+    { name: "Beautika Secret", url: "beautikasecret.com" },
+    { name: "Henzadem", url: "henzadem.com" },
+    { name: "Wafi", url: "wafi.com.kw" }
+  ],
+  companyProfiles: [
+    { name: "OGM Kuwait", url: "ogmkw.com" },
+    { name: "CTR Map", url: "ctrmap.com" },
+    { name: "Raz Car", url: "raz-car.com" },
+    { name: "Wafi Corporate", url: "company.wafi.com.kw" },
+    { name: "Najm Al Tamayoz", url: "najmaltamayoz.com" }
+  ],
+  odoo: [
+    { name: "Wafi General Trading" },
+    { name: "Beautika Secret" },
+    { name: "Sora International" },
+    { name: "Feeders Kuwait" },
+    { name: "Al Enizy Farms" },
+    { name: "HealthyGO KSA" }
+  ]
+};
+
+const stats = [
+  { number: "10+", label: "Years Experience" },
+  { number: "150+", label: "Projects Delivered" },
+  { number: "50+", label: "Happy Clients" },
+  { number: "24/7", label: "Support" }
+];
+---
+
+<Layout title="ENET Systems LTD | Digital Transformation Partner">
+  <Navbar />
+  
+  <!-- Hero Section -->
+  <section class="relative min-h-screen flex items-center pt-20 overflow-hidden">
+    <!-- Background Effects -->
+    <div class="absolute inset-0">
+      <div class="absolute top-1/4 -left-32 w-96 h-96 bg-accent/10 rounded-full blur-3xl"></div>
+      <div class="absolute bottom-1/4 -right-32 w-96 h-96 bg-accent/5 rounded-full blur-3xl"></div>
+      <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_transparent_0%,_var(--color-primary)_70%)]"></div>
+    </div>
+    
+    <div class="container-custom relative z-10">
+      <div class="max-w-4xl">
+        <div class="opacity-0 animate-slide-up">
+          <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 border border-accent/20 text-accent text-sm font-medium">
+            <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
+            Kuwait's Leading Tech Partner
+          </span>
+        </div>
+        
+        <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold font-[family-name:var(--font-display)] mt-8 leading-[1.1] opacity-0 animate-slide-up animate-delay-100">
+          Building the
+          <span class="text-gradient block">Digital Future</span>
+        </h1>
+        
+        <p class="text-xl md:text-2xl text-muted mt-8 max-w-2xl leading-relaxed opacity-0 animate-slide-up animate-delay-200">
+          ENET Systems LTD delivers enterprise web solutions, Odoo ERP implementations, and mobile applications that transform businesses across Kuwait and the MENA region.
+        </p>
+        
+        <div class="flex flex-wrap gap-4 mt-10 opacity-0 animate-slide-up animate-delay-300">
+          <a href="/contact" class="btn-primary text-lg px-8 py-4">Start Your Project</a>
+          <a href="/portfolio" class="btn-outline text-lg px-8 py-4">View Our Work</a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 opacity-0 animate-slide-up animate-delay-500">
+      <div class="w-6 h-10 rounded-full border-2 border-white/20 flex justify-center pt-2">
+        <div class="w-1 h-3 rounded-full bg-accent animate-bounce"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <section class="section-padding bg-secondary">
+    <div class="container-custom">
+      <div class="text-center mb-16">
+        <span class="text-accent text-sm font-medium uppercase tracking-wider opacity-0 animate-slide-up">What We Do</span>
+        <h2 class="text-4xl md:text-5xl font-bold font-[family-name:var(--font-display)] mt-4 opacity-0 animate-slide-up animate-delay-100">
+          Our Services
+        </h2>
+        <p class="text-muted text-lg mt-4 max-w-2xl mx-auto opacity-0 animate-slide-up animate-delay-200">
+          Comprehensive digital solutions tailored to elevate your business in the modern landscape.
+        </p>
+      </div>
+      
+      <div class="grid md:grid-cols-3 gap-8">
+        {services.map((service, i) => (
+          <div class="card group opacity-0 animate-slide-up" style={`animation-delay: ${(i + 3) * 100}ms`}>
+            <div class="w-16 h-16 rounded-2xl bg-accent/10 flex items-center justify-center text-accent mb-6 group-hover:bg-accent group-hover:text-primary transition-all duration-300" set:html={service.icon} />
+            <h3 class="text-2xl font-bold font-[family-name:var(--font-display)] mb-4">
+              {service.title}
+            </h3>
+            <p class="text-muted leading-relaxed">
+              {service.desc}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Portfolio Section -->
+  <section class="section-padding">
+    <div class="container-custom">
+      <div class="text-center mb-16">
+        <span class="text-accent text-sm font-medium uppercase tracking-wider opacity-0 animate-slide-up">Our Work</span>
+        <h2 class="text-4xl md:text-5xl font-bold font-[family-name:var(--font-display)] mt-4 opacity-0 animate-slide-up animate-delay-100">
+          Portfolio
+        </h2>
+      </div>
+      
+      <!-- E-commerce -->
+      <div class="mb-16 opacity-0 animate-slide-up animate-delay-200">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-10 h-10 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+          </div>
+          <h3 class="text-2xl font-bold font-[family-name:var(--font-display)]">E-commerce</h3>
+        </div>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {portfolio.ecommerce.map(project => (
+            <a href={`https://${project.url}`} target="_blank" rel="noopener" class="p-6 rounded-xl bg-secondary border border-border hover:border-accent/50 transition-all duration-300 group">
+              <div class="flex items-center justify-between">
+                <span class="font-semibold group-hover:text-accent transition-colors">{project.name}</span>
+                <svg class="w-4 h-4 text-muted group-hover:text-accent group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+              </div>
+              <span class="text-xs text-muted mt-2 block">{project.url}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+      
+      <!-- Company Profiles -->
+      <div class="mb-16 opacity-0 animate-slide-up animate-delay-300">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+          </div>
+          <h3 class="text-2xl font-bold font-[family-name:var(--font-display)]">Company Profiles</h3>
+        </div>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          {portfolio.companyProfiles.map(project => (
+            <a href={project.url.startsWith('http') ? project.url : `https://${project.url}`} target="_blank" rel="noopener" class="p-5 rounded-xl bg-secondary border border-border hover:border-accent/50 transition-all duration-300 group">
+              <span class="font-semibold group-hover:text-accent transition-colors">{project.name}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+      
+      <!-- Odoo Installations -->
+      <div class="opacity-0 animate-slide-up animate-delay-400">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center text-purple-400">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/></svg>
+          </div>
+          <h3 class="text-2xl font-bold font-[family-name:var(--font-display)]">Odoo Installations</h3>
+        </div>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {portfolio.odoo.map(project => (
+            <div class="p-5 rounded-xl bg-secondary border border-border">
+              <div class="flex items-center gap-3">
+                <div class="w-2 h-2 rounded-full bg-purple-400"></div>
+                <span class="font-semibold">{project.name}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      <div class="text-center mt-12 opacity-0 animate-slide-up animate-delay-500">
+        <a href="/contact" class="btn-outline">Work With Us</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="section-padding bg-secondary">
+    <div class="container-custom">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+        {stats.map((stat, i) => (
+          <div class="text-center opacity-0 animate-slide-up" style={`animation-delay: ${(i + 5) * 100}ms`}>
+            <div class="text-4xl md:text-5xl font-bold font-[family-name:var(--font-display)] text-accent mb-2">
+              {stat.number}
+            </div>
+            <div class="text-muted">{stat.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="section-padding relative overflow-hidden">
+    <div class="absolute inset-0">
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-accent/10 rounded-full blur-3xl"></div>
+    </div>
+    <div class="container-custom relative z-10 text-center">
+      <h2 class="text-4xl md:text-5xl font-bold font-[family-name:var(--font-display)] opacity-0 animate-slide-up">
+        Ready to Transform Your Business?
+      </h2>
+      <p class="text-muted text-lg mt-4 max-w-xl mx-auto opacity-0 animate-slide-up animate-delay-100">
+        Let's discuss how we can help you achieve your digital transformation goals.
+      </p>
+      <div class="flex flex-wrap justify-center gap-4 mt-10 opacity-0 animate-slide-up animate-delay-200">
+        <a href="/contact" class="btn-primary text-lg px-8 py-4">Get In Touch</a>
+        <a href="/services" class="btn-outline text-lg px-8 py-4">Our Services</a>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+</Layout>
