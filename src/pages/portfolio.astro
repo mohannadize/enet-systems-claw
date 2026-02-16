@@ -3,6 +3,8 @@ import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 
+const base = import.meta.env.BASE_URL || '/';
+
 const portfolio = {
   ecommerce: [
     { name: "Fly Up Cosmetics", url: "https://flyupcosmeticskw.com", desc: "Premium cosmetics e-commerce platform" },
@@ -135,7 +137,7 @@ const categories = [
       <p class="text-muted mb-8 max-w-xl mx-auto">
         Ready to build something amazing? Let's discuss your next project.
       </p>
-      <a href="/contact" class="btn-primary">Get In Touch</a>
+      <a href="${base}contact" class="btn-primary">Get In Touch</a>
     </div>
   </section>
 

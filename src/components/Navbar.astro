@@ -1,19 +1,27 @@
 ---
 const currentPath = Astro.url.pathname;
+const base = import.meta.env.BASE_URL || '/';
 
 const navLinks = [
-  { href: '/', label: 'Home' },
-  { href: '/about', label: 'About' },
-  { href: '/services', label: 'Services' },
-  { href: '/portfolio', label: 'Portfolio' },
-  { href: '/contact', label: 'Contact' },
+  { href: base || '/', label: 'Home' },
+  { href: `${base}about`, label: 'About' },
+  { href: `${base}services`, label: 'Services' },
+  { href: `${base}portfolio`, label: 'Portfolio' },
+  { href: `${base}contact`, label: 'Contact' },
 ];
+
+const isActive = (href: string) => {
+  if (href === base || href === '/') {
+    return currentPath === '/' || currentPath === base || currentPath === `${base}/`;
+  }
+  return currentPath.startsWith(href);
+};
 ---
 
 <nav class="fixed top-0 left-0 right-0 z-50 bg-primary/80 backdrop-blur-xl border-b border-white/5">
   <div class="container-custom">
     <div class="flex items-center justify-between h-20">
-      <a href="/" class="flex items-center gap-2">
+      <a href={base || '/'} class="flex items-center gap-2">
         <span class="text-3xl font-bold font-[family-name:var(--font-display)]">
           ENE<span class="text-accent">T</span>
         </span>
@@ -25,13 +33,13 @@ const navLinks = [
             href={link.href}
             class:list={[
               "text-sm font-medium transition-colors hover:text-accent",
-              currentPath === link.href ? "text-accent" : "text-muted"
+              isActive(link.href) ? "text-accent" : "text-muted"
             ]}
           >
             {link.label}
           </a>
         ))}
-        <a href="/contact" class="btn-primary text-sm">Get Started</a>
+        <a href={`${base}contact`} class="btn-primary text-sm">Get Started</a>
       </div>
       
       <button id="mobile-menu-btn" class="md:hidden text-white p-2">
@@ -49,13 +57,13 @@ const navLinks = [
           href={link.href}
           class:list={[
             "text-base font-medium py-2 transition-colors hover:text-accent",
-            currentPath === link.href ? "text-accent" : "text-muted"
+            isActive(link.href) ? "text-accent" : "text-muted"
           ]}
         >
           {link.label}
         </a>
       ))}
-      <a href="/contact" class="btn-primary text-center text-sm mt-2">Get Started</a>
+      <a href={`${base}contact`} class="btn-primary text-center text-sm mt-2">Get Started</a>
     </div>
   </div>
 </nav>
