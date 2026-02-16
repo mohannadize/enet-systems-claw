@@ -1,0 +1,190 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+
+const services = [
+  {
+    title: 'Web Development',
+    description: 'We build high-performance websites and web applications that engage users and drive conversions. From corporate websites to complex e-commerce platforms, our team delivers solutions that scale with your business.',
+    features: ['E-commerce Solutions', 'Corporate Websites', 'Web Applications', 'CMS Development', 'API Integration', 'Performance Optimization'],
+    icon: '🌐'
+  },
+  {
+    title: 'Odoo ERP Implementation',
+    description: 'As an official Odoo Partner, we provide end-to-end ERP solutions that streamline your business operations. From implementation to customization and ongoing support, we help you leverage the full power of Odoo.',
+    features: ['Odoo Implementation', 'Module Customization', 'Data Migration', 'Integration Services', 'Training & Support', 'Cloud Hosting'],
+    icon: '📊'
+  },
+  {
+    title: 'Mobile App Development',
+    description: 'Reach your customers on any device with custom mobile applications. We develop native iOS and Android apps, as well as cross-platform solutions that provide seamless user experiences.',
+    features: ['iOS Development', 'Android Development', 'Cross-Platform Apps', 'App Store Optimization', 'UI/UX Design', 'Maintenance & Updates'],
+    icon: '📱'
+  }
+];
+
+const process = [
+  { step: '01', title: 'Discovery', desc: 'We analyze requirements and create a detailed project roadmap.' },
+  { step: '02', title: 'Design', desc: 'Our design team creates intuitive interfaces aligned with your brand.' },
+  { step: '03', title: 'Development', desc: 'Expert developers build using best practices and cutting-edge tech.' },
+  { step: '04', title: 'Testing', desc: 'Rigorous QA ensures your product is bug-free and optimal.' },
+  { step: '05', title: 'Deployment', desc: 'We deploy to production and ensure smooth launch.' },
+  { step: '06', title: 'Support', desc: 'Ongoing maintenance to keep your solution running at peak.' }
+];
+
+const techStack = [
+  'Python', 'JavaScript', 'React', 'Node.js', 'PHP', 'Laravel', 'Flutter', 'React Native', 'Odoo', 'PostgreSQL', 'MySQL', 'MongoDB', 'AWS', 'Docker'
+];
+---
+
+<Layout title="Services | ENET Systems LTD">
+  <Navbar />
+  
+  <!-- Page Header -->
+  <section class="pt-32 pb-16 relative overflow-hidden">
+    <div class="absolute inset-0">
+      <div class="absolute top-1/4 -left-32 w-96 h-96 bg-accent/10 rounded-full blur-3xl"></div>
+    </div>
+    <div class="container-custom relative z-10 text-center">
+      <h1 class="text-5xl md:text-6xl font-bold font-[family-name:var(--font-display)] mb-4 opacity-0 animate-slide-up">
+        Our Services
+      </h1>
+      <p class="text-muted text-lg opacity-0 animate-slide-up animate-delay-100">
+        Comprehensive digital solutions to power your business growth
+      </p>
+    </div>
+  </section>
+
+  <!-- Services Detail -->
+  <section class="section-padding">
+    <div class="container-custom space-y-16">
+      {services.map((service, i) => (
+        <div class={`grid lg:grid-cols-2 gap-12 items-center ${i % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}>
+          <div class="opacity-0 animate-slide-up" style={`animation-delay: ${i * 100}ms`}>
+            <div class="text-5xl mb-6">{service.icon}</div>
+            <h2 class="text-3xl md:text-4xl font-bold font-[family-name:var(--font-display)] mb-4">
+              {service.title}
+            </h2>
+            <p class="text-muted leading-relaxed mb-6">
+              {service.description}
+            </p>
+            <div class="flex flex-wrap gap-2">
+              {service.features.map(feature => (
+                <span class="px-3 py-1 bg-secondary border border-border rounded-full text-sm text-muted">
+                  {feature}
+                </span>
+              ))}
+            </div>
+          </div>
+          
+          <div class="opacity-0 animate-slide-up animate-delay-200" style={`animation-delay: ${i * 100 + 100}ms`}>
+            <div class="aspect-square max-w-md mx-auto bg-secondary rounded-3xl border border-border p-8 flex items-center justify-center">
+              <svg viewBox="0 0 400 300" class="w-full" fill="none">
+                {i === 0 && (
+                  <>
+                    <rect x="20" y="40" width="360" height="220" rx="15" fill="var(--color-surface)" stroke="var(--color-border)"/>
+                    <rect x="60" y="80" width="120" height="80" rx="8" fill="var(--color-accent)" opacity="0.3"/>
+                    <rect x="200" y="80" width="140" height="15" rx="4" fill="var(--color-accent)"/>
+                    <rect x="200" y="110" width="100" height="10" rx="3" fill="var(--color-border)"/>
+                    <rect x="200" y="135" width="120" height="10" rx="3" fill="var(--color-border)"/>
+                    <rect x="60" y="190" width="280" height="40" rx="8" fill="var(--color-secondary)" stroke="var(--color-border)"/>
+                  </>
+                )}
+                {i === 1 && (
+                  <>
+                    <rect x="50" y="50" width="140" height="200" rx="10" fill="var(--color-surface)" stroke="var(--color-border)"/>
+                    <rect x="60" y="60" width="120" height="25" rx="5" fill="var(--color-accent)"/>
+                    <rect x="60" y="100" width="80" height="15" rx="3" fill="var(--color-border)"/>
+                    <rect x="60" y="130" width="120" height="15" rx="3" fill="var(--color-border)"/>
+                    <rect x="60" y="160" width="90" height="15" rx="3" fill="var(--color-border)"/>
+                    <rect x="60" y="190" width="110" height="15" rx="3" fill="var(--color-border)"/>
+                    <rect x="210" y="50" width="140" height="200" rx="10" fill="var(--color-surface)" stroke="var(--color-border)"/>
+                    <rect x="220" y="60" width="120" height="25" rx="5" fill="var(--color-accent)" opacity="0.5"/>
+                    <rect x="220" y="100" width="80" height="15" rx="3" fill="var(--color-border)"/>
+                    <rect x="220" y="130" width="120" height="15" rx="3" fill="var(--color-border)"/>
+                    <rect x="220" y="160" width="90" height="15" rx="3" fill="var(--color-border)"/>
+                    <rect x="220" y="190" width="110" height="15" rx="3" fill="var(--color-border)"/>
+                  </>
+                )}
+                {i === 2 && (
+                  <>
+                    <rect x="80" y="40" width="90" height="180" rx="15" fill="var(--color-surface)" stroke="var(--color-border)"/>
+                    <rect x="90" y="55" width="70" height="110" rx="8" fill="var(--color-secondary)"/>
+                    <rect x="100" y="70" width="50" height="30" rx="4" fill="var(--color-accent)" opacity="0.5"/>
+                    <rect x="100" y="110" width="50" height="8" rx="2" fill="var(--color-border)"/>
+                    <rect x="100" y="130" width="40" height="8" rx="2" fill="var(--color-border)"/>
+                    <rect x="230" y="40" width="90" height="180" rx="15" fill="var(--color-surface)" stroke="var(--color-border)"/>
+                    <rect x="240" y="55" width="70" height="110" rx="8" fill="var(--color-secondary)"/>
+                    <rect x="250" y="70" width="50" height="30" rx="4" fill="var(--color-accent)" opacity="0.3"/>
+                    <rect x="250" y="110" width="50" height="8" rx="2" fill="var(--color-border)"/>
+                    <rect x="250" y="130" width="40" height="8" rx="2" fill="var(--color-border)"/>
+                  </>
+                )}
+              </svg>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Tech Stack -->
+  <section class="section-padding bg-secondary">
+    <div class="container-custom text-center">
+      <span class="text-accent text-sm font-medium uppercase tracking-wider">What We Use</span>
+      <h2 class="text-3xl md:text-4xl font-bold font-[family-name:var(--font-display)] mt-4 mb-8">
+        Technologies We Use
+      </h2>
+      <div class="flex flex-wrap justify-center gap-3">
+        {techStack.map((tech, i) => (
+          <span class="px-4 py-2 bg-primary border border-border rounded-lg text-sm hover:border-accent/50 transition-colors opacity-0 animate-slide-up" style={`animation-delay: ${i * 50}ms`}>
+            {tech}
+          </span>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Process -->
+  <section class="section-padding">
+    <div class="container-custom">
+      <div class="text-center mb-16">
+        <span class="text-accent text-sm font-medium uppercase tracking-wider">How We Work</span>
+        <h2 class="text-3xl md:text-4xl font-bold font-[family-name:var(--font-display)] mt-4">
+          Our Development Process
+        </h2>
+      </div>
+      
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {process.map((item, i) => (
+          <div class="p-6 rounded-2xl bg-secondary border border-border hover:border-accent/30 transition-all duration-300 opacity-0 animate-slide-up" style={`animation-delay: ${i * 100}ms`}>
+            <div class="text-4xl font-bold font-[family-name:var(--font-display)] text-accent/30 mb-4">
+              {item.step}
+            </div>
+            <h3 class="text-lg font-semibold mb-2">{item.title}</h3>
+            <p class="text-muted text-sm">{item.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section-padding relative overflow-hidden">
+    <div class="absolute inset-0">
+      <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl"></div>
+    </div>
+    <div class="container-custom relative z-10 text-center">
+      <h2 class="text-3xl md:text-4xl font-bold font-[family-name:var(--font-display)] mb-6">
+        Ready to Start Your Project?
+      </h2>
+      <p class="text-muted mb-8 max-w-xl mx-auto">
+        Let's discuss how we can help bring your vision to life.
+      </p>
+      <a href="/contact" class="btn-primary inline-block">Get In Touch</a>
+    </div>
+  </section>
+
+  <Footer />
+</Layout>

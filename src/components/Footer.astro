@@ -1,0 +1,50 @@
+---
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="bg-secondary border-t border-border">
+  <div class="container-custom py-16">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+      <div>
+        <a href="/" class="inline-block text-3xl font-bold font-[family-name:var(--font-display)] mb-4">
+          ENE<span class="text-accent">T</span>
+        </a>
+        <p class="text-muted text-sm leading-relaxed">
+          Your trusted partner for digital transformation. We build solutions that drive business growth across Kuwait and the MENA region.
+        </p>
+      </div>
+      
+      <div>
+        <h4 class="text-white font-semibold mb-4 font-[family-name:var(--font-display)]">Quick Links</h4>
+        <ul class="space-y-3">
+          <li><a href="/" class="text-muted text-sm hover:text-accent transition-colors">Home</a></li>
+          <li><a href="/about" class="text-muted text-sm hover:text-accent transition-colors">About</a></li>
+          <li><a href="/services" class="text-muted text-sm hover:text-accent transition-colors">Services</a></li>
+          <li><a href="/contact" class="text-muted text-sm hover:text-accent transition-colors">Contact</a></li>
+        </ul>
+      </div>
+      
+      <div>
+        <h4 class="text-white font-semibold mb-4 font-[family-name:var(--font-display)]">Services</h4>
+        <ul class="space-y-3">
+          <li><a href="/services" class="text-muted text-sm hover:text-accent transition-colors">Web Development</a></li>
+          <li><a href="/services" class="text-muted text-sm hover:text-accent transition-colors">Odoo ERP</a></li>
+          <li><a href="/services" class="text-muted text-sm hover:text-accent transition-colors">Mobile Apps</a></li>
+        </ul>
+      </div>
+      
+      <div>
+        <h4 class="text-white font-semibold mb-4 font-[family-name:var(--font-display)]">Contact</h4>
+        <ul class="space-y-3 text-muted text-sm">
+          <li>Kuwait</li>
+          <li>+20 127 6666 314</li>
+          <li>Inquiry@enet.systems</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="mt-12 pt-8 border-t border-border text-center">
+      <p class="text-muted text-sm">© {currentYear} ENET Systems LTD. All rights reserved.</p>
+    </div>
+  </div>
+</footer>

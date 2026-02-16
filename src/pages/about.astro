@@ -1,0 +1,163 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+
+const values = [
+  { title: 'Innovation', desc: 'We embrace new technologies and creative solutions to solve complex business challenges.' },
+  { title: 'Quality', desc: 'Excellence in code, design, and service is non-negotiable. We deliver nothing less than the best.' },
+  { title: 'Partnership', desc: 'Your success is our success. We work as an extension of your team, not just a vendor.' }
+];
+
+const team = [
+  { name: 'Ahmed Al-Kandari', role: 'CEO & Founder' },
+  { name: 'Sarah Hassan', role: 'Head of Development' },
+  { name: 'Mohammad Ali', role: 'Odoo Consultant' },
+  { name: 'Fatima Ahmed', role: 'UI/UX Designer' }
+];
+
+const stats = [
+  { number: '10+', label: 'Years in Business' },
+  { number: '150+', label: 'Projects Completed' },
+  { number: '50+', label: 'Happy Clients' },
+  { number: '20+', label: 'Team Members' }
+];
+---
+
+<Layout title="About Us | ENET Systems LTD">
+  <Navbar />
+  
+  <!-- Page Header -->
+  <section class="pt-32 pb-16 relative overflow-hidden">
+    <div class="absolute inset-0">
+      <div class="absolute top-1/4 -right-32 w-96 h-96 bg-accent/10 rounded-full blur-3xl"></div>
+    </div>
+    <div class="container-custom relative z-10 text-center">
+      <h1 class="text-5xl md:text-6xl font-bold font-[family-name:var(--font-display)] mb-4 opacity-0 animate-slide-up">
+        About ENET Systems
+      </h1>
+      <p class="text-muted text-lg opacity-0 animate-slide-up animate-delay-100">
+        Your trusted partner in digital transformation since 2015
+      </p>
+    </div>
+  </section>
+
+  <!-- About Story -->
+  <section class="section-padding">
+    <div class="container-custom">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div class="opacity-0 animate-slide-up">
+          <span class="text-accent text-sm font-medium uppercase tracking-wider">Our Story</span>
+          <h2 class="text-3xl md:text-4xl font-bold font-[family-name:var(--font-display)] mt-4 mb-6">
+            Driving Digital Excellence in Kuwait
+          </h2>
+          <div class="space-y-4 text-muted leading-relaxed">
+            <p>
+              ENET Systems LTD was founded with a mission to help businesses in Kuwait and the MENA region harness the power of technology for growth and innovation. Over the years, we have evolved into a comprehensive software solutions provider, serving clients across various industries.
+            </p>
+            <p>
+              Our team of experienced developers, designers, and business analysts work collaboratively to deliver solutions that not only meet technical requirements but also align with our clients' business objectives. We believe in building long-term partnerships based on trust, transparency, and exceptional results.
+            </p>
+            <p>
+              As an official Odoo Partner, we bring international best practices in enterprise resource planning to local businesses, helping them streamline operations and achieve digital maturity.
+            </p>
+          </div>
+        </div>
+        
+        <div class="relative opacity-0 animate-slide-up animate-delay-200">
+          <svg viewBox="0 0 500 400" class="w-full" fill="none">
+            <rect x="50" y="50" width="400" height="300" rx="20" fill="var(--color-surface)" stroke="var(--color-border)" stroke-width="1"/>
+            <circle cx="170" cy="180" r="50" fill="var(--color-accent)" opacity="0.3"/>
+            <circle cx="330" cy="180" r="50" fill="var(--color-accent)" opacity="0.2"/>
+            <circle cx="250" cy="260" r="50" fill="var(--color-accent)" opacity="0.1"/>
+            <rect x="140" y="130" width="60" height="60" rx="30" fill="var(--color-secondary)" stroke="var(--color-border)"/>
+            <rect x="300" y="130" width="60" height="60" rx="30" fill="var(--color-secondary)" stroke="var(--color-border)"/>
+            <rect x="220" y="210" width="60" height="60" rx="30" fill="var(--color-secondary)" stroke="var(--color-border)"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="section-padding bg-secondary">
+    <div class="container-custom">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+        {stats.map((stat, i) => (
+          <div class="text-center opacity-0 animate-slide-up" style={`animation-delay: ${i * 100}ms`}>
+            <div class="text-4xl md:text-5xl font-bold font-[family-name:var(--font-display)] text-accent mb-2">
+              {stat.number}
+            </div>
+            <div class="text-muted text-sm">{stat.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Values -->
+  <section class="section-padding">
+    <div class="container-custom">
+      <div class="text-center mb-16">
+        <span class="text-accent text-sm font-medium uppercase tracking-wider">What We Believe</span>
+        <h2 class="text-3xl md:text-4xl font-bold font-[family-name:var(--font-display)] mt-4">
+          Our Core Values
+        </h2>
+      </div>
+      
+      <div class="grid md:grid-cols-3 gap-8">
+        {values.map((value, i) => (
+          <div class="p-8 rounded-2xl bg-secondary border border-border text-center opacity-0 animate-slide-up" style={`animation-delay: ${i * 100}ms`}>
+            <h3 class="text-xl font-bold font-[family-name:var(--font-display)] mb-4 text-accent">
+              {value.title}
+            </h3>
+            <p class="text-muted text-sm leading-relaxed">
+              {value.desc}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Team -->
+  <section class="section-padding bg-secondary">
+    <div class="container-custom">
+      <div class="text-center mb-16">
+        <span class="text-accent text-sm font-medium uppercase tracking-wider">Our People</span>
+        <h2 class="text-3xl md:text-4xl font-bold font-[family-name:var(--font-display)] mt-4">
+          Leadership Team
+        </h2>
+      </div>
+      
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        {team.map((member, i) => (
+          <div class="bg-primary rounded-2xl overflow-hidden border border-border opacity-0 animate-slide-up" style={`animation-delay: ${i * 100}ms`}>
+            <div class="h-48 bg-gradient-to-br from-accent/20 to-secondary flex items-center justify-center">
+              <span class="text-4xl">👤</span>
+            </div>
+            <div class="p-4 text-center">
+              <h3 class="font-semibold mb-1">{member.name}</h3>
+              <p class="text-muted text-sm">{member.role}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section-padding">
+    <div class="container-custom text-center">
+      <h2 class="text-3xl md:text-4xl font-bold font-[family-name:var(--font-display)] mb-6">
+        Let's Work Together
+      </h2>
+      <p class="text-muted mb-8 max-w-xl mx-auto">
+        Ready to transform your business with technology? We're here to help.
+      </p>
+      <a href="/contact" class="btn-primary inline-block">Get In Touch</a>
+    </div>
+  </section>
+
+  <Footer />
+</Layout>
