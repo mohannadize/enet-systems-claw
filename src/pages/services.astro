@@ -10,19 +10,19 @@ const services = [
     title: 'Web Development',
     description: 'We build high-performance websites and web applications that engage users and drive conversions. From corporate websites to complex e-commerce platforms, our team delivers solutions that scale with your business.',
     features: ['E-commerce Solutions', 'Corporate Websites', 'Web Applications', 'CMS Development', 'API Integration', 'Performance Optimization'],
-    icon: '🌐'
+    icon: `<svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>`
   },
   {
     title: 'Odoo ERP Implementation',
     description: 'As an official Odoo Partner, we provide end-to-end ERP solutions that streamline your business operations. From implementation to customization and ongoing support, we help you leverage the full power of Odoo.',
     features: ['Odoo Implementation', 'Module Customization', 'Data Migration', 'Integration Services', 'Training & Support', 'Cloud Hosting'],
-    icon: '📊'
+    icon: `<svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/></svg>`
   },
   {
     title: 'Mobile App Development',
     description: 'Reach your customers on any device with custom mobile applications. We develop native iOS and Android apps, as well as cross-platform solutions that provide seamless user experiences.',
     features: ['iOS Development', 'Android Development', 'Cross-Platform Apps', 'App Store Optimization', 'UI/UX Design', 'Maintenance & Updates'],
-    icon: '📱'
+    icon: `<svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>`
   }
 ];
 
@@ -64,7 +64,7 @@ const techStack = [
       {services.map((service, i) => (
         <div class={`grid lg:grid-cols-2 gap-12 items-center ${i % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}>
           <div class="opacity-0 animate-slide-up" style={`animation-delay: ${i * 100}ms`}>
-            <div class="text-5xl mb-6">{service.icon}</div>
+            <div class="text-accent mb-6" set:html={service.icon} />
             <h2 class="text-3xl md:text-4xl font-bold font-[family-name:var(--font-display)] mb-4">
               {service.title}
             </h2>
