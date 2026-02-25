@@ -1,0 +1,7 @@
+{
+  "name": "Wafi General Trading",
+  "desc": "Complete ERP implementation with inventory, accounting, sales, and purchase modules. Integrated barcode scanning and automated reporting.",
+  "gradient": "amber",
+  "category": "odoo",
+  "order": 0
+}

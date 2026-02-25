@@ -1,0 +1,7 @@
+{
+  "name": "Sora International",
+  "desc": "Custom Odoo modules for trading business including automated procurement, vendor management, and shipping integrations.",
+  "gradient": "purple",
+  "category": "odoo",
+  "order": 2
+}

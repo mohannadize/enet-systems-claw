@@ -2,53 +2,19 @@
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
+import LogoPlaceholder from '../components/LogoPlaceholder.astro';
+import ProjectModal from '../components/ProjectModal.astro';
+import { getPortfolioByCategory, getPortfolioCategories, getAllProjectsForModal } from '../lib/collections';
 
 const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '') + '/';
 
-const portfolio = {
-  ecommerce: [
-    { name: "Fly Up Cosmetics", url: "https://flyupcosmeticskw.com", desc: "Premium cosmetics e-commerce platform" },
-    { name: "Beautika Secret", url: "https://beautikasecret.com", desc: "Beauty products online store" },
-    { name: "Henzadem", url: "https://henzadem.com", desc: "Fashion and lifestyle e-commerce" },
-    { name: "Wafi", url: "https://wafi.com.kw", desc: "Multi-category e-commerce platform" }
-  ],
-  companyProfiles: [
-    { name: "OGM Kuwait", url: "https://ogmkw.com", desc: "Corporate website for OGM" },
-    { name: "CTR Map", url: "https://ctrmap.com", desc: "Mapping and location services" },
-    { name: "Raz Car", url: "https://raz-car.com", desc: "Automotive dealership website" },
-    { name: "Wafi Corporate", url: "https://company.wafi.com.kw", desc: "Corporate profile for Wafi" },
-    { name: "Najm Al Tamayoz", url: "https://najmaltamayoz.com", desc: "Company profile website" }
-  ],
-  odoo: [
-    { name: "Wafi General Trading", desc: "Complete ERP implementation with inventory, accounting, and sales modules" },
-    { name: "Beautika Secret", desc: "Odoo POS and inventory management for retail operations" },
-    { name: "Sora International", desc: "Custom Odoo modules for trading business" },
-    { name: "Feeders Kuwait", desc: "Supply chain management with Odoo" },
-    { name: "Al Enizy Farms", desc: "Agriculture management ERP solution" },
-    { name: "HealthyGO KSA", desc: "Healthcare sector ERP implementation" }
-  ]
-};
+const portfolioByCategory = await getPortfolioByCategory();
+const categories = getPortfolioCategories();
+const allProjects = await getAllProjectsForModal();
 
-const categories = [
-  { 
-    id: "ecommerce", 
-    title: "E-commerce", 
-    desc: "Online stores with secure payments, inventory management, and responsive design",
-    icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>`
-  },
-  { 
-    id: "companyProfiles", 
-    title: "Company Profiles", 
-    desc: "Professional corporate websites that showcase your brand and services",
-    icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>`
-  },
-  { 
-    id: "odoo", 
-    title: "Odoo ERP", 
-    desc: "Enterprise resource planning solutions for streamlined operations",
-    icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/></svg>`
-  }
-];
+const ecommerceStart = 0;
+const companyStart = portfolioByCategory.ecommerce.length;
+const odooStart = portfolioByCategory.ecommerce.length + portfolioByCategory.companyProfiles.length;
 ---
 
 <Layout title="Portfolio | ENET Systems LTD">
@@ -58,88 +24,251 @@ const categories = [
   <section class="pt-32 pb-16 relative overflow-hidden">
     <div class="absolute inset-0">
       <div class="absolute top-1/4 -right-32 w-96 h-96 bg-accent/10 rounded-full blur-3xl"></div>
+      <div class="absolute bottom-0 left-1/4 w-64 h-64 bg-accent/5 rounded-full blur-3xl"></div>
     </div>
     <div class="container-custom relative z-10 text-center">
-      <h1 class="text-5xl md:text-6xl font-bold font-[family-name:var(--font-display)] mb-4 opacity-0 animate-slide-up">
+      <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 border border-accent/20 text-accent text-sm font-medium mb-6 opacity-0 animate-slide-up">
+        <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
+        {allProjects.length}+ Projects Delivered
+      </span>
+      <h1 class="text-5xl md:text-6xl font-bold font-[family-name:var(--font-display)] mb-4 opacity-0 animate-slide-up animate-delay-100">
         Our Portfolio
       </h1>
-      <p class="text-muted text-lg opacity-0 animate-slide-up animate-delay-100">
-        A showcase of our work across e-commerce, corporate websites, and ERP solutions
+      <p class="text-muted text-lg max-w-2xl mx-auto opacity-0 animate-slide-up animate-delay-200">
+        A showcase of our work across e-commerce, corporate websites, and ERP solutions. Click on any project to learn more.
       </p>
     </div>
   </section>
 
-  <!-- Portfolio Categories -->
-  <section class="section-padding">
+  <!-- Portfolio Grid -->
+  <section class="section-padding bg-secondary/30">
     <div class="container-custom">
       {categories.map((cat, catIndex) => (
-        <div class="mb-20 last:mb-0 opacity-0 animate-slide-up" style={`animation-delay: ${catIndex * 100}ms`}>
-          <div class="flex items-center gap-4 mb-8">
-            <div class="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center text-accent" set:html={cat.icon} />
+        <div class="mb-24 last:mb-0" data-category={cat.id}>
+          <!-- Category Header -->
+          <div class="flex flex-col md:flex-row md:items-center gap-4 mb-10 opacity-0 animate-slide-up" style={`animation-delay: ${catIndex * 100}ms`}>
+            <div class={`w-14 h-14 rounded-2xl bg-${cat.gradient}-500/10 flex items-center justify-center text-${cat.gradient}-400 ring-1 ring-${cat.gradient}-500/20`} set:html={cat.icon} />
             <div>
-              <h2 class="text-3xl font-bold font-[family-name:var(--font-display)]">{cat.title}</h2>
-              <p class="text-muted">{cat.desc}</p>
+              <h2 class="text-3xl md:text-4xl font-bold font-[family-name:var(--font-display)]">{cat.title}</h2>
+              <p class="text-muted mt-1">{cat.desc}</p>
             </div>
           </div>
           
-          {cat.id === 'ecommerce' && (
-            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {portfolio.ecommerce.map((project, i) => (
-                <a href={project.url} target="_blank" rel="noopener" class="card group" style={`animation-delay: ${(catIndex * 4 + i) * 50}ms`}>
-                  <div class="h-32 rounded-xl bg-gradient-to-br from-accent/20 to-secondary flex items-center justify-center mb-4 group-hover:from-accent/30 transition-all">
-                    <svg class="w-12 h-12 text-accent/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          <!-- Projects Grid -->
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+            {cat.id === 'ecommerce' && portfolioByCategory.ecommerce.map((entry, i) => {
+              const project = entry.data;
+              return (
+              <button 
+                type="button"
+                class="portfolio-card group relative bg-secondary rounded-2xl p-6 border border-border hover:border-accent/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-xl hover:shadow-accent/5 text-left opacity-0 animate-slide-up cursor-pointer"
+                style={`animation-delay: ${(catIndex * 4 + i) * 50}ms`}
+                data-project-index={ecommerceStart + i}
+                aria-label={`View details for ${project.name}`}
+              >
+                {/* Hover Glow Effect */}
+                <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                
+                <div class="relative">
+                  {/* Logo */}
+                  <div class="mb-4 transform group-hover:scale-110 transition-transform duration-300">
+                    <LogoPlaceholder name={project.name} size="md" gradient={project.gradient as any} class="group-hover:shadow-accent/20" />
                   </div>
-                  <h3 class="text-lg font-semibold mb-1 group-hover:text-accent transition-colors">{project.name}</h3>
-                  <p class="text-muted text-sm">{project.desc}</p>
-                </a>
-              ))}
-            </div>
-          )}
-          
-          {cat.id === 'companyProfiles' && (
-            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {portfolio.companyProfiles.map((project, i) => (
-                <a href={project.url} target="_blank" rel="noopener" class="card group" style={`animation-delay: ${(catIndex * 4 + i) * 50}ms`}>
-                  <div class="h-32 rounded-xl bg-gradient-to-br from-blue-500/20 to-secondary flex items-center justify-center mb-4 group-hover:from-blue-500/30 transition-all">
-                    <svg class="w-12 h-12 text-blue-400/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                  
+                  {/* Content */}
+                  <h3 class="font-semibold text-white group-hover:text-accent transition-colors mb-1 line-clamp-1">
+                    {project.name}
+                  </h3>
+                  <span class="text-xs text-muted flex items-center gap-1">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Click for details
+                  </span>
+                  
+                  {/* Arrow Indicator */}
+                  <div class="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
+                    <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
                   </div>
-                  <h3 class="text-lg font-semibold mb-1 group-hover:text-accent transition-colors">{project.name}</h3>
-                  <p class="text-muted text-sm">{project.desc}</p>
-                </a>
-              ))}
-            </div>
-          )}
-          
-          {cat.id === 'odoo' && (
-            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {portfolio.odoo.map((project, i) => (
-                <div class="card" style={`animation-delay: ${(catIndex * 4 + i) * 50}ms`}>
-                  <div class="h-32 rounded-xl bg-gradient-to-br from-purple-500/20 to-secondary flex items-center justify-center mb-4">
-                    <svg class="w-12 h-12 text-purple-400/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/></svg>
-                  </div>
-                  <h3 class="text-lg font-semibold mb-1">{project.name}</h3>
-                  <p class="text-muted text-sm">{project.desc}</p>
                 </div>
-              ))}
-            </div>
-          )}
+              </button>
+            );
+            })}
+            
+            {cat.id === 'companyProfiles' && portfolioByCategory.companyProfiles.map((entry, i) => {
+              const project = entry.data;
+              return (
+              <button 
+                type="button"
+                class="portfolio-card group relative bg-secondary rounded-2xl p-6 border border-border hover:border-blue-500/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-xl hover:shadow-blue-500/5 text-left opacity-0 animate-slide-up cursor-pointer"
+                style={`animation-delay: ${(catIndex * 4 + i) * 50}ms`}
+                data-project-index={companyStart + i}
+                aria-label={`View details for ${project.name}`}
+              >
+                <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                
+                <div class="relative">
+                  <div class="mb-4 transform group-hover:scale-110 transition-transform duration-300">
+                    <LogoPlaceholder name={project.name} size="md" gradient={project.gradient as any} />
+                  </div>
+                  
+                  <h3 class="font-semibold text-white group-hover:text-blue-400 transition-colors mb-1 line-clamp-1">
+                    {project.name}
+                  </h3>
+                  <span class="text-xs text-muted flex items-center gap-1">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Click for details
+                  </span>
+                  
+                  <div class="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
+                    <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                  </div>
+                </div>
+              </button>
+            );
+            })}
+            
+            {cat.id === 'odoo' && portfolioByCategory.odoo.map((entry, i) => {
+              const project = entry.data;
+              return (
+              <button 
+                type="button"
+                class="portfolio-card group relative bg-secondary rounded-2xl p-6 border border-border hover:border-purple-500/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-xl hover:shadow-purple-500/5 text-left opacity-0 animate-slide-up cursor-pointer"
+                style={`animation-delay: ${(catIndex * 4 + i) * 50}ms`}
+                data-project-index={odooStart + i}
+                aria-label={`View details for ${project.name}`}
+              >
+                <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                
+                <div class="relative">
+                  <div class="mb-4 transform group-hover:scale-110 transition-transform duration-300">
+                    <LogoPlaceholder name={project.name} size="md" gradient={project.gradient as any} />
+                  </div>
+                  
+                  <h3 class="font-semibold text-white group-hover:text-purple-400 transition-colors mb-1 line-clamp-1">
+                    {project.name}
+                  </h3>
+                  <span class="text-xs text-muted flex items-center gap-1">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Click for details
+                  </span>
+                  
+                  <div class="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
+                    <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                  </div>
+                </div>
+              </button>
+            );
+            })}
+          </div>
         </div>
       ))}
     </div>
   </section>
 
-  <!-- CTA -->
-  <section class="section-padding bg-secondary">
-    <div class="container-custom text-center">
-      <h2 class="text-3xl md:text-4xl font-bold font-[family-name:var(--font-display)] mb-6">
-        Start Your Project
-      </h2>
-      <p class="text-muted mb-8 max-w-xl mx-auto">
-        Ready to build something amazing? Let's discuss your next project.
-      </p>
-      <a href={`${base}contact`} class="btn-primary">Get In Touch</a>
+  <!-- Stats Section -->
+  <section class="py-16 border-y border-border">
+    <div class="container-custom">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div class="text-center opacity-0 animate-slide-up">
+          <div class="text-4xl md:text-5xl font-bold font-[family-name:var(--font-display)] text-accent mb-2">
+            {allProjects.length}+
+          </div>
+          <div class="text-muted">Projects Delivered</div>
+        </div>
+        <div class="text-center opacity-0 animate-slide-up animate-delay-100">
+          <div class="text-4xl md:text-5xl font-bold font-[family-name:var(--font-display)] text-accent mb-2">
+            3
+          </div>
+          <div class="text-muted">Service Categories</div>
+        </div>
+        <div class="text-center opacity-0 animate-slide-up animate-delay-200">
+          <div class="text-4xl md:text-5xl font-bold font-[family-name:var(--font-display)] text-accent mb-2">
+            10+
+          </div>
+          <div class="text-muted">Years Experience</div>
+        </div>
+        <div class="text-center opacity-0 animate-slide-up animate-delay-300">
+          <div class="text-4xl md:text-5xl font-bold font-[family-name:var(--font-display)] text-accent mb-2">
+            50+
+          </div>
+          <div class="text-muted">Happy Clients</div>
+        </div>
+      </div>
     </div>
   </section>
 
+  <!-- CTA -->
+  <section class="section-padding relative overflow-hidden">
+    <div class="absolute inset-0">
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-accent/10 rounded-full blur-3xl"></div>
+    </div>
+    <div class="container-custom relative z-10 text-center">
+      <h2 class="text-3xl md:text-4xl font-bold font-[family-name:var(--font-display)] mb-6 opacity-0 animate-slide-up">
+        Start Your Project
+      </h2>
+      <p class="text-muted mb-8 max-w-xl mx-auto opacity-0 animate-slide-up animate-delay-100">
+        Ready to build something amazing? Let's discuss your next project and bring your vision to life.
+      </p>
+      <div class="flex flex-wrap justify-center gap-4 opacity-0 animate-slide-up animate-delay-200">
+        <a href={`${base}contact`} class="btn-primary text-lg px-8 py-4">Get In Touch</a>
+        <a href={`${base}services`} class="btn-outline text-lg px-8 py-4">Our Services</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal Component -->
+  <ProjectModal />
+
+  <script define:vars={{ allProjects }}>
+    window.__PROJECTS__ = allProjects;
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-project-index]');
+      if (btn && typeof window.openProjectModal === 'function') {
+        const idx = parseInt(btn.getAttribute('data-project-index'), 10);
+        if (!Number.isNaN(idx) && window.__PROJECTS__[idx]) {
+          window.openProjectModal(window.__PROJECTS__[idx]);
+        }
+      }
+    });
+  </script>
+
   <Footer />
 </Layout>
+
+<style>
+  .portfolio-card {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .portfolio-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 0%, rgba(245, 158, 11, 0.03) 100%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  
+  .portfolio-card:hover::before {
+    opacity: 1;
+  }
+  
+  .line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

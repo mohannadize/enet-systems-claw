@@ -1,0 +1,79 @@
+---
+interface Props {
+  name: string;
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  class?: string;
+  gradient?: 'amber' | 'blue' | 'purple' | 'emerald' | 'rose' | 'indigo' | 'cyan' | 'orange';
+}
+
+const { name, size = 'md', class: className = '', gradient: forcedGradient } = Astro.props;
+
+// Generate initials from company name
+const getInitials = (str: string) => {
+  // Handle special cases
+  if (str.includes('OGM')) return 'OGM';
+  if (str.includes('CTR')) return 'CTR';
+  if (str.includes('Wafi')) return 'W';
+  if (str.includes('Odoo')) return 'Odoo';
+  if (str.includes('Feeders')) return 'F';
+  if (str.includes('Al Enizy')) return 'AE';
+  if (str.includes('HealthyGO')) return 'HG';
+  if (str.includes('Sora')) return 'S';
+  
+  const words = str.split(' ').filter(w => w.length > 0);
+  if (words.length >= 2) {
+    return (words[0][0] + words[1][0]).toUpperCase();
+  }
+  return str.substring(0, 2).toUpperCase();
+};
+
+const initials = getInitials(name);
+
+// Gradient options matching site theme
+const gradientMap = {
+  amber: 'from-amber-500 to-orange-600',
+  blue: 'from-blue-500 to-cyan-400',
+  purple: 'from-purple-500 to-pink-500',
+  emerald: 'from-emerald-500 to-teal-400',
+  rose: 'from-rose-500 to-red-600',
+  indigo: 'from-indigo-500 to-violet-500',
+  cyan: 'from-cyan-500 to-blue-500',
+  orange: 'from-orange-500 to-amber-500',
+};
+
+// Generate consistent color based on name if not forced
+const getGradient = (str: string) => {
+  const gradients = Object.values(gradientMap);
+  
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return gradients[Math.abs(hash) % gradients.length];
+};
+
+const gradient = forcedGradient ? gradientMap[forcedGradient] : getGradient(name);
+
+const sizeClasses = {
+  sm: 'w-12 h-12 text-sm shadow-lg',
+  md: 'w-20 h-20 text-xl shadow-xl',
+  lg: 'w-32 h-32 text-3xl shadow-2xl',
+  xl: 'w-40 h-40 text-4xl shadow-2xl',
+};
+---
+
+<div 
+  class={`
+    ${sizeClasses[size]} 
+    rounded-2xl 
+    bg-gradient-to-br ${gradient} 
+    flex items-center justify-center 
+    font-bold font-[family-name:var(--font-display)]
+    text-white
+    ring-2 ring-white/10
+    transition-all duration-300
+    ${className}
+  `}
+>
+  {initials}
+</div>

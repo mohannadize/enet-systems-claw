@@ -1,0 +1,201 @@
+---
+import LogoPlaceholder from './LogoPlaceholder.astro';
+---
+
+<!-- Global Modal Container -->
+<div 
+  id="project-modal"
+  class="fixed inset-0 z-50 hidden items-center justify-center"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="modal-title"
+>
+  <!-- Backdrop with glassmorphism -->
+  <div 
+    class="absolute inset-0 bg-primary/90 backdrop-blur-md modal-backdrop transition-opacity duration-300 opacity-0"
+    data-modal-backdrop
+  ></div>
+  
+  <!-- Modal Content -->
+  <div class="relative w-full max-w-lg mx-4 px-4">
+    <div 
+      class="bg-secondary border border-border rounded-3xl p-8 modal-content opacity-0 scale-95 translate-y-4 transition-all duration-500 shadow-2xl shadow-accent/5"
+      data-modal-content
+    >
+      <!-- Close Button -->
+      <button 
+        class="absolute top-4 right-4 w-10 h-10 rounded-full bg-surface flex items-center justify-center text-muted hover:text-white hover:bg-accent/20 transition-all duration-300 hover:rotate-90"
+        aria-label="Close modal"
+        data-modal-close
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+      
+      <!-- Category Badge -->
+      <div class="flex justify-center mb-4">
+        <span 
+          class="px-3 py-1 rounded-full text-xs font-medium uppercase tracking-wider bg-accent/10 text-accent border border-accent/20"
+          data-modal-category
+        >
+          Category
+        </span>
+      </div>
+      
+      <!-- Logo -->
+      <div class="flex justify-center mb-6">
+        <div data-modal-logo>
+          <LogoPlaceholder name="Project" size="lg" />
+        </div>
+      </div>
+      
+      <!-- Project Name -->
+      <h3 
+        id="modal-title"
+        class="text-2xl md:text-3xl font-bold font-[family-name:var(--font-display)] text-center mb-4"
+        data-modal-title
+      >
+        Project Name
+      </h3>
+      
+      <!-- Description -->
+      <p 
+        class="text-muted text-center leading-relaxed mb-8 text-lg"
+        data-modal-desc
+      >
+        Project description goes here.
+      </p>
+      
+      <!-- Visit Button (hidden until project has URL) -->
+      <div class="hidden flex justify-center" data-modal-link-container>
+        <a 
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-primary inline-flex items-center gap-2 group"
+          data-modal-link
+        >
+          <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+          </svg>
+          Visit Website
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  interface ProjectData {
+    name: string;
+    url?: string;
+    desc: string;
+    category: string;
+    gradient?: 'amber' | 'blue' | 'purple' | 'emerald' | 'rose' | 'indigo' | 'cyan' | 'orange';
+  }
+
+  // Get modal elements
+  const modal = document.getElementById('project-modal');
+  const backdrop = modal?.querySelector('[data-modal-backdrop]');
+  const content = modal?.querySelector('[data-modal-content]');
+  const titleEl = modal?.querySelector('[data-modal-title]');
+  const descEl = modal?.querySelector('[data-modal-desc]');
+  const categoryEl = modal?.querySelector('[data-modal-category]');
+  const linkEl = modal?.querySelector('[data-modal-link]') as HTMLAnchorElement | null;
+  const linkContainer = modal?.querySelector('[data-modal-link-container]');
+  const logoContainer = modal?.querySelector('[data-modal-logo]');
+  const closeBtn = modal?.querySelector('[data-modal-close]');
+
+  // Close modal function
+  function closeModal() {
+    if (!modal || !backdrop || !content) return;
+    
+    // Animate out
+    backdrop.classList.add('opacity-0');
+    backdrop.classList.remove('opacity-100');
+    content.classList.add('opacity-0', 'scale-95', 'translate-y-4');
+    content.classList.remove('opacity-100', 'scale-100', 'translate-y-0');
+    
+    setTimeout(() => {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      document.body.style.overflow = '';
+    }, 300);
+  }
+
+  // Open modal function
+  function openModal(project: ProjectData) {
+    if (!modal || !backdrop || !content) return;
+    
+    // Update content
+    if (titleEl) titleEl.textContent = project.name;
+    if (descEl) descEl.textContent = project.desc;
+    if (categoryEl) categoryEl.textContent = project.category;
+    
+    // Update link
+    if (project.url) {
+      if (linkEl) linkEl.href = project.url.startsWith('http') ? project.url : `https://${project.url}`;
+      linkContainer?.classList.remove('hidden');
+    } else {
+      linkContainer?.classList.add('hidden');
+    }
+    
+    // Update logo - recreate LogoPlaceholder with new props
+    if (logoContainer) {
+      const gradientClass = project.gradient ? `from-${project.gradient}-500` : '';
+      const toColor = project.gradient === 'amber' ? 'to-orange-600' : 
+                      project.gradient === 'blue' ? 'to-cyan-400' :
+                      project.gradient === 'purple' ? 'to-pink-500' :
+                      project.gradient === 'emerald' ? 'to-teal-400' :
+                      project.gradient === 'rose' ? 'to-red-600' :
+                      project.gradient === 'indigo' ? 'to-violet-500' :
+                      project.gradient === 'cyan' ? 'to-blue-500' :
+                      project.gradient === 'orange' ? 'to-amber-500' : 'to-orange-600';
+      
+      // Generate initials
+      let initials = project.name.substring(0, 2).toUpperCase();
+      if (project.name.includes('OGM')) initials = 'OGM';
+      if (project.name.includes('CTR')) initials = 'CTR';
+      if (project.name.includes('Wafi')) initials = 'W';
+      if (project.name.includes('Odoo')) initials = 'Odoo';
+      
+      const words = project.name.split(' ').filter(w => w.length > 0);
+      if (words.length >= 2 && !project.name.includes('OGM') && !project.name.includes('CTR')) {
+        initials = (words[0][0] + words[1][0]).toUpperCase();
+      }
+      
+      logoContainer.innerHTML = `
+        <div class="w-32 h-32 text-3xl shadow-2xl rounded-2xl bg-gradient-to-br ${gradientClass} ${toColor} flex items-center justify-center font-bold font-[family-name:var(--font-display)] text-white ring-2 ring-white/10 transition-all duration-300">
+          ${initials}
+        </div>
+      `;
+    }
+    
+    // Show modal
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+    
+    // Animate in
+    requestAnimationFrame(() => {
+      backdrop.classList.remove('opacity-0');
+      backdrop.classList.add('opacity-100');
+      content.classList.remove('opacity-0', 'scale-95', 'translate-y-4');
+      content.classList.add('opacity-100', 'scale-100', 'translate-y-0');
+    });
+  }
+
+  // Event listeners
+  closeBtn?.addEventListener('click', closeModal);
+  backdrop?.addEventListener('click', closeModal);
+  
+  // Close on escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeModal();
+  });
+
+  // Expose to window for global access
+  (window as any).openProjectModal = openModal;
+  (window as any).closeProjectModal = closeModal;
+</script>

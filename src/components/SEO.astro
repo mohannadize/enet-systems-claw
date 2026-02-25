@@ -1,0 +1,75 @@
+---
+interface Service {
+  name: string;
+  description: string;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  services?: Service[];
+}
+
+const { title, description, services = [] } = Astro.props;
+
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@id": `${Astro.site?.origin ?? 'https://enet.systems'}/#organization`,
+  "@type": "Organization",
+  "name": "ENET Systems LTD",
+  "url": Astro.site?.origin ?? 'https://enet.systems',
+  "logo": `${Astro.site?.origin ?? 'https://enet.systems'}/favicon.svg`,
+  "description": "ENET Systems LTD - Your trusted partner for digital transformation, providing Odoo ERP, Web Development, and Mobile App solutions.",
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "KW"
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "customer service",
+    "areaServed": "KW",
+    "availableLanguage": ["English", "Arabic"]
+  }
+};
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "ENET Systems",
+  "url": Astro.site?.origin ?? 'https://enet.systems',
+  "description": description,
+  "publisher": {
+    "@id": `${Astro.site?.origin ?? 'https://enet.systems'}/#organization`
+  }
+};
+
+const serviceSchema = services.length > 0 ? {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "serviceType": services.map(s => s.name).join(", "),
+  "provider": {
+    "@id": `${Astro.site?.origin ?? 'https://enet.systems'}/#organization`
+  },
+  "areaServed": {
+    "@type": "Country",
+    "name": "Kuwait"
+  },
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Digital Transformation Services",
+    "itemListElement": services.map((service, index) => ({
+      "@type": "OfferCatalogItem",
+      "itemOffered": {
+        "@type": "Service",
+        "name": service.name,
+        "description": service.description
+      }
+    }))
+  }
+} : null;
+---
+
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
+<script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+{serviceSchema && <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />}

@@ -1,12 +1,19 @@
 ---
 import '../styles/global.css';
+import SEO from '../components/SEO.astro';
+
+interface Service {
+  name: string;
+  description: string;
+}
 
 interface Props {
   title: string;
   description?: string;
+  services?: Service[];
 }
 
-const { title, description = "ENET Systems LTD - Your trusted partner for digital transformation" } = Astro.props;
+const { title, description = "ENET Systems LTD - Your trusted partner for digital transformation", services = [] } = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -20,6 +27,7 @@ const { title, description = "ENET Systems LTD - Your trusted partner for digita
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Syne:wght@400..800&display=swap" rel="stylesheet" />
     <title>{title}</title>
+    <SEO title={title} description={description} services={services} />
   </head>
   <body class="bg-primary text-white antialiased">
     <div class="noise-overlay"></div>

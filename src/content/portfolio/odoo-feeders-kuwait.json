@@ -1,0 +1,7 @@
+{
+  "name": "Feeders Kuwait",
+  "desc": "Supply chain management with Odoo featuring demand forecasting, automated reordering, and logistics tracking.",
+  "gradient": "cyan",
+  "category": "odoo",
+  "order": 3
+}
