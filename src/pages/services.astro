@@ -3,8 +3,12 @@ import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import { getServices } from '../lib/collections';
+import { buildWebPage, siteUrl } from '../lib/jsonld';
 
 const servicesEntries = await getServices();
+
+const servicesPageDescription =
+  "Comprehensive digital solutions to power your business growth — web development, Odoo ERP, mobile apps, SEO, and more.";
 
 const process = [
   { step: '01', title: 'Discovery', desc: 'We analyze requirements and create a detailed project roadmap.' },
@@ -20,13 +24,22 @@ const techStack = [
 ];
 ---
 
-<Layout title="Services | ENET Systems LTD">
+<Layout
+  title="Services | ENET Systems LTD"
+  description={servicesPageDescription}
+  jsonLd={buildWebPage({
+    name: "Services | ENET Systems LTD",
+    description: servicesPageDescription,
+    url: siteUrl("/services"),
+  })}
+>
   <Navbar />
   
   <!-- Page Header -->
   <section class="pt-32 pb-16 relative overflow-hidden">
     <div class="absolute inset-0">
-      <div class="absolute top-1/4 -left-32 w-96 h-96 bg-accent/10 rounded-full blur-3xl"></div>
+      <div class="absolute top-1/4 -right-32 w-96 h-96 bg-accent/10 rounded-full blur-3xl"></div>
+      <div class="absolute bottom-0 left-1/4 w-64 h-64 bg-accent/5 rounded-full blur-3xl"></div>
     </div>
     <div class="container-custom relative z-10 text-center">
       <h1 class="text-5xl md:text-6xl font-bold font-[family-name:var(--font-display)] mb-4 opacity-0 animate-slide-up">
@@ -53,13 +66,19 @@ const techStack = [
             <p class="text-muted leading-relaxed mb-6">
               {service.description}
             </p>
-            <div class="flex flex-wrap gap-2">
-              {service.features.map((feature: string) => (
+            <div class="flex flex-wrap gap-2 mb-6">
+              {service.features?.map((feature: string) => (
                 <span class="px-3 py-1 bg-secondary border border-border rounded-full text-sm text-muted">
                   {feature}
                 </span>
               ))}
             </div>
+            <a href={`/services/${entry.id}`} class="btn-primary inline-flex items-center gap-2 group">
+              Learn More
+              <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
           </div>
           
           <div class="opacity-0 animate-slide-up animate-delay-200" style={`animation-delay: ${i * 100 + 100}ms`}>
@@ -105,6 +124,29 @@ const techStack = [
                     <rect x="250" y="130" width="40" height="8" rx="2" fill="var(--color-border)"/>
                   </>
                 )}
+                {i === 3 && (
+                  <>
+                    {/* Search bar */}
+                    <rect x="40" y="50" width="240" height="36" rx="18" fill="var(--color-surface)" stroke="var(--color-border)"/>
+                    <circle cx="62" cy="68" r="8" fill="none" stroke="var(--color-accent)" stroke-width="2"/>
+                    <line x1="68" y1="74" x2="74" y2="80" stroke="var(--color-accent)" stroke-width="2" stroke-linecap="round"/>
+                    <rect x="80" y="62" width="100" height="8" rx="4" fill="var(--color-border)" opacity="0.6"/>
+                    {/* Ranking bars */}
+                    <rect x="40" y="105" width="280" height="28" rx="6" fill="var(--color-surface)" stroke="var(--color-border)"/>
+                    <rect x="52" y="113" width="12" height="12" rx="2" fill="var(--color-accent)" opacity="0.9"/>
+                    <rect x="72" y="116" width="120" height="6" rx="3" fill="var(--color-accent)" opacity="0.5"/>
+                    <rect x="200" y="116" width="60" height="6" rx="3" fill="var(--color-border)"/>
+                    <rect x="40" y="143" width="280" height="28" rx="6" fill="var(--color-surface)" stroke="var(--color-border)"/>
+                    <rect x="52" y="151" width="12" height="12" rx="2" fill="var(--color-border)"/>
+                    <rect x="72" y="154" width="90" height="6" rx="3" fill="var(--color-border)" opacity="0.7"/>
+                    <rect x="40" y="181" width="280" height="28" rx="6" fill="var(--color-surface)" stroke="var(--color-border)"/>
+                    <rect x="52" y="189" width="12" height="12" rx="2" fill="var(--color-border)"/>
+                    <rect x="72" y="192" width="110" height="6" rx="3" fill="var(--color-border)" opacity="0.5"/>
+                    {/* Upward trend arrow */}
+                    <polyline points="310,230 330,200 350,210 370,170" fill="none" stroke="var(--color-accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <polygon points="370,160 376,174 364,174" fill="var(--color-accent)"/>
+                  </>
+                )}
               </svg>
             </div>
           </div>
@@ -121,7 +163,7 @@ const techStack = [
       <h2 class="text-3xl md:text-4xl font-bold font-[family-name:var(--font-display)] mt-4 mb-8">
         Technologies We Use
       </h2>
-      <div class="flex flex-wrap justify-center gap-3">
+      <div class="flex flex-wrap justify-center gap-2 max-w-3xl mx-auto">
         {techStack.map((tech, i) => (
           <span class="px-4 py-2 bg-primary border border-border rounded-lg text-sm hover:border-accent/50 transition-colors opacity-0 animate-slide-up" style={`animation-delay: ${i * 50}ms`}>
             {tech}
@@ -158,7 +200,7 @@ const techStack = [
   <!-- CTA -->
   <section class="section-padding relative overflow-hidden">
     <div class="absolute inset-0">
-      <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl"></div>
+      <div class="absolute bottom-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[260px] h-[160px] bg-accent/10 rounded-full blur-3xl"></div>
     </div>
     <div class="container-custom relative z-10 text-center">
       <h2 class="text-3xl md:text-4xl font-bold font-[family-name:var(--font-display)] mb-6">

@@ -1,254 +1,444 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Navbar from '../components/Navbar.astro';
-import Footer from '../components/Footer.astro';
-import LogoPlaceholder from '../components/LogoPlaceholder.astro';
-import ProjectModal from '../components/ProjectModal.astro';
-import { getServices, getPortfolioByCategory, getAllProjectsForModal } from '../lib/collections';
+import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
+import LogoPlaceholder from "../components/LogoPlaceholder.astro";
+import PixelGrid from "../components/PixelGrid";
+import {
+  getServices,
+  getCaseStudies,
+  getBlogPosts,
+  serviceLabels,
+  serviceColors,
+} from "../lib/collections";
+import { buildWebPage, siteUrl } from "../lib/jsonld";
+import { ArrowRightCircleIcon } from "@heroicons/react/24/outline";
+import OdooIcon from "../components/icons/odoo-logo.astro";
+import WebIcon from "../components/icons/web_icon.astro";
+import MobileIcon from "@/components/icons/mobile_icon.astro";
+import { TextEffect } from "@/components/text-effect";
 
 const servicesEntries = await getServices();
-const portfolioByCategory = await getPortfolioByCategory();
-const projectsForModal = await getAllProjectsForModal();
+const caseStudies = await getCaseStudies();
+const featuredStudies = caseStudies.slice(0, 6);
+const latestBlogPosts = (await getBlogPosts()).slice(0, 3);
 
-const ecommerceStart = 0;
-const companyStart = portfolioByCategory.ecommerce.length;
-const odooStart = portfolioByCategory.ecommerce.length + portfolioByCategory.companyProfiles.length;
+const formatBlogDate = (d: Date) =>
+  d.toLocaleDateString("en-GB", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+
+/** Representative client feedback — replace with approved quotes when available */
+const testimonials = [
+  {
+    quote:
+      "We needed Odoo live without freezing day-to-day operations. ENET planned the cutover, trained our staff, and stayed close after go-live — the kind of partner you want when ERP touches every department.",
+    name: "Ahmad R.",
+    title: "Group IT Manager",
+    org: "Multi-branch retail · Kuwait",
+  },
+  {
+    quote:
+      "Our storefront was fast in the office and slow for customers on mobile. They profiled the stack, fixed the real bottlenecks, and gave us a checklist so we do not slide backwards after launch.",
+    name: "Layla M.",
+    title: "Head of E-commerce",
+    org: "Fashion & beauty brand · GCC",
+  },
+  {
+    quote:
+      "Clear communication, realistic timelines, and engineers who understand both product and infrastructure. They have shipped multiple releases for us and remain our first call for complex builds.",
+    name: "Faisal T.",
+    title: "Managing Director",
+    org: "Industrial supplies · Kuwait",
+  },
+];
 
 const stats = [
   { number: "10+", label: "Years Experience" },
   { number: "150+", label: "Projects Delivered" },
   { number: "50+", label: "Happy Clients" },
-  { number: "24/7", label: "Support" }
+  { number: "24/7", label: "Support" },
 ];
 
-const servicesForSEO = servicesEntries.map(entry => ({
-  name: entry.data.title,
-  description: entry.data.shortDescription ?? entry.data.description
-}));
+const homeDescription =
+  "ENET Systems LTD delivers enterprise web solutions, Odoo ERP implementations, and mobile applications that transform businesses across Kuwait and the MENA region.";
 ---
 
-<Layout 
+<Layout
   title="ENET Systems LTD | Digital Transformation Partner"
-  description="ENET Systems LTD delivers enterprise web solutions, Odoo ERP implementations, and mobile applications that transform businesses across Kuwait and the MENA region."
-  services={servicesForSEO}
+  description={homeDescription}
+  jsonLd={buildWebPage({
+    name: "ENET Systems LTD | Digital Transformation Partner",
+    description: homeDescription,
+    url: siteUrl("/"),
+  })}
 >
   <Navbar />
-  
+
   <!-- Hero Section -->
-  <section class="relative min-h-screen flex items-center pt-20 overflow-hidden">
+  <section class="relative min-h-[calc(100vh-160px)] flex items-center overflow-hidden">
+    <img
+      src="/images/hero.webp"
+      alt="Hero Background"
+      class="absolute inset-0 w-full h-full object-cover opacity-30"
+      fetchpriority="high"
+    />
     <!-- Background Effects -->
     <div class="absolute inset-0">
-      <div class="absolute top-1/4 -left-32 w-96 h-96 bg-accent/10 rounded-full blur-3xl"></div>
-      <div class="absolute bottom-1/4 -right-32 w-96 h-96 bg-accent/5 rounded-full blur-3xl"></div>
-      <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_transparent_0%,_var(--color-primary)_70%)]"></div>
+      <div
+        class="absolute top-1/4 -left-32 w-96 h-96 bg-accent/10 rounded-full blur-3xl"
+      >
+      </div>
+      <div
+        class="absolute bottom-1/4 -right-32 w-96 h-96 bg-accent/5 rounded-full blur-3xl"
+      >
+      </div>
+      <!-- <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_transparent_0%,_var(--color-primary)_70%)]"></div> -->
+      <div class="absolute inset-0 bg-linear-to-b from-transparent to-primary">
+      </div>
     </div>
-    
+
     <div class="container-custom relative z-10">
-      <div class="max-w-4xl">
-        <div class="opacity-0 animate-slide-up">
-          <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 border border-accent/20 text-accent text-sm font-medium">
-            <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
-            Kuwait's Leading Tech Partner
-          </span>
+      <div class="flex items-center gap-10 xl:gap-16">
+        <!-- Desktop pixel grid — left column (lg+) -->
+        <div class="hidden lg:flex shrink-0 opacity-0 animate-fade-in animate-delay-200">
+          <PixelGrid client:load cellSize={16} gap={2} />
         </div>
-        
-        <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold font-[family-name:var(--font-display)] mt-8 leading-[1.1] opacity-0 animate-slide-up animate-delay-100">
-          Building the
-          <span class="text-gradient block">Digital Future</span>
-        </h1>
-        
-        <p class="text-xl md:text-2xl text-muted mt-8 max-w-2xl leading-tight mb-8 opacity-0 animate-slide-up animate-delay-200">
-          ENET Systems LTD delivers enterprise web solutions, Odoo ERP implementations, and mobile applications that transform businesses across Kuwait and the MENA region.
-        </p>
-        
-        <div class="flex flex-wrap gap-4 opacity-0 animate-slide-up animate-delay-300">
-          <a href={`/contact`} class="btn-primary text-lg px-8 py-4">Start Your Project</a>
-          <a href={`/portfolio`} class="btn-outline text-lg px-8 py-4">View Our Work</a>
+
+        <!-- Hero text — flex-1 so it fills remaining space -->
+        <div class="flex-1 min-w-0 max-w-2xl relative">
+          <!-- Mobile: pixel grid faded behind text -->
+          <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20 lg:hidden">
+            <PixelGrid client:load cellSize={13} gap={2} />
+          </div>
+
+          <h1
+            class="text-5xl md:text-7xl lg:text-7xl font-bold font-heading leading-[1.1] opacity-0 animate-slide-up animate-delay-100"
+          >
+              Software that
+              <span class="text-amber-400">Drives Growth.</span>
+          </h1>
+
+          <p
+            class="text-base md:text-lg text-muted mt-8 max-w-2xl leading-tight mb-8 opacity-0 animate-slide-up animate-delay-200"
+          >
+            We build software that transforms businesses across Kuwait and the
+            MENA region.
+          </p>
+
+          <div
+            class="flex flex-wrap gap-4 opacity-0 animate-slide-up animate-delay-300 items-center"
+          >
+            <a href={`/contact`} class="btn-primary text-lg px-4 md:px-8 py-2 md:py-3"
+              >Get in Touch</a
+            >
+            <a
+              href={`/portfolio`}
+              class="text-lg opacity-70 hover:opacity-100 transition-opacity duration-300 px-4 md:px-8 py-2 md:py-4 flex items-center gap-2 group"
+              >View Our Work <ArrowRightCircleIcon
+                className="w-5 h-5 group-hover:translate-x-1 opacity-0 group-hover:opacity-100 transition duration-300"
+              /></a
+            >
+          </div>
         </div>
       </div>
     </div>
-    
+
     <!-- Scroll indicator -->
-    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 opacity-0 animate-slide-up animate-delay-500">
-      <div class="w-6 h-10 rounded-full border-2 border-white/20 flex justify-center pt-2">
+    <div
+      class="absolute bottom-8 left-1/2 -translate-x-1/2 opacity-0 animate-slide-up animate-delay-500"
+    >
+      <div
+        class="w-6 h-10 rounded-full border-2 border-white/20 flex justify-center pt-2"
+      >
         <div class="w-1 h-3 rounded-full bg-accent animate-bounce"></div>
       </div>
     </div>
   </section>
 
   <!-- Services Section -->
-  <section class="section-padding bg-secondary">
+  <section class="section-padding bg-linear-to-b from-transparent to-secondary">
     <div class="container-custom">
       <div class="text-center mb-16">
-        <span class="text-accent text-sm font-medium uppercase tracking-wider opacity-0 animate-slide-up">What We Do</span>
-        <h2 class="text-4xl md:text-5xl font-bold font-[family-name:var(--font-display)] mt-4 opacity-0 animate-slide-up animate-delay-100">
+        <span
+          class="text-accent text-sm font-medium uppercase tracking-wider opacity-0 animate-slide-up"
+          >What We Do</span
+        >
+        <h2
+          class="text-4xl md:text-5xl font-bold font-[family-name:var(--font-display)] mt-4 opacity-0 animate-slide-up animate-delay-100"
+        >
           Our Services
         </h2>
-        <p class="text-muted text-lg mt-4 max-w-2xl mx-auto opacity-0 animate-slide-up animate-delay-200">
-          Comprehensive digital solutions tailored to elevate your business in the modern landscape.
+        <p
+          class="text-muted text-lg mt-4 max-w-2xl mx-auto opacity-0 animate-slide-up animate-delay-200"
+        >
+          Comprehensive digital solutions tailored to elevate your business in
+          the modern landscape.
         </p>
       </div>
-      
+
       <div class="grid md:grid-cols-3 gap-8">
-        {servicesEntries.map((entry, i) => {
-          const service = entry.data;
-          const desc = service.shortDescription ?? service.description;
-          return (
-            <div class="card group opacity-0 animate-slide-up" style={`animation-delay: ${(i + 3) * 100}ms`}>
-              <div class="w-16 h-16 rounded-2xl bg-accent/10 flex items-center justify-center text-accent mb-6 group-hover:bg-accent group-hover:text-primary transition-all duration-300 [&_svg]:w-8 [&_svg]:h-8" set:html={service.icon} />
-              <h3 class="text-2xl font-bold font-[family-name:var(--font-display)] mb-4">
-                {service.title}
-              </h3>
-              <p class="text-muted leading-relaxed">
-                {desc}
-              </p>
-            </div>
-          );
-        })}
+        {
+          servicesEntries.map((entry, i) => {
+            const service = entry.data;
+            const desc = service.shortDescription ?? service.description;
+            return (
+              <a
+                href={`/services/${entry.id}`}
+                class="card group opacity-0 animate-slide-up"
+                style={`animation-delay: ${(i + 3) * 100}ms`}
+              >
+                <div
+                  class="w-16 h-16 rounded-2xl bg-amber-500/20 flex items-center justify-center text-amber-400 mb-6 group-hover:bg-amber-500 group-hover:text-primary transition-all duration-300 [&_svg]:w-8 [&_svg]:h-8"
+                  set:html={service.icon}
+                />
+                <h3 class="text-2xl font-bold font-[family-name:var(--font-display)] mb-4">
+                  {service.title}
+                </h3>
+                <p class="text-muted leading-relaxed">{desc}</p>
+              </a>
+            );
+          })
+        }
       </div>
     </div>
   </section>
 
-  <!-- Portfolio Section -->
-  <section class="section-padding">
+  <!-- Case Studies Section -->
+  <section class="section-padding bg-linear-to-b from-secondary to-primary">
     <div class="container-custom">
       <div class="text-center mb-16">
-        <span class="text-accent text-sm font-medium uppercase tracking-wider opacity-0 animate-slide-up">Our Work</span>
-        <h2 class="text-4xl md:text-5xl font-bold font-[family-name:var(--font-display)] mt-4 opacity-0 animate-slide-up animate-delay-100">
-          Portfolio
+        <span
+          class="text-accent text-sm font-medium uppercase tracking-wider opacity-0 animate-slide-up"
+          >Client Stories</span
+        >
+        <h2
+          class="text-4xl md:text-5xl font-bold font-[family-name:var(--font-display)] mt-4 opacity-0 animate-slide-up animate-delay-100"
+        >
+          Case Studies
         </h2>
-        <p class="text-muted text-lg mt-4 max-w-2xl mx-auto opacity-0 animate-slide-up animate-delay-200">
-          Click on any project to explore the details
+        <p
+          class="text-muted text-lg mt-4 max-w-2xl mx-auto opacity-0 animate-slide-up animate-delay-200"
+        >
+          Real projects, real results. See how we've helped businesses transform their digital operations.
         </p>
       </div>
-      
-      <!-- E-commerce -->
-      <div class="mb-16 opacity-0 animate-slide-up animate-delay-200">
-        <div class="flex items-center gap-3 mb-6">
-          <div class="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-400">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-          </div>
-          <h3 class="text-2xl font-bold font-[family-name:var(--font-display)]">E-commerce</h3>
-        </div>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {portfolioByCategory.ecommerce.map((entry, i) => {
-            const project = entry.data;
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {
+          featuredStudies.map((cs, i) => {
+            const study = cs.data;
             return (
-            <button 
-              type="button"
-              class="group relative bg-secondary rounded-xl p-5 border border-border hover:border-amber-500/50 transition-all duration-300 hover:-translate-y-1 text-left cursor-pointer"
-              data-project-index={ecommerceStart + i}
-              aria-label={`View details for ${project.name}`}
-            >
-              <div class="flex items-center gap-3">
-                <div class="transform group-hover:scale-110 transition-transform duration-300">
-                  <LogoPlaceholder name={project.name} size="sm" gradient={project.gradient as any} />
+              <a
+                href={`/case-studies/${cs.id}`}
+                class="group relative bg-secondary rounded-2xl p-6 border border-border hover:border-accent/30 transition-all duration-400 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/20 opacity-0 animate-slide-up"
+                style={`animation-delay: ${(i + 2) * 80}ms`}
+                aria-label={`Read ${study.name} case study`}
+              >
+                <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-accent/3 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+                <div class="relative">
+                  <!-- Logo + service badges -->
+                  <div class="flex items-start justify-between gap-3 mb-5">
+                    <LogoPlaceholder
+                      name={study.name}
+                      size="md"
+                      gradient={study.gradient as any}
+                    />
+                    <div class="flex flex-wrap gap-1.5 justify-end">
+                      {study.services.map((svc) => (
+                        <span class={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border ${serviceColors[svc]}`}>
+                          {serviceLabels[svc]}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <h3 class="font-bold text-lg font-[family-name:var(--font-display)] mb-1.5 group-hover:text-accent transition-colors">
+                    {study.name}
+                  </h3>
+                  <p class="text-muted text-sm leading-relaxed line-clamp-2">{study.desc}</p>
+
+                  <div class="mt-5 flex items-center gap-1.5 text-xs font-semibold text-muted group-hover:text-accent transition-colors group-hover:gap-2.5 duration-300">
+                    Read case study
+                    <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                  </div>
                 </div>
-                <div class="flex-1 min-w-0">
-                  <span class="font-semibold group-hover:text-amber-400 transition-colors block truncate">{project.name}</span>
-                  <span class="text-xs text-muted">Click for details</span>
-                </div>
-              </div>
-            </button>
-          );
-          })}
-        </div>
+              </a>
+            );
+          })
+        }
       </div>
-      
-      <!-- Company Profiles -->
-      <div class="mb-16 opacity-0 animate-slide-up animate-delay-300">
-        <div class="flex items-center gap-3 mb-6">
-          <div class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-          </div>
-          <h3 class="text-2xl font-bold font-[family-name:var(--font-display)]">Company Profiles</h3>
-        </div>
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {portfolioByCategory.companyProfiles.map((entry, i) => {
-            const project = entry.data;
-            return (
-            <button 
-              type="button"
-              class="group relative bg-secondary rounded-xl p-5 border border-border hover:border-blue-500/50 transition-all duration-300 hover:-translate-y-1 text-left cursor-pointer"
-              data-project-index={companyStart + i}
-              aria-label={`View details for ${project.name}`}
-            >
-              <div class="flex items-center gap-3">
-                <div class="transform group-hover:scale-110 transition-transform duration-300">
-                  <LogoPlaceholder name={project.name} size="sm" gradient={project.gradient as any} />
-                </div>
-                <div class="flex-1 min-w-0">
-                  <span class="font-semibold group-hover:text-blue-400 transition-colors block truncate">{project.name}</span>
-                </div>
-              </div>
-            </button>
-          );
-          })}
-        </div>
-      </div>
-      
-      <!-- Odoo Installations -->
-      <div class="opacity-0 animate-slide-up animate-delay-400">
-        <div class="flex items-center gap-3 mb-6">
-          <div class="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center text-purple-400">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/></svg>
-          </div>
-          <h3 class="text-2xl font-bold font-[family-name:var(--font-display)]">Odoo Installations</h3>
-        </div>
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {portfolioByCategory.odoo.map((entry, i) => {
-            const project = entry.data;
-            return (
-            <button 
-              type="button"
-              class="group relative bg-secondary rounded-xl p-5 border border-border hover:border-purple-500/50 transition-all duration-300 hover:-translate-y-1 text-left cursor-pointer"
-              data-project-index={odooStart + i}
-              aria-label={`View details for ${project.name}`}
-            >
-              <div class="flex items-center gap-3">
-                <div class="w-2 h-2 rounded-full bg-purple-400 group-hover:scale-125 transition-transform"></div>
-                <span class="font-semibold group-hover:text-purple-400 transition-colors">{project.name}</span>
-              </div>
-            </button>
-          );
-          })}
-        </div>
-      </div>
-      
-      <div class="text-center mt-12 opacity-0 animate-slide-up animate-delay-500">
-        <a href={`/portfolio`} class="btn-outline">View All Projects</a>
+
+      <div
+        class="text-center mt-12 opacity-0 animate-slide-up animate-delay-500"
+      >
+        <a href={`/case-studies`} class="btn-outline">View All Case Studies</a>
       </div>
     </div>
   </section>
 
-  <!-- Project Modal -->
-  <ProjectModal />
+  <!-- Latest blog -->
+  {
+    latestBlogPosts.length > 0 && (
+      <section class="section-padding bg-linear-to-b from-primary to-secondary border-t border-border">
+        <div class="container-custom">
+          <div class="text-center mb-16">
+            <span class="text-accent text-sm font-medium uppercase tracking-wider opacity-0 animate-slide-up">
+              Insights
+            </span>
+            <h2 class="text-4xl md:text-5xl font-bold font-[family-name:var(--font-display)] mt-4 opacity-0 animate-slide-up animate-delay-100">
+              From the blog
+            </h2>
+            <p class="text-muted text-lg mt-4 max-w-2xl mx-auto opacity-0 animate-slide-up animate-delay-200">
+              Notes on ERP, commerce, and shipping software that holds up in production across Kuwait and the wider region.
+            </p>
+          </div>
 
-  <script define:vars={{ projectsForModal }}>
-    window.__PROJECTS__ = projectsForModal;
-    document.addEventListener('click', (e) => {
-      const btn = e.target.closest('[data-project-index]');
-      if (btn && typeof window.openProjectModal === 'function') {
-        const idx = parseInt(btn.getAttribute('data-project-index'), 10);
-        if (!Number.isNaN(idx) && window.__PROJECTS__[idx]) {
-          window.openProjectModal(window.__PROJECTS__[idx]);
+          <div class="grid md:grid-cols-3 gap-6">
+            {latestBlogPosts.map((post, i) => {
+              const { title, description, pubDate, author } = post.data;
+              return (
+                <a
+                  href={`/blog/${post.id}`}
+                  class="group flex flex-col rounded-2xl border border-border bg-secondary p-6 md:p-7 transition-all duration-300 hover:border-accent/35 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/15 opacity-0 animate-slide-up"
+                  style={`animation-delay: ${(i + 2) * 90}ms`}
+                >
+                  <time
+                    datetime={pubDate.toISOString()}
+                    class="text-xs font-medium uppercase tracking-wide text-muted mb-3"
+                  >
+                    {formatBlogDate(pubDate)}
+                    {author ? ` · ${author}` : ""}
+                  </time>
+                  <h3 class="text-lg md:text-xl font-bold font-[family-name:var(--font-display)] mb-3 group-hover:text-accent transition-colors leading-snug">
+                    {title}
+                  </h3>
+                  <p class="text-muted text-sm leading-relaxed line-clamp-3 flex-1 mb-5">
+                    {description}
+                  </p>
+                  <span class="text-sm font-semibold text-accent inline-flex items-center gap-1.5 mt-auto group-hover:gap-2.5 transition-all">
+                    Read article
+                    <svg
+                      class="w-4 h-4 transition-transform group-hover:translate-x-0.5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </span>
+                </a>
+              );
+            })}
+          </div>
+
+          <div class="text-center mt-12 opacity-0 animate-slide-up animate-delay-500">
+            <a href="/blog" class="btn-outline">
+              View all articles
+            </a>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Testimonials -->
+  <section class="section-padding bg-linear-to-b from-secondary to-primary relative overflow-hidden">
+    <!-- ambient glow -->
+    <div
+      class="pointer-events-none absolute top-1/2 left-0 w-[min(90vw,520px)] h-[min(90vw,520px)] -translate-y-1/2 -translate-x-1/2 rounded-full bg-accent/5 blur-3xl"
+      aria-hidden="true"
+    />
+    <!-- giant background quotation mark -->
+    <div
+      class="pointer-events-none select-none absolute inset-0 flex items-center justify-center overflow-hidden"
+      aria-hidden="true"
+    >
+      <span
+        class="font-[family-name:var(--font-display)] text-[32rem] md:text-[42rem] leading-none font-bold text-amber-400/[0.05] -translate-y-8"
+        style="line-height:1"
+      >
+        &ldquo;
+      </span>
+    </div>
+    <div class="container-custom relative z-10">
+      <div class="text-center mb-16">
+        <span class="text-accent text-sm font-medium uppercase tracking-wider opacity-0 animate-slide-up">
+          Client voices
+        </span>
+        <h2 class="text-4xl md:text-5xl font-bold font-[family-name:var(--font-display)] mt-4 opacity-0 animate-slide-up animate-delay-100">
+          What partners say
+        </h2>
+        <p class="text-muted text-lg mt-4 max-w-2xl mx-auto opacity-0 animate-slide-up animate-delay-200">
+          Long-term relationships matter to us — here is how teams describe working with ENET on the ground.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6 lg:gap-8">
+        {
+          testimonials.map((t, i) => (
+            <figure
+              class="relative rounded-2xl border border-border bg-secondary/80 backdrop-blur-sm p-6 md:p-8 flex flex-col opacity-0 animate-slide-up"
+              style={`animation-delay: ${(i + 2) * 100}ms`}
+            >
+              <span
+                class="font-[family-name:var(--font-display)] text-5xl leading-none text-amber-400/40 select-none"
+                aria-hidden="true"
+              >
+                &ldquo;
+              </span>
+              <blockquote class="text-[0.95rem] md:text-base leading-relaxed text-muted -mt-4 flex-1">
+                <p>{t.quote}</p>
+              </blockquote>
+              <figcaption class="mt-8 pt-6 border-t border-border">
+                <cite class="not-italic font-semibold text-white font-[family-name:var(--font-display)]">
+                  {t.name}
+                </cite>
+                <p class="text-sm text-muted mt-1">
+                  {t.title}
+                  <span class="text-border" aria-hidden="true">
+                    {" · "}
+                  </span>
+                  {t.org}
+                </p>
+              </figcaption>
+            </figure>
+          ))
         }
-      }
-    });
-  </script>
+      </div>
+    </div>
+  </section>
 
   <!-- Stats Section -->
-  <section class="section-padding bg-secondary">
+  <section class="py-20 bg-accent">
     <div class="container-custom">
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
-        {stats.map((stat, i) => (
-          <div class="text-center opacity-0 animate-slide-up" style={`animation-delay: ${(i + 5) * 100}ms`}>
-            <div class="text-4xl md:text-5xl font-bold font-[family-name:var(--font-display)] text-accent mb-2">
-              {stat.number}
+      <div
+        class="grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-primary/40"
+      >
+        {
+          stats.map((stat, i) => (
+            <div
+              class="text-center opacity-0 animate-slide-up"
+              style={`animation-delay: ${(i + 5) * 100}ms`}
+            >
+              <div class="text-4xl md:text-5xl font-bold font-[family-name:var(--font-display)] text-primary mb-2">
+                {stat.number}
+              </div>
+              <div class="text-primary">{stat.label}</div>
             </div>
-            <div class="text-muted">{stat.label}</div>
-          </div>
-        ))}
+          ))
+        }
       </div>
     </div>
   </section>
@@ -256,18 +446,34 @@ const servicesForSEO = servicesEntries.map(entry => ({
   <!-- CTA Section -->
   <section class="section-padding relative overflow-hidden">
     <div class="absolute inset-0">
-      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-accent/10 rounded-full blur-3xl"></div>
+      <div
+        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[260px] bg-accent/10 rounded-full blur-3xl"
+      >
+      </div>
     </div>
     <div class="container-custom relative z-10 text-center">
-      <h2 class="text-4xl md:text-5xl font-bold font-[family-name:var(--font-display)] opacity-0 animate-slide-up">
+      <h2
+        class="text-4xl md:text-5xl font-bold font-[family-name:var(--font-display)] opacity-0 animate-slide-up"
+      >
         Ready to Transform Your Business?
       </h2>
-      <p class="text-muted text-lg mt-4 max-w-xl mx-auto opacity-0 animate-slide-up animate-delay-100">
-        Let's discuss how we can help you achieve your digital transformation goals.
+      <p
+        class="text-muted text-lg mt-4 max-w-xl mx-auto opacity-0 animate-slide-up animate-delay-100"
+      >
+        Let's discuss how we can help you achieve your digital transformation
+        goals.
       </p>
-      <div class="flex flex-wrap justify-center gap-4 mt-10 opacity-0 animate-slide-up animate-delay-200">
-        <a href={`/contact`} class="btn-primary text-lg px-8 py-4">Get In Touch</a>
-        <a href={`/services`} class="btn-outline text-lg px-8 py-4">Our Services</a>
+      <div
+        class="flex flex-wrap justify-center gap-4 mt-10 opacity-0 animate-slide-up animate-delay-200 items-center"
+      >
+        <a href={`/contact`} class="btn-primary text-lg px-8 py-3"
+          >Get In Touch</a
+        >
+        <a
+          href={`/services`}
+          class="text-lg opacity-70 hover:opacity-100 transition-opacity duration-300 px-8 py-3"
+          >Our Services</a
+        >
       </div>
     </div>
   </section>

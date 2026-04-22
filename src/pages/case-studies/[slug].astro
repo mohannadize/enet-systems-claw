@@ -1,0 +1,290 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Navbar from '../../components/Navbar.astro';
+import Footer from '../../components/Footer.astro';
+import LogoPlaceholder from '../../components/LogoPlaceholder.astro';
+import { getCaseStudies, serviceLabels, serviceColors } from '../../lib/collections';
+import { buildCaseStudy, siteUrl } from '../../lib/jsonld';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('caseStudies');
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+
+const allStudies = await getCaseStudies();
+const related = allStudies.filter((cs) => cs.id !== entry.id).slice(0, 3);
+
+const liveUrl = entry.data.url
+  ? (entry.data.url.startsWith('http') ? entry.data.url : `https://${entry.data.url}`)
+  : null;
+
+const caseStudyPageUrl = siteUrl(`/case-studies/${entry.id}`);
+
+const serviceIcons: Record<string, string> = {
+  ecommerce: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>',
+  odoo: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/>',
+  web: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9"/>',
+  mobile: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>',
+};
+---
+
+<Layout
+  title={`${entry.data.name} Case Study | ENET Systems`}
+  description={entry.data.desc}
+  jsonLd={buildCaseStudy({
+    name: entry.data.name,
+    desc: entry.data.desc,
+    url: caseStudyPageUrl,
+    liveUrl,
+  })}
+>
+  <Navbar />
+
+  <!-- Page Hero -->
+  <section class="pt-16 pb-16 relative overflow-hidden">
+    <div class="absolute inset-0">
+      <div class="absolute top-1/4 -right-32 w-96 h-96 bg-accent/10 rounded-full blur-3xl"></div>
+      <div class="absolute bottom-0 left-1/4 w-64 h-64 bg-accent/5 rounded-full blur-3xl"></div>
+    </div>
+
+    <div class="container-custom relative z-10">
+      <!-- Breadcrumb -->
+      <nav class="flex items-center gap-2 text-sm text-muted mb-10" aria-label="Breadcrumb">
+        <a href="/case-studies" class="hover:text-white transition-colors flex items-center gap-1.5 group">
+          <svg class="w-4 h-4 transition-transform group-hover:-translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+          Case Studies
+        </a>
+        <span class="text-border">/</span>
+        <span class="text-white">{entry.data.name}</span>
+      </nav>
+
+      <div class="flex flex-col md:flex-row md:items-start gap-8 md:gap-12">
+        <!-- Logo -->
+        <div class="shrink-0">
+          <LogoPlaceholder name={entry.data.name} size="xl" gradient={entry.data.gradient as any} />
+        </div>
+
+        <!-- Meta -->
+        <div class="flex-1">
+          <!-- Service badges -->
+          <div class="flex flex-wrap gap-2 mb-5">
+            {entry.data.services.map((svc) => (
+              <span class={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium uppercase tracking-wider border ${serviceColors[svc]}`}>
+                {serviceLabels[svc]}
+              </span>
+            ))}
+          </div>
+
+          <h1 class="text-4xl md:text-5xl font-bold font-[family-name:var(--font-display)] mb-3">
+            {entry.data.name}
+          </h1>
+
+          {entry.data.tagline && (
+            <p class="text-accent text-lg font-medium mb-4">{entry.data.tagline}</p>
+          )}
+
+          <p class="text-muted text-lg max-w-2xl leading-relaxed mb-6">
+            {entry.data.desc}
+          </p>
+
+          <div class="flex flex-wrap gap-3">
+            {liveUrl && (
+              <a
+                href={liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn-primary inline-flex items-center gap-2 group"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+                Visit Website
+                <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </a>
+            )}
+            <a href="/contact" class="btn-outline inline-flex items-center gap-2">
+              Work With Us
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Summary Bar -->
+  {entry.data.services.length > 1 && (
+    <section class="border-y border-border bg-secondary/40">
+      <div class="container-custom py-6">
+        <div class="flex flex-wrap items-center gap-4 md:gap-8">
+          <span class="text-xs font-medium uppercase tracking-widest text-muted shrink-0">Services delivered</span>
+          <div class="flex flex-wrap gap-3">
+            {entry.data.services.map((svc) => (
+              <div class="flex items-center gap-2 text-sm">
+                <svg class="w-4 h-4 text-accent shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" set:html={serviceIcons[svc]} />
+                <span class="text-white font-medium">{serviceLabels[svc]}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- MDX Content -->
+  <section class="section-padding bg-secondary/20">
+    <div class="container-custom">
+      <div class="max-w-3xl mx-auto prose-content">
+        <Content />
+      </div>
+    </div>
+  </section>
+
+  <!-- Related Case Studies -->
+  {related.length > 0 && (
+    <section class="pb-20 md:pb-32">
+      <div class="container-custom">
+        <div class="flex items-center gap-3 mb-10">
+          <div class="h-px flex-1 bg-border"></div>
+          <span class="text-xs font-medium uppercase tracking-widest text-muted px-3">More Case Studies</span>
+          <div class="h-px flex-1 bg-border"></div>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-5">
+          {related.map((cs) => {
+            const study = cs.data;
+            return (
+              <a
+                href={`/case-studies/${cs.id}`}
+                class="group relative bg-secondary rounded-2xl p-6 border border-border hover:border-accent/30 transition-all duration-400 hover:-translate-y-1"
+              >
+                <div class="flex items-center gap-3 mb-4">
+                  <LogoPlaceholder name={study.name} size="sm" gradient={study.gradient as any} />
+                  <div class="flex flex-wrap gap-1">
+                    {study.services.map((svc) => (
+                      <span class={`inline-flex items-center px-2 py-0.5 rounded-full text-xs border ${serviceColors[svc]}`}>
+                        {serviceLabels[svc]}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <h3 class="font-bold font-[family-name:var(--font-display)] mb-1 group-hover:text-accent transition-colors">
+                  {study.name}
+                </h3>
+                <p class="text-muted text-sm line-clamp-2">{study.desc}</p>
+              </a>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- CTA -->
+  <section class="section-padding relative overflow-hidden border-t border-border">
+    <div class="absolute inset-0">
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-accent/5 rounded-full blur-3xl"></div>
+    </div>
+    <div class="container-custom relative z-10 text-center">
+      <h2 class="text-3xl md:text-4xl font-bold font-[family-name:var(--font-display)] mb-4">
+        Ready to Build Something Like This?
+      </h2>
+      <p class="text-muted mb-8 max-w-xl mx-auto">
+        Let's talk about how we can help your business achieve similar results.
+      </p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a href="/contact" class="btn-primary text-lg px-8 py-4">Get In Touch</a>
+        <a href="/case-studies" class="btn-outline text-lg px-8 py-4">More Case Studies</a>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+</Layout>
+
+<style>
+  .prose-content :global(h2) {
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-family: var(--font-display);
+    color: white;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--color-border, rgba(255,255,255,0.08));
+  }
+
+  .prose-content :global(h3) {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: white;
+    margin-top: 1.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .prose-content :global(p) {
+    color: var(--color-muted, rgba(255,255,255,0.6));
+    line-height: 1.8;
+    margin-bottom: 1.25rem;
+  }
+
+  .prose-content :global(ul) {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+
+  .prose-content :global(ul li) {
+    color: var(--color-muted, rgba(255,255,255,0.6));
+    padding-left: 1.5rem;
+    position: relative;
+    line-height: 1.7;
+  }
+
+  .prose-content :global(ul li::before) {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.6em;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-accent, #28afa2);
+  }
+
+  .prose-content :global(ul li strong) {
+    color: white;
+    font-weight: 600;
+  }
+
+  .prose-content :global(a) {
+    color: var(--color-accent, #28afa2);
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    transition: text-decoration-color 0.2s;
+  }
+
+  .prose-content :global(a:hover) {
+    text-decoration-color: currentColor;
+  }
+
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

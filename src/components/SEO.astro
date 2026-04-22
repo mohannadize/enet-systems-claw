@@ -1,75 +1,60 @@
 ---
-interface Service {
-  name: string;
-  description: string;
-}
+import { ORGANIZATION_ID, SITE_URL, WEBSITE_ID, type JsonLdObject } from "../lib/jsonld";
 
 interface Props {
-  title: string;
   description: string;
-  services?: Service[];
+  jsonLd?: JsonLdObject | JsonLdObject[];
 }
 
-const { title, description, services = [] } = Astro.props;
+const { description, jsonLd } = Astro.props;
 
-const organizationSchema = {
+const orgUrl = SITE_URL;
+const logoUrl = `${SITE_URL}/logo.svg`;
+
+const organizationSchema: JsonLdObject = {
   "@context": "https://schema.org",
-  "@id": `${Astro.site?.origin ?? 'https://enet.systems'}/#organization`,
+  "@id": ORGANIZATION_ID,
   "@type": "Organization",
-  "name": "ENET Systems LTD",
-  "url": Astro.site?.origin ?? 'https://enet.systems',
-  "logo": `${Astro.site?.origin ?? 'https://enet.systems'}/favicon.svg`,
-  "description": "ENET Systems LTD - Your trusted partner for digital transformation, providing Odoo ERP, Web Development, and Mobile App solutions.",
-  "address": {
+  name: "ENET Systems LTD",
+  url: orgUrl,
+  logo: logoUrl,
+  description:
+    "ENET Systems LTD - Your trusted partner for digital transformation, providing Odoo ERP, Web Development, and Mobile App solutions.",
+  address: {
     "@type": "PostalAddress",
-    "addressCountry": "KW"
+    addressCountry: "KW",
   },
-  "contactPoint": {
+  contactPoint: {
     "@type": "ContactPoint",
-    "contactType": "customer service",
-    "areaServed": "KW",
-    "availableLanguage": ["English", "Arabic"]
-  }
+    contactType: "customer service",
+    areaServed: "KW",
+    availableLanguage: ["English", "Arabic"],
+  },
 };
 
-const websiteSchema = {
+const websiteSchema: JsonLdObject = {
   "@context": "https://schema.org",
+  "@id": WEBSITE_ID,
   "@type": "WebSite",
-  "name": "ENET Systems",
-  "url": Astro.site?.origin ?? 'https://enet.systems',
-  "description": description,
-  "publisher": {
-    "@id": `${Astro.site?.origin ?? 'https://enet.systems'}/#organization`
-  }
+  name: "ENET Systems",
+  url: orgUrl,
+  description: description,
+  publisher: { "@id": ORGANIZATION_ID },
 };
 
-const serviceSchema = services.length > 0 ? {
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "serviceType": services.map(s => s.name).join(", "),
-  "provider": {
-    "@id": `${Astro.site?.origin ?? 'https://enet.systems'}/#organization`
-  },
-  "areaServed": {
-    "@type": "Country",
-    "name": "Kuwait"
-  },
-  "hasOfferCatalog": {
-    "@type": "OfferCatalog",
-    "name": "Digital Transformation Services",
-    "itemListElement": services.map((service, index) => ({
-      "@type": "OfferCatalogItem",
-      "itemOffered": {
-        "@type": "Service",
-        "name": service.name,
-        "description": service.description
-      }
-    }))
-  }
-} : null;
+const extraJsonLd: JsonLdObject[] = !jsonLd
+  ? []
+  : Array.isArray(jsonLd)
+    ? jsonLd
+    : [jsonLd];
 ---
 
 <!-- JSON-LD Structured Data -->
-<script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
+<script
+  type="application/ld+json"
+  set:html={JSON.stringify(organizationSchema)}
+/>
 <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
-{serviceSchema && <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />}
+{extraJsonLd.map((obj) => (
+  <script type="application/ld+json" set:html={JSON.stringify(obj)} />
+))}

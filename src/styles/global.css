@@ -3,8 +3,8 @@
 @theme {
   --color-primary: #0a0a0f;
   --color-secondary: #13131a;
-  --color-accent: #f59e0b;
-  --color-accent-hover: #d97706;
+  --color-accent: #28AFA2;
+  --color-accent-hover: #28afa2;
   --color-muted: #a1a1aa;
   --color-surface: #18181f;
   --color-border: #27272a;
@@ -31,19 +31,19 @@
 
 @layer components {
   .btn-primary {
-    @apply px-6 py-3 bg-accent text-primary font-semibold rounded-lg 
+    @apply px-6 py-2 bg-accent text-primary font-semibold rounded-xs 
            transition-all duration-300 hover:bg-accent-hover hover:scale-105 
            hover:shadow-lg hover:shadow-accent/20;
   }
   
   .btn-outline {
-    @apply px-6 py-3 border-2 border-white/20 text-white font-semibold rounded-lg 
+    @apply px-6 py-3 border-2 border-white/20 text-white font-semibold rounded-xs 
            transition-all duration-300 hover:border-white hover:bg-white/5;
   }
   
   .card {
     @apply bg-secondary rounded-2xl p-8 border border-border 
-           transition-all duration-500 hover:border-accent/50 hover:translate-y-[-4px];
+           transition-all duration-500 hover:border-amber-500/50 hover:translate-y-[-4px];
   }
   
   .section-padding {
@@ -57,7 +57,7 @@
 
 @layer utilities {
   .text-gradient {
-    @apply bg-gradient-to-r from-accent via-amber-400 to-accent bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-accent via-accent-hover to-accent bg-clip-text text-transparent;
   }
   
   .animate-fade-in {
@@ -68,8 +68,7 @@
     animation: slideUp 0.8s ease-out forwards;
   }
   
-  .animate-delay-100 { animation-delay: 100ms; }
-  .animate-delay-200 { animation-delay: 200ms; }
+  .animate-delay-100 { animation-delay: 100ms; } .animate-delay-200 { animation-delay: 200ms; }
   .animate-delay-300 { animation-delay: 300ms; }
   .animate-delay-400 { animation-delay: 400ms; }
   .animate-delay-500 { animation-delay: 500ms; }
@@ -102,4 +101,12 @@
   z-index: 9999;
   opacity: 0.03;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+.font-heading {
+  font-family: var(--font-display);
+}
+
+.font-body {
+  font-family: var(--font-body);
 }

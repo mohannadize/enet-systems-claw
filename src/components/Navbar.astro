@@ -1,78 +1,346 @@
 ---
-const currentPath = Astro.url.pathname;
-const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '') + '/';
+import SocialIcons from "./SocialIcons.astro";
+import { getServices } from "../lib/collections";
 
-const navLinks = [
-  { href: base || '/', label: 'Home' },
-  { href: `${base}about`, label: 'About' },
-  { href: `${base}services`, label: 'Services' },
-  { href: `${base}portfolio`, label: 'Portfolio' },
-  { href: `${base}contact`, label: 'Contact' },
+const currentPath = Astro.url.pathname;
+const base = (import.meta.env.BASE_URL || "/").replace(/\/$/, "") + "/";
+
+type NavItem = { href: string; label: string };
+type NavLink = NavItem & { items?: NavItem[]; cta?: boolean };
+
+const serviceEntries = await getServices();
+const serviceItems: NavItem[] = serviceEntries.map((entry) => ({
+  href: `/services/${entry.id}`,
+  label: entry.data.title,
+}));
+
+const navLinks: NavLink[] = [
+  { href: "/", label: "Home" },
+  { href: "/about", label: "About" },
+  { href: "/case-studies", label: "Case Studies" },
+  {
+    href: "/services",
+    label: "Services",
+    items: serviceItems,
+  },
+  { href: "/blog", label: "Blog" },
+  { href: "/contact", label: "Get started", cta: true },
 ];
 
 const isActive = (href: string) => {
-  if (href === base || href === '/') {
-    return currentPath === '/' || currentPath === base || currentPath === `${base}/`;
+  if (href === base || href === "/") {
+    return (
+      currentPath === "/" || currentPath === base || currentPath === `${base}/`
+    );
   }
   return currentPath.startsWith(href);
 };
+
+const isLinkActive = (link: NavLink) => {
+  if (isActive(link.href)) return true;
+  return link.items?.some((item) => isActive(item.href)) ?? false;
+};
+
+const nonCtaLinks = navLinks.filter((l) => !l.cta);
+const ctaLink = navLinks.find((l) => l.cta);
 ---
 
-<nav class="fixed top-0 left-0 right-0 z-50 bg-primary/80 backdrop-blur-xl border-b border-white/5">
+<!-- CSS-driven toggle: this checkbox IS the open/closed state -->
+<input type="checkbox" id="nav-toggle" class="peer sr-only" />
+
+<!-- ── Desktop + mobile top bar ───────────────────────────────────────── -->
+<nav
+  id="site-nav"
+  class="sticky top-0 z-50 border-b border-white/5 bg-primary/80 backdrop-blur-xl"
+  aria-label="Main"
+>
   <div class="container-custom">
-    <div class="flex items-center justify-between h-20">
-      <a href={base || '/'} class="flex items-center gap-2">
-        <span class="text-3xl font-bold font-[family-name:var(--font-display)]">
-          ENE<span class="text-accent">T</span>
-        </span>
+    <div class="flex h-16 items-center justify-between md:h-20">
+      <a href={base || "/"} class="flex h-12 items-center md:h-16">
+        <img src="/logo.svg" alt="ENET Systems LTD" class="h-12 py-2 md:h-16" />
       </a>
-      
-      <div class="hidden md:flex items-center gap-8">
-        {navLinks.map(link => (
-          <a 
-            href={link.href}
-            class:list={[
-              "text-sm font-medium transition-colors hover:text-accent",
-              isActive(link.href) ? "text-accent" : "text-muted"
-            ]}
-          >
-            {link.label}
-          </a>
-        ))}
-        <a href={`${base}contact`} class="btn-primary text-sm">Get Started</a>
+
+      <!-- Desktop nav -->
+      <div class="hidden items-center gap-1 md:flex md:gap-2">
+        {
+          navLinks.map((link) =>
+            link.cta ? (
+              <a
+                href={link.href}
+                class:list={[
+                  "btn-primary ml-2 shrink-0 text-sm md:ml-3",
+                  isActive(link.href) &&
+                    "ring-2 ring-white/25 ring-offset-2 ring-offset-primary",
+                ]}
+              >
+                {link.label}
+              </a>
+            ) : link.items ? (
+              <details class="group relative">
+                <summary
+                  class:list={[
+                    "flex cursor-pointer list-none items-center gap-1 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:text-accent [&::-webkit-details-marker]:hidden",
+                    isLinkActive(link) ? "text-accent" : "text-muted",
+                  ]}
+                >
+                  <span>{link.label}</span>
+                  <svg
+                    class="inline-block size-4 shrink-0 text-muted transition-transform duration-200 group-open:rotate-180"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </summary>
+                <div
+                  class="absolute left-0 top-full z-50 min-w-56 pt-2"
+                  role="presentation"
+                >
+                  <div class="rounded-xl border border-border bg-secondary py-2 shadow-xl shadow-black/40 ring-1 ring-white/5">
+                    <a
+                      href={link.href}
+                      class:list={[
+                        "block px-4 py-2.5 text-sm font-medium transition-colors hover:bg-white/5 hover:text-accent",
+                        isActive(link.href) &&
+                          !link.items.some((i) => isActive(i.href))
+                          ? "text-accent"
+                          : "text-muted",
+                      ]}
+                    >
+                      All services
+                    </a>
+                    <div class="my-1 h-px bg-border" role="separator" />
+                    {link.items.map((item) => (
+                      <a
+                        href={item.href}
+                        class:list={[
+                          "block px-4 py-2.5 text-sm font-medium transition-colors hover:bg-white/5 hover:text-accent",
+                          isActive(item.href) ? "text-accent" : "text-muted",
+                        ]}
+                      >
+                        {item.label}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </details>
+            ) : (
+              <a
+                href={link.href}
+                class:list={[
+                  "rounded-md px-3 py-2 text-sm font-medium transition-colors hover:text-accent",
+                  isActive(link.href) ? "text-accent" : "text-muted",
+                ]}
+              >
+                {link.label}
+              </a>
+            ),
+          )
+        }
       </div>
-      
-      <button id="mobile-menu-btn" class="md:hidden text-white p-2">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-      </button>
-    </div>
-  </div>
-  
-  <div id="mobile-menu" class="md:hidden hidden bg-secondary border-b border-border">
-    <div class="container-custom py-4 flex flex-col gap-4">
-      {navLinks.map(link => (
-        <a 
-          href={link.href}
-          class:list={[
-            "text-base font-medium py-2 transition-colors hover:text-accent",
-            isActive(link.href) ? "text-accent" : "text-muted"
-          ]}
-        >
-          {link.label}
-        </a>
-      ))}
-      <a href={`${base}contact`} class="btn-primary text-center text-sm mt-2">Get Started</a>
+
+      <!-- Hamburger label — the CSS toggle trigger -->
+      <label
+        for="nav-toggle"
+        class="relative z-[80] flex h-11 w-11 cursor-pointer touch-manipulation flex-col items-center justify-center gap-[5px] rounded-lg text-white md:hidden"
+        aria-label="Toggle menu"
+      >
+        <span class="ham-bar ham-bar-1 block h-[2px] w-6 origin-center rounded-full bg-current transition-all duration-300 ease-out" />
+        <span class="ham-bar ham-bar-2 block h-[2px] w-6 rounded-full bg-current transition-all duration-300 ease-out" />
+        <span class="ham-bar ham-bar-3 block h-[2px] w-6 origin-center rounded-full bg-current transition-all duration-300 ease-out" />
+      </label>
     </div>
   </div>
 </nav>
 
+<!-- ── Full-screen mobile menu ─────────────────────────────────────────── -->
+<!-- Slides in from the right, driven entirely by #nav-toggle:checked via peer -->
+<div
+  id="mobile-panel"
+  class="fixed inset-0 z-[70] flex flex-col bg-primary transition-transform duration-300 ease-in-out translate-x-full peer-checked:translate-x-0 md:hidden"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Navigation"
+>
+  <!-- Decorative accent blobs -->
+  <div class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+    <div class="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-accent/8 blur-3xl"></div>
+    <div class="absolute bottom-0 -left-16 w-64 h-64 rounded-full bg-accent/5 blur-3xl"></div>
+  </div>
+
+  <!-- Top bar: logo + close button -->
+  <div class="relative flex h-16 shrink-0 items-center justify-between px-6 border-b border-white/5">
+    <a href={base || "/"} class="flex h-10 items-center">
+      <img src="/logo-small.svg" alt="ENET Systems LTD" class="h-12 py-2 md:h-16" />
+    </a>
+    <label
+      for="nav-toggle"
+      class="flex h-11 w-11 cursor-pointer items-center justify-center rounded-lg text-muted transition-colors hover:text-white"
+      aria-label="Close menu"
+    >
+      <svg class="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </label>
+  </div>
+
+  <!-- Links — scrollable, takes up remaining space -->
+  <div class="relative flex-1 overflow-y-auto overscroll-contain px-6 py-8">
+    <ul class="flex flex-col gap-1">
+      {
+        nonCtaLinks.map((link) =>
+          link.items ? (
+            <li>
+              <details class="group/ms">
+                <summary class:list={[
+                  "flex cursor-pointer list-none items-center justify-between py-4 text-4xl font-bold font-[family-name:var(--font-display)] tracking-tight transition-colors [&::-webkit-details-marker]:hidden hover:text-accent",
+                  isLinkActive(link) ? "text-accent" : "text-white",
+                ]}>
+                  <span>{link.label}</span>
+                  <svg
+                    class="size-7 shrink-0 text-muted transition-transform duration-200 group-open/ms:rotate-180"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </summary>
+
+                <!-- Sub-links -->
+                <ul class="mt-1 mb-3 flex flex-col border-l-2 border-border pl-5 gap-0">
+                  <li>
+                    <a
+                      href={link.href}
+                      class:list={[
+                        "flex items-center py-3 text-lg font-medium transition-colors hover:text-accent",
+                        isActive(link.href) && !link.items.some((i) => isActive(i.href))
+                          ? "text-accent"
+                          : "text-muted",
+                      ]}
+                    >
+                      All services
+                    </a>
+                  </li>
+                  {link.items.map((item) => (
+                    <li>
+                      <a
+                        href={item.href}
+                        class:list={[
+                          "flex items-center py-3 text-lg font-medium transition-colors hover:text-accent",
+                          isActive(item.href) ? "text-accent" : "text-muted",
+                        ]}
+                      >
+                        {item.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            </li>
+          ) : (
+            <li>
+              <a
+                href={link.href}
+                class:list={[
+                  "flex items-center py-4 text-4xl font-bold font-[family-name:var(--font-display)] tracking-tight transition-colors hover:text-accent",
+                  isActive(link.href) ? "text-accent" : "text-white",
+                ]}
+              >
+                {link.label}
+              </a>
+            </li>
+          ),
+        )
+      }
+    </ul>
+  </div>
+
+  <!-- Bottom: CTA + social -->
+  <div class="relative shrink-0 border-t border-white/5 px-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-6 space-y-5">
+    {
+      ctaLink && (
+        <a
+          href={ctaLink.href}
+          class="btn-primary flex min-h-[3.25rem] w-full items-center justify-center text-base font-semibold"
+        >
+          {ctaLink.label}
+        </a>
+      )
+    }
+    <div class="flex items-center justify-between">
+      <p class="text-[13px] font-medium text-muted uppercase tracking-widest">Connect</p>
+      <SocialIcons size="sm" />
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Hamburger → X when checkbox is checked */
+  #nav-toggle:checked ~ nav .ham-bar-1 {
+    transform: translateY(7px) rotate(45deg);
+  }
+  #nav-toggle:checked ~ nav .ham-bar-2 {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  #nav-toggle:checked ~ nav .ham-bar-3 {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  /* Prevent body scroll while menu is open (set via JS for reliability) */
+  body.menu-open {
+    overflow: hidden;
+  }
+</style>
+
 <script>
-  const btn = document.getElementById('mobile-menu-btn');
-  const menu = document.getElementById('mobile-menu');
-  
-  btn?.addEventListener('click', () => {
-    menu?.classList.toggle('hidden');
-  });
+  function initNav() {
+    const toggle = document.getElementById("nav-toggle") as HTMLInputElement | null;
+
+    if (!toggle) return;
+
+    /* Reset state on each init (handles view-transition navigation) */
+    toggle.checked = false;
+    document.body.classList.remove("menu-open");
+
+    /* Scroll lock */
+    toggle.addEventListener("change", () => {
+      document.body.classList.toggle("menu-open", toggle.checked);
+    });
+
+    /* Escape to close */
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && toggle.checked) {
+        toggle.checked = false;
+        document.body.classList.remove("menu-open");
+      }
+    });
+
+    /* Close when navigating via a link */
+    document.querySelectorAll("#mobile-panel a").forEach((el) => {
+      el.addEventListener("click", () => {
+        toggle.checked = false;
+        document.body.classList.remove("menu-open");
+      });
+    });
+
+    /* Close desktop dropdowns when clicking outside */
+    document.addEventListener("click", (e) => {
+      const target = e.target as Node;
+      document.querySelectorAll("#site-nav details").forEach((d) => {
+        if (!d.contains(target)) (d as HTMLDetailsElement).open = false;
+      });
+    });
+  }
+
+  document.addEventListener("astro:page-load", initNav);
 </script>

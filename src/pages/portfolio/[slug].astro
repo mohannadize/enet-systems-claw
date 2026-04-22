@@ -1,0 +1,236 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Navbar from '../../components/Navbar.astro';
+import Footer from '../../components/Footer.astro';
+import LogoPlaceholder from '../../components/LogoPlaceholder.astro';
+import { buildPortfolioProject, siteUrl } from '../../lib/jsonld';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('portfolio');
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+
+const categoryLabels: Record<string, string> = {
+  ecommerce: 'E-commerce',
+  web: 'Company Profile',
+  odoo: 'Odoo ERP',
+  mobile: 'Mobile App',
+};
+
+const categoryColors: Record<string, string> = {
+  ecommerce: 'bg-accent/10 text-accent border-accent/20',
+  web: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
+  odoo: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
+  mobile: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+};
+
+const categoryLabel = categoryLabels[entry.data.category] ?? entry.data.category;
+const categoryColor = categoryColors[entry.data.category] ?? 'bg-accent/10 text-accent border-accent/20';
+
+const liveUrl = entry.data.url
+  ? (entry.data.url.startsWith('http') ? entry.data.url : `https://${entry.data.url}`)
+  : null;
+
+const portfolioPageUrl = siteUrl(`/portfolio/${entry.id}`);
+---
+
+<Layout
+  title={`${entry.data.name} | Portfolio | ENET Systems`}
+  description={entry.data.desc}
+  jsonLd={buildPortfolioProject({
+    name: entry.data.name,
+    desc: entry.data.desc,
+    url: portfolioPageUrl,
+    liveUrl,
+  })}
+>
+  <Navbar />
+
+  <!-- Page Hero -->
+  <section class="pt-32 pb-16 relative overflow-hidden">
+    <div class="absolute inset-0">
+      <div class="absolute top-1/4 -right-32 w-96 h-96 bg-accent/10 rounded-full blur-3xl"></div>
+      <div class="absolute bottom-0 left-1/4 w-64 h-64 bg-accent/5 rounded-full blur-3xl"></div>
+    </div>
+
+    <div class="container-custom relative z-10">
+      <!-- Back link -->
+      <a
+        href="/portfolio"
+        class="inline-flex items-center gap-2 text-muted hover:text-white transition-colors mb-10 group"
+      >
+        <svg class="w-4 h-4 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        Portfolio
+      </a>
+
+      <div class="flex flex-col md:flex-row md:items-center gap-8">
+        <!-- Logo -->
+        <div class="shrink-0">
+          <LogoPlaceholder name={entry.data.name} size="xl" gradient={entry.data.gradient as any} />
+        </div>
+
+        <!-- Meta -->
+        <div>
+          <span class={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium uppercase tracking-wider border mb-4 ${categoryColor}`}>
+            {categoryLabel}
+          </span>
+          <h1 class="text-4xl md:text-5xl font-bold font-[family-name:var(--font-display)] mb-3">
+            {entry.data.name}
+          </h1>
+          <p class="text-muted text-lg max-w-2xl leading-relaxed mb-6">
+            {entry.data.desc}
+          </p>
+          {liveUrl && (
+            <a
+              href={liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-primary inline-flex items-center gap-2 group"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+              Visit Website
+              <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MDX Content -->
+  <section class="section-padding bg-secondary/30">
+    <div class="container-custom">
+      <div class="max-w-3xl mx-auto prose-content">
+        <Content />
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section-padding relative overflow-hidden">
+    <div class="absolute inset-0">
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-accent/5 rounded-full blur-3xl"></div>
+    </div>
+    <div class="container-custom relative z-10 text-center">
+      <h2 class="text-3xl md:text-4xl font-bold font-[family-name:var(--font-display)] mb-4">
+        Start Your Project
+      </h2>
+      <p class="text-muted mb-8 max-w-xl mx-auto">
+        Ready to build something like this? Let's talk about what we can create together.
+      </p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a href="/contact" class="btn-primary text-lg px-8 py-4">Get In Touch</a>
+        <a href="/portfolio" class="btn-outline text-lg px-8 py-4">More Projects</a>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+</Layout>
+
+<style>
+  /* Prose styles for MDX content — no typography plugin needed */
+  .prose-content :global(h2) {
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-family: var(--font-display);
+    color: white;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--color-border, rgba(255,255,255,0.08));
+  }
+
+  .prose-content :global(h3) {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: white;
+    margin-top: 1.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .prose-content :global(p) {
+    color: var(--color-muted, rgba(255,255,255,0.6));
+    line-height: 1.8;
+    margin-bottom: 1.25rem;
+  }
+
+  .prose-content :global(ul) {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+
+  .prose-content :global(ul li) {
+    color: var(--color-muted, rgba(255,255,255,0.6));
+    padding-left: 1.5rem;
+    position: relative;
+    line-height: 1.7;
+  }
+
+  .prose-content :global(ul li::before) {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.6em;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-accent, #f59e0b);
+  }
+
+  .prose-content :global(ul li strong) {
+    color: white;
+    font-weight: 600;
+  }
+
+  .prose-content :global(a) {
+    color: var(--color-accent, #f59e0b);
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    transition: text-decoration-color 0.2s;
+  }
+
+  .prose-content :global(a:hover) {
+    text-decoration-color: currentColor;
+  }
+
+  .prose-content :global(code) {
+    font-size: 0.875em;
+    background: rgba(255,255,255,0.06);
+    padding: 0.2em 0.4em;
+    border-radius: 0.25rem;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .prose-content :global(pre) {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    overflow-x: auto;
+    margin-bottom: 1.25rem;
+  }
+
+  .prose-content :global(pre code) {
+    background: none;
+    border: none;
+    padding: 0;
+  }
+</style>

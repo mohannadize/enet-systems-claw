@@ -1,23 +1,29 @@
 ---
+import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import LogoPlaceholder from '../components/LogoPlaceholder.astro';
-import ProjectModal from '../components/ProjectModal.astro';
-import { getPortfolioByCategory, getPortfolioCategories, getAllProjectsForModal } from '../lib/collections';
-
-const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '') + '/';
+import { getPortfolioByCategory, getPortfolioCategories } from '../lib/collections';
+import { buildPortfolioIndex, siteUrl } from '../lib/jsonld';
 
 const portfolioByCategory = await getPortfolioByCategory();
-const categories = getPortfolioCategories();
-const allProjects = await getAllProjectsForModal();
 
-const ecommerceStart = 0;
-const companyStart = portfolioByCategory.ecommerce.length;
-const odooStart = portfolioByCategory.ecommerce.length + portfolioByCategory.companyProfiles.length;
+const portfolioIndexDescription =
+  "A selection of web, e-commerce, Odoo ERP, and mobile work delivered by ENET Systems across Kuwait and the MENA region.";
+const categories = getPortfolioCategories();
+const allEntries = await getCollection('portfolio');
 ---
 
-<Layout title="Portfolio | ENET Systems LTD">
+<Layout
+  title="Portfolio | ENET Systems LTD"
+  description={portfolioIndexDescription}
+  jsonLd={buildPortfolioIndex({
+    name: "Portfolio | ENET Systems LTD",
+    description: portfolioIndexDescription,
+    url: siteUrl("/portfolio"),
+  })}
+>
   <Navbar />
   
   <!-- Page Header -->
@@ -29,13 +35,13 @@ const odooStart = portfolioByCategory.ecommerce.length + portfolioByCategory.com
     <div class="container-custom relative z-10 text-center">
       <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 border border-accent/20 text-accent text-sm font-medium mb-6 opacity-0 animate-slide-up">
         <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
-        {allProjects.length}+ Projects Delivered
+        {allEntries.length}+ Projects Delivered
       </span>
       <h1 class="text-5xl md:text-6xl font-bold font-[family-name:var(--font-display)] mb-4 opacity-0 animate-slide-up animate-delay-100">
         Our Portfolio
       </h1>
       <p class="text-muted text-lg max-w-2xl mx-auto opacity-0 animate-slide-up animate-delay-200">
-        A showcase of our work across e-commerce, corporate websites, and ERP solutions. Click on any project to learn more.
+        A showcase of our work across e-commerce, corporate websites, and ERP solutions.
       </p>
     </div>
   </section>
@@ -59,53 +65,41 @@ const odooStart = portfolioByCategory.ecommerce.length + portfolioByCategory.com
             {cat.id === 'ecommerce' && portfolioByCategory.ecommerce.map((entry, i) => {
               const project = entry.data;
               return (
-              <button 
-                type="button"
-                class="portfolio-card group relative bg-secondary rounded-2xl p-6 border border-border hover:border-accent/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-xl hover:shadow-accent/5 text-left opacity-0 animate-slide-up cursor-pointer"
+              <a 
+                href={`/portfolio/${entry.id}`}
+                class="portfolio-card group relative bg-secondary rounded-2xl p-6 border border-border hover:border-accent/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-xl hover:shadow-accent/5 opacity-0 animate-slide-up"
                 style={`animation-delay: ${(catIndex * 4 + i) * 50}ms`}
-                data-project-index={ecommerceStart + i}
-                aria-label={`View details for ${project.name}`}
+                aria-label={`View case study for ${project.name}`}
               >
-                {/* Hover Glow Effect */}
                 <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 
                 <div class="relative">
-                  {/* Logo */}
                   <div class="mb-4 transform group-hover:scale-110 transition-transform duration-300">
                     <LogoPlaceholder name={project.name} size="md" gradient={project.gradient as any} class="group-hover:shadow-accent/20" />
                   </div>
                   
-                  {/* Content */}
                   <h3 class="font-semibold text-white group-hover:text-accent transition-colors mb-1 line-clamp-1">
                     {project.name}
                   </h3>
                   <span class="text-xs text-muted flex items-center gap-1">
                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    Click for details
-                  </span>
-                  
-                  {/* Arrow Indicator */}
-                  <div class="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
-                    <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                     </svg>
-                  </div>
+                    View case study
+                  </span>
                 </div>
-              </button>
+              </a>
             );
             })}
             
-            {cat.id === 'companyProfiles' && portfolioByCategory.companyProfiles.map((entry, i) => {
+            {cat.id === 'web' && portfolioByCategory.web.map((entry, i) => {
               const project = entry.data;
               return (
-              <button 
-                type="button"
-                class="portfolio-card group relative bg-secondary rounded-2xl p-6 border border-border hover:border-blue-500/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-xl hover:shadow-blue-500/5 text-left opacity-0 animate-slide-up cursor-pointer"
+              <a 
+                href={`/portfolio/${entry.id}`}
+                class="portfolio-card group relative bg-secondary rounded-2xl p-6 border border-border hover:border-blue-500/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-xl hover:shadow-blue-500/5 opacity-0 animate-slide-up"
                 style={`animation-delay: ${(catIndex * 4 + i) * 50}ms`}
-                data-project-index={companyStart + i}
-                aria-label={`View details for ${project.name}`}
+                aria-label={`View case study for ${project.name}`}
               >
                 <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 
@@ -119,30 +113,23 @@ const odooStart = portfolioByCategory.ecommerce.length + portfolioByCategory.com
                   </h3>
                   <span class="text-xs text-muted flex items-center gap-1">
                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    Click for details
-                  </span>
-                  
-                  <div class="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
-                    <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                     </svg>
-                  </div>
+                    View case study
+                  </span>
                 </div>
-              </button>
+              </a>
             );
             })}
             
             {cat.id === 'odoo' && portfolioByCategory.odoo.map((entry, i) => {
               const project = entry.data;
               return (
-              <button 
-                type="button"
-                class="portfolio-card group relative bg-secondary rounded-2xl p-6 border border-border hover:border-purple-500/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-xl hover:shadow-purple-500/5 text-left opacity-0 animate-slide-up cursor-pointer"
+              <a 
+                href={`/portfolio/${entry.id}`}
+                class="portfolio-card group relative bg-secondary rounded-2xl p-6 border border-border hover:border-purple-500/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-xl hover:shadow-purple-500/5 opacity-0 animate-slide-up"
                 style={`animation-delay: ${(catIndex * 4 + i) * 50}ms`}
-                data-project-index={odooStart + i}
-                aria-label={`View details for ${project.name}`}
+                aria-label={`View case study for ${project.name}`}
               >
                 <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 
@@ -156,18 +143,12 @@ const odooStart = portfolioByCategory.ecommerce.length + portfolioByCategory.com
                   </h3>
                   <span class="text-xs text-muted flex items-center gap-1">
                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    Click for details
-                  </span>
-                  
-                  <div class="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
-                    <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                     </svg>
-                  </div>
+                    View case study
+                  </span>
                 </div>
-              </button>
+              </a>
             );
             })}
           </div>
@@ -182,7 +163,7 @@ const odooStart = portfolioByCategory.ecommerce.length + portfolioByCategory.com
       <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
         <div class="text-center opacity-0 animate-slide-up">
           <div class="text-4xl md:text-5xl font-bold font-[family-name:var(--font-display)] text-accent mb-2">
-            {allProjects.length}+
+            {allEntries.length}+
           </div>
           <div class="text-muted">Projects Delivered</div>
         </div>
@@ -221,27 +202,11 @@ const odooStart = portfolioByCategory.ecommerce.length + portfolioByCategory.com
         Ready to build something amazing? Let's discuss your next project and bring your vision to life.
       </p>
       <div class="flex flex-wrap justify-center gap-4 opacity-0 animate-slide-up animate-delay-200">
-        <a href={`${base}contact`} class="btn-primary text-lg px-8 py-4">Get In Touch</a>
-        <a href={`${base}services`} class="btn-outline text-lg px-8 py-4">Our Services</a>
+        <a href="/contact" class="btn-primary text-lg px-8 py-4">Get In Touch</a>
+        <a href="/services" class="btn-outline text-lg px-8 py-4">Our Services</a>
       </div>
     </div>
   </section>
-
-  <!-- Modal Component -->
-  <ProjectModal />
-
-  <script define:vars={{ allProjects }}>
-    window.__PROJECTS__ = allProjects;
-    document.addEventListener('click', (e) => {
-      const btn = e.target.closest('[data-project-index]');
-      if (btn && typeof window.openProjectModal === 'function') {
-        const idx = parseInt(btn.getAttribute('data-project-index'), 10);
-        if (!Number.isNaN(idx) && window.__PROJECTS__[idx]) {
-          window.openProjectModal(window.__PROJECTS__[idx]);
-        }
-      }
-    });
-  </script>
 
   <Footer />
 </Layout>

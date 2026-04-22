@@ -1,7 +1,0 @@
-{
-  "name": "HealthyGO KSA",
-  "desc": "Healthcare sector ERP implementation with patient management, pharmacy integration, and insurance billing modules.",
-  "gradient": "blue",
-  "category": "odoo",
-  "order": 5
-}

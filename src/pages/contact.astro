@@ -2,17 +2,29 @@
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
+import SocialIcons from '../components/SocialIcons.astro';
+import { buildContactPage, siteUrl } from '../lib/jsonld';
 
 const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '') + '/';
+const contactDescription =
+  "Get in touch with the ENET Systems team for a free consultation on web, mobile, and Odoo ERP projects.";
 ---
 
-<Layout title="Contact Us | ENET Systems LTD">
+<Layout
+  title="Contact Us | ENET Systems LTD"
+  description={contactDescription}
+  jsonLd={buildContactPage({
+    url: siteUrl("/contact"),
+    description: contactDescription,
+  })}
+>
   <Navbar />
   
   <!-- Page Header -->
   <section class="pt-32 pb-16 relative overflow-hidden">
     <div class="absolute inset-0">
       <div class="absolute top-1/4 -right-32 w-96 h-96 bg-accent/10 rounded-full blur-3xl"></div>
+      <div class="absolute bottom-0 left-1/4 w-64 h-64 bg-accent/5 rounded-full blur-3xl"></div>
     </div>
     <div class="container-custom relative z-10 text-center">
       <h1 class="text-5xl md:text-6xl font-bold font-[family-name:var(--font-display)] mb-4 opacity-0 animate-slide-up">
@@ -25,7 +37,7 @@ const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '') + '/';
   </section>
 
   <!-- Contact Section -->
-  <section class="section-padding pb-0">
+  <section class="section-padding pb-20">
     <div class="container-custom">
       <div class="grid lg:grid-cols-5 gap-12">
         <!-- Contact Info -->
@@ -66,6 +78,13 @@ const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '') + '/';
                 <h4 class="font-semibold mb-1">Working Hours</h4>
                 <p class="text-muted text-sm">Sunday - Thursday: 9:00 AM - 6:00 PM</p>
               </div>
+            </div>
+
+            <div class="pt-2">
+              <p class="text-sm font-semibold mb-3 font-[family-name:var(--font-display)]">
+                Social
+              </p>
+              <SocialIcons />
             </div>
           </div>
         </div>
@@ -140,21 +159,6 @@ const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '') + '/';
               Send Message
             </button>
           </form>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Map Placeholder -->
-  <section class="pt-0">
-    <div class="container-custom pb-20">
-      <div class="bg-secondary border border-border rounded-2xl h-80 flex items-center justify-center">
-        <div class="text-center text-muted">
-          <svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-          </svg>
-          <p>Map integration available upon request</p>
         </div>
       </div>
     </div>
