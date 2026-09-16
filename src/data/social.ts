@@ -1,12 +1,14 @@
+import { business } from "./business";
+
 /** Update LinkedIn and Instagram URLs when official profiles are confirmed. */
 export const socialLinks = [
   {
     label: "WhatsApp",
-    href: "https://wa.me/201276666314",
+    href: business.whatsAppUrl,
   },
   {
     label: "Email",
-    href: "mailto:Inquiry@enet.systems",
+    href: business.mailtoHref,
   },
   {
     label: "LinkedIn",

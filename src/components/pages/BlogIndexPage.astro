@@ -1,0 +1,120 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Navbar from '../../components/Navbar.astro';
+import Footer from '../../components/Footer.astro';
+import { getBlogPosts } from '../../lib/collections';
+import { buildBlogIndex, siteUrl } from '../../lib/jsonld';
+import { t, type Locale } from '../../i18n/i18n';
+
+const { locale } = Astro.props as { locale: Locale };
+const L = (k: Parameters<typeof t>[1]) => t(locale, k);
+const p = (path: string) => `/${locale}${path === "/" ? "" : path}`;
+
+const posts = await getBlogPosts(locale);
+
+const blogIndexDescription =
+  "Insights on Odoo ERP, e-commerce, web development, and digital transformation from the ENET Systems team.";
+const blogIndexDescriptionAr =
+  'رؤى من فريق ENET Systems حول أودو ERP والتجارة الإلكترونية وتطوير الويب والتحول الرقمي.';
+const blogSeo = locale === 'ar' ? blogIndexDescriptionAr : blogIndexDescription;
+
+const formatDate = (d: Date) =>
+  d.toLocaleDateString(locale === 'ar' ? 'ar-EG' : 'en-GB', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+---
+
+<Layout
+  title={locale === 'ar' ? 'المدونة | ENET Systems' : 'Blog | ENET Systems LTD'}
+  description={blogSeo}
+  jsonLd={buildBlogIndex({
+    name: locale === 'ar' ? 'المدونة | ENET Systems' : 'Blog | ENET Systems LTD',
+    description: blogSeo,
+    url: siteUrl(p('/blog')),
+  })}
+>
+  <Navbar />
+
+  <section class="pt-16 pb-16 relative overflow-hidden bg-ink">
+    <div class="absolute inset-0">
+      <div class="absolute inset-0 halftone halftone-light opacity-15" aria-hidden="true"></div>
+      <div class="absolute top-1/4 -right-32 w-96 h-96 bg-accent/15 rounded-full blur-3xl"></div>
+      <div class="absolute bottom-0 left-1/4 w-64 h-64 bg-fire/10 rounded-full blur-3xl"></div>
+    </div>
+    <div class="container-custom relative z-10 text-center">
+      <span class="inline-flex items-center gap-2 px-4 py-2 border-2 border-accent/40 bg-accent/10 text-accent text-sm font-bold mb-6 opacity-0 animate-slide-up">
+        <span class="w-2 h-2 bg-accent animate-pulse"></span>
+        {posts.length} {L('blog.articles')}
+      </span>
+      <h1 class="text-6xl md:text-8xl font-bold font-[family-name:var(--font-display)] text-white mb-4 opacity-0 animate-slide-up animate-delay-100 leading-[1.05]">
+        {L('blog.title')}
+      </h1>
+      <p class="text-white/60 text-lg max-w-2xl mx-auto opacity-0 animate-slide-up animate-delay-200">
+        {L('blog.subtitle')}
+      </p>
+    </div>
+  </section>
+
+  <section class="section-padding bg-secondary border-t-2 border-ink/5">
+    <div class="container-custom max-w-3xl">
+      <ul class="flex flex-col gap-6">
+        {
+          posts.map((post, i) => {
+            const { title, description, pubDate, author, tags } = post.data;
+            return (
+              <li
+                class="opacity-0 animate-slide-up"
+                style={`animation-delay: ${i * 80}ms`}
+              >
+                <article>
+                  <a
+                    href={p(`/blog/${post.id}`)}
+                    class="group block border-2 border-ink/10 bg-white p-6 md:p-8 transition-all duration-300 hover:border-accent hover:-translate-y-1 hover:shadow-2xl hover:shadow-accent/10"
+                  >
+                    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted mb-3">
+                      <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
+                      {author && (
+                        <>
+                          <span class="text-border" aria-hidden="true">·</span>
+                          <span>{author}</span>
+                        </>
+                      )}
+                    </div>
+                    <h2 class="text-xl md:text-2xl font-bold font-[family-name:var(--font-display)] mb-2 group-hover:text-accent transition-colors">
+                      {title}
+                    </h2>
+                    <p class="text-muted leading-relaxed mb-4">{description}</p>
+                    {tags && tags.length > 0 && (
+                      <div class="flex flex-wrap gap-2">
+                        {tags.map((tag) => (
+                          <span class="px-2.5 py-0.5 text-xs font-medium text-muted border-2 border-ink/10 bg-secondary">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </a>
+                </article>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="pb-20 md:pb-28 bg-secondary border-t-2 border-ink/5 pt-12">
+    <div class="container-custom text-center">
+      <p class="text-muted text-sm">
+        {L('blog.footerCta')}{' '}
+        <a href={p('/contact')} class="text-accent underline-offset-4 hover:underline">{L('blog.getInTouch')}</a>
+        {' '}{L('blog.orExplore')}{' '}
+        <a href={p('/case-studies')} class="text-accent underline-offset-4 hover:underline">{L('common.caseStudies')}</a>.
+      </p>
+    </div>
+  </section>
+
+  <Footer />
+</Layout>

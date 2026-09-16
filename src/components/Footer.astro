@@ -1,121 +1,96 @@
 ---
 import { EnetLogo } from "./EnetLogo";
 import SocialIcons from "./SocialIcons.astro";
+import { business } from "../data/business";
+import { t, getLocaleFromUrl, type Locale } from "../i18n/i18n";
+
+const locale: Locale = getLocaleFromUrl(Astro.url);
+const L = (k: Parameters<typeof t>[1]) => t(locale, k);
+const p = (path: string) => `/${locale}${path === "/" ? "" : path}`;
 
 const currentYear = new Date().getFullYear();
-const base = (import.meta.env.BASE_URL || "/").replace(/\/$/, "") + "/";
 ---
 
-<footer class="bg-linear-to-b from-transparent to-secondary">
-  <EnetLogo
-    className="w-90 mx-auto mt-12 h-auto object-contain -mb-8"
-    primaryColor="#ffffff"
-  />
-  <p
-    class="text-accent text-lg leading-relaxed text-center px-4 max-w-2xl mx-auto font-heading font-bold tracking-wide text-shadow-accent/20 select-none animate-pulse
-    text-shadow-lg"
-  >
-    Growth through technology.
-  </p>
-  <div class="container-custom py-16">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-      <div>
-        <h4
-          class="text-white font-semibold mb-4 font-[family-name:var(--font-display)]"
-        >
-          Quick Links
-        </h4>
-        <ul class="space-y-3">
-          <li>
-            <a
-              href={base || "/"}
-              class="text-muted text-sm hover:text-accent transition-colors"
-              >Home</a
-            >
-          </li>
-          <li>
-            <a
-              href={`${base}about`}
-              class="text-muted text-sm hover:text-accent transition-colors"
-              >About</a
-            >
-          </li>
-          <li>
-            <a
-              href={`${base}services`}
-              class="text-muted text-sm hover:text-accent transition-colors"
-              >Services</a
-            >
-          </li>
-          <li>
-            <a
-              href={`${base}portfolio`}
-              class="text-muted text-sm hover:text-accent transition-colors"
-              >Portfolio</a
-            >
-          </li>
-          <li>
-            <a
-              href={`${base}contact`}
-              class="text-muted text-sm hover:text-accent transition-colors"
-              >Contact</a
-            >
-          </li>
-        </ul>
-      </div>
+<footer class="bg-ink text-white relative overflow-hidden">
+  <!-- Dual accent bar at top -->
+  <div class="flex h-1.5 w-full">
+    <div class="flex-1 bg-accent"></div>
+    <div class="flex-1 bg-fire"></div>
+  </div>
 
-      <div>
-        <h4
-          class="text-white font-semibold mb-4 font-[family-name:var(--font-display)]"
-        >
-          Services
-        </h4>
-        <ul class="space-y-3">
-          <li>
-            <a
-              href={`${base}services`}
-              class="text-muted text-sm hover:text-accent transition-colors"
-              >Web Development</a
-            >
-          </li>
-          <li>
-            <a
-              href={`${base}services`}
-              class="text-muted text-sm hover:text-accent transition-colors"
-              >Odoo ERP</a
-            >
-          </li>
-          <li>
-            <a
-              href={`${base}services`}
-              class="text-muted text-sm hover:text-accent transition-colors"
-              >Mobile Apps</a
-            >
-          </li>
-        </ul>
-      </div>
+  <!-- Halftone texture -->
+  <div
+    class="pointer-events-none absolute inset-0 halftone halftone-light opacity-30"
+    aria-hidden="true"
+  ></div>
 
-      <div>
-        <h4
-          class="text-white font-semibold mb-4 font-[family-name:var(--font-display)]"
-        >
-          Contact
-        </h4>
-        <ul class="space-y-3 text-muted text-sm">
-          <li>+20 127 6666 314</li>
-          <li>Inquiry@enet.systems</li>
-        </ul>
-        <p class="text-white font-semibold mt-6 mb-3 text-sm font-[family-name:var(--font-display)]">
-          Follow us
+  <!-- Giant background tagline -->
+  <div class="pointer-events-none absolute bottom-0 left-0 right-0 overflow-hidden" aria-hidden="true">
+    <p class="font-[family-name:var(--font-display)] text-[18vw] md:text-[14vw] font-bold leading-[0.8] text-white/[0.03] whitespace-nowrap select-none -mb-4">
+      ENET SYSTEMS
+    </p>
+  </div>
+
+  <div class="container-custom relative z-10 pt-16 pb-8">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 mb-12">
+      <!-- Brand -->
+      <div class="md:col-span-5">
+        <a href={p("/")} class="flex items-center mb-6">
+          <img src="/logo.svg" alt="ENET Systems LTD" class="h-16" />
+        </a>
+        <p class="text-lg font-bold font-[family-name:var(--font-display)] mb-3">
+          <span class="text-accent">{L("footer.tagline")}</span>
+        </p>
+        <p class="text-white/50 text-sm leading-relaxed max-w-sm mb-6">
+          ENET Systems LTD — delivering enterprise web solutions, Odoo ERP implementations, and mobile applications across Kuwait and the MENA region.
         </p>
         <SocialIcons />
       </div>
+
+      <!-- Quick Links -->
+      <div class="md:col-span-3 md:col-start-7">
+        <h4 class="text-white font-bold mb-5 font-[family-name:var(--font-display)] text-sm uppercase tracking-wider">
+          {L("footer.quickLinks")}
+        </h4>
+        <ul class="space-y-3">
+          <li><a href={p("/")} class="text-white/60 text-sm font-medium hover:text-accent transition-colors border-b border-transparent hover:border-accent">{L("nav.home")}</a></li>
+          <li><a href={p("/about")} class="text-white/60 text-sm font-medium hover:text-accent transition-colors border-b border-transparent hover:border-accent">{L("nav.about")}</a></li>
+          <li><a href={p("/services")} class="text-white/60 text-sm font-medium hover:text-accent transition-colors border-b border-transparent hover:border-accent">{L("nav.services")}</a></li>
+          <li><a href={p("/portfolio")} class="text-white/60 text-sm font-medium hover:text-accent transition-colors border-b border-transparent hover:border-accent">{L("common.portfolio")}</a></li>
+          <li><a href={p("/contact")} class="text-white/60 text-sm font-medium hover:text-accent transition-colors border-b border-transparent hover:border-accent">{L("nav.contact")}</a></li>
+        </ul>
+      </div>
+
+      <!-- Services + Contact -->
+      <div class="md:col-span-3">
+        <h4 class="text-white font-bold mb-5 font-[family-name:var(--font-display)] text-sm uppercase tracking-wider">
+          {L("footer.services")}
+        </h4>
+        <ul class="space-y-3 mb-8">
+          <li><a href={p("/services")} class="text-white/60 text-sm font-medium hover:text-fire transition-colors border-b border-transparent hover:border-fire">{L("footer.webDevelopment")}</a></li>
+          <li><a href={p("/services")} class="text-white/60 text-sm font-medium hover:text-fire transition-colors border-b border-transparent hover:border-fire">{L("footer.odooErp")}</a></li>
+          <li><a href={p("/services")} class="text-white/60 text-sm font-medium hover:text-fire transition-colors border-b border-transparent hover:border-fire">{L("footer.mobileApps")}</a></li>
+        </ul>
+
+        <h4 class="text-white font-bold mb-3 font-[family-name:var(--font-display)] text-sm uppercase tracking-wider">
+          {L("footer.contact")}
+        </h4>
+        <ul class="space-y-2 text-white/60 text-sm">
+          <li><a href={business.telHref} class="hover:text-accent transition-colors">{business.phoneDisplay}</a></li>
+          <li><a href={business.mailtoHref} class="hover:text-accent transition-colors">{business.emailDisplay}</a></li>
+        </ul>
+      </div>
     </div>
 
-    <div class="mt-12 pt-8 border-t border-border text-center">
-      <p class="text-muted text-sm">
-        © {currentYear} ENET SYSTEMS LTD - All rights reserved.
+    <!-- Bottom bar -->
+    <div class="pt-6 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4">
+      <p class="text-white/40 text-xs font-medium">
+        © {currentYear} {business.legalName} · {L("footer.rights")}
       </p>
+      <div class="flex items-center gap-2">
+        <span class="w-3 h-3 bg-accent rounded-full"></span>
+        <span class="w-3 h-3 bg-fire rounded-full"></span>
+      </div>
     </div>
   </div>
 </footer>

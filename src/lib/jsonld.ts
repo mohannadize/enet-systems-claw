@@ -1,8 +1,11 @@
+import { business, publicUrl } from "../data/business";
+
 /**
  * Type-safe JSON-LD builders for schema.org. Each returns a plain object ready to JSON.stringify.
- * Canonical site URL must match [astro.config.mjs] `site`.
+ * Canonical site URL comes from [src/data/business.ts] (keep in sync with astro.config `site`).
  */
-export const SITE_URL = "https://enet.systems" as const;
+
+export const SITE_URL = business.publicSiteUrl;
 export const ORGANIZATION_ID = `${SITE_URL}/#organization` as const;
 export const WEBSITE_ID = `${SITE_URL}/#website` as const;
 
@@ -11,8 +14,7 @@ const websiteRef = { "@id": WEBSITE_ID } as const;
 
 /** Build an absolute URL for a path (e.g. `/contact` → full origin URL). */
 export function siteUrl(path: string): string {
-  const normalized = path.startsWith("/") ? path : `/${path}`;
-  return `${SITE_URL}${normalized}`;
+  return publicUrl(path);
 }
 
 export type JsonLdObject = Record<string, unknown>;

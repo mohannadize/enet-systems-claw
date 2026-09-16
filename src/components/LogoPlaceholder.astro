@@ -55,22 +55,21 @@ const getGradient = (str: string) => {
 const gradient = forcedGradient ? gradientMap[forcedGradient] : getGradient(name);
 
 const sizeClasses = {
-  sm: 'w-12 h-12 text-sm shadow-lg',
-  md: 'w-20 h-20 text-xl shadow-xl',
-  lg: 'w-32 h-32 text-3xl shadow-2xl',
-  xl: 'w-40 h-40 text-4xl shadow-2xl',
+  sm: 'w-12 h-12 text-sm',
+  md: 'w-20 h-20 text-xl',
+  lg: 'w-32 h-32 text-3xl',
+  xl: 'w-40 h-40 text-4xl',
 };
 ---
 
 <div 
   class={`
-    ${sizeClasses[size]} 
-    rounded-2xl 
-    bg-gradient-to-br ${gradient} 
-    flex items-center justify-center 
+    ${sizeClasses[size]}
+    bg-gradient-to-br ${gradient}
+    flex items-center justify-center
     font-bold font-[family-name:var(--font-display)]
     text-white
-    ring-2 ring-white/10
+    border-2 border-ink/10
     transition-all duration-300
     ${className}
   `}

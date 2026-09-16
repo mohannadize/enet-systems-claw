@@ -1,31 +1,42 @@
 ---
 import SocialIcons from "./SocialIcons.astro";
 import { getServices } from "../lib/collections";
+import { t, dir, locales, getLocaleFromUrl, getLocaleUrl, type Locale } from "../i18n/i18n";
 
 const currentPath = Astro.url.pathname;
 const base = (import.meta.env.BASE_URL || "/").replace(/\/$/, "") + "/";
 
+const locale: Locale = getLocaleFromUrl(Astro.url);
+const L = (k: Parameters<typeof t>[1]) => t(locale, k);
+const otherLocale: Locale = locale === 'ar' ? 'en' : 'ar';
+const switchUrl = getLocaleUrl(Astro.url, otherLocale);
+
+/** Prefix a raw path with the active locale, e.g. "/about" -> "/ar/about". */
+const p = (path: string) => `/${locale}${path === "/" ? "" : path}`;
+
 type NavItem = { href: string; label: string };
 type NavLink = NavItem & { items?: NavItem[]; cta?: boolean };
 
-const serviceEntries = await getServices();
+const serviceEntries = await getServices(locale);
 const serviceItems: NavItem[] = serviceEntries.map((entry) => ({
-  href: `/services/${entry.id}`,
+  href: p(`/services/${entry.id}`),
   label: entry.data.title,
 }));
 
 const navLinks: NavLink[] = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
-  { href: "/case-studies", label: "Case Studies" },
+  { href: p("/"), label: L("nav.home") },
+  { href: p("/about"), label: L("nav.about") },
+  { href: p("/case-studies"), label: L("nav.caseStudies") },
   {
-    href: "/services",
-    label: "Services",
+    href: p("/services"),
+    label: L("nav.services"),
     items: serviceItems,
   },
-  { href: "/blog", label: "Blog" },
-  { href: "/contact", label: "Get started", cta: true },
+  { href: p("/blog"), label: L("nav.blog") },
+  { href: p("/contact"), label: L("nav.getStarted"), cta: true },
 ];
+
+const norm = (s: string) => s.replace(/\/+$/, "") || "/";
 
 const isActive = (href: string) => {
   if (href === base || href === "/") {
@@ -51,13 +62,29 @@ const ctaLink = navLinks.find((l) => l.cta);
 <!-- ── Desktop + mobile top bar ───────────────────────────────────────── -->
 <nav
   id="site-nav"
-  class="sticky top-0 z-50 border-b border-white/5 bg-primary/80 backdrop-blur-xl"
+  class="sticky top-0 z-50 border-b-2 border-ink/10 bg-primary/90 backdrop-blur-xl"
   aria-label="Main"
 >
+  <!-- Dual accent bar at very top -->
+  <div class="flex h-1 w-full">
+    <div class="flex-1 bg-accent"></div>
+    <div class="flex-1 bg-fire"></div>
+  </div>
+
   <div class="container-custom">
     <div class="flex h-16 items-center justify-between md:h-20">
-      <a href={base || "/"} class="flex h-12 items-center md:h-16">
-        <img src="/logo.svg" alt="ENET Systems LTD" class="h-12 py-2 md:h-16" />
+      <a href={p("/")} class="flex h-12 items-center md:h-16">
+        <img src="/logo-dark.svg" alt="ENET Systems LTD" class="h-12 py-2 md:h-16" />
+      </a>
+
+      <!-- Language switcher (desktop) -->
+      <a
+        href={switchUrl}
+        class="ml-2 hidden shrink-0 items-center gap-1 border-2 border-ink/15 px-3 py-1 text-xs font-bold text-muted transition-all hover:border-accent hover:text-accent md:inline-flex"
+        hreflang={otherLocale}
+        lang={otherLocale}
+      >
+        {locale === 'ar' ? 'EN' : 'ع'}<span aria-hidden="true">↔</span>
       </a>
 
       <!-- Desktop nav -->
@@ -68,9 +95,9 @@ const ctaLink = navLinks.find((l) => l.cta);
               <a
                 href={link.href}
                 class:list={[
-                  "btn-primary ml-2 shrink-0 text-sm md:ml-3",
+                  "btn-fire ml-2 shrink-0 text-sm md:ml-3",
                   isActive(link.href) &&
-                    "ring-2 ring-white/25 ring-offset-2 ring-offset-primary",
+                    "ring-2 ring-ink/15 ring-offset-2 ring-offset-primary",
                 ]}
               >
                 {link.label}
@@ -79,8 +106,8 @@ const ctaLink = navLinks.find((l) => l.cta);
               <details class="group relative">
                 <summary
                   class:list={[
-                    "flex cursor-pointer list-none items-center gap-1 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:text-accent [&::-webkit-details-marker]:hidden",
-                    isLinkActive(link) ? "text-accent" : "text-muted",
+                    "flex cursor-pointer list-none items-center gap-1 border-2 border-transparent px-3 py-2 text-sm font-bold transition-all hover:border-ink/15 [&::-webkit-details-marker]:hidden",
+                    isLinkActive(link) ? "text-accent border-accent/20 bg-accent/5" : "text-muted",
                   ]}
                 >
                   <span>{link.label}</span>
@@ -94,7 +121,7 @@ const ctaLink = navLinks.find((l) => l.cta);
                     <path
                       stroke-linecap="round"
                       stroke-linejoin="round"
-                      stroke-width="2"
+                      stroke-width="2.5"
                       d="M19 9l-7 7-7-7"
                     />
                   </svg>
@@ -103,14 +130,14 @@ const ctaLink = navLinks.find((l) => l.cta);
                   class="absolute left-0 top-full z-50 min-w-56 pt-2"
                   role="presentation"
                 >
-                  <div class="rounded-xl border border-border bg-secondary py-2 shadow-xl shadow-black/40 ring-1 ring-white/5">
+                  <div class="border-2 border-ink/10 bg-white py-2 shadow-2xl shadow-ink/10">
                     <a
                       href={link.href}
                       class:list={[
-                        "block px-4 py-2.5 text-sm font-medium transition-colors hover:bg-white/5 hover:text-accent",
+                        "block px-4 py-2.5 text-sm font-bold transition-colors hover:bg-accent/5 hover:text-accent border-l-2 border-transparent hover:border-accent",
                         isActive(link.href) &&
                           !link.items.some((i) => isActive(i.href))
-                          ? "text-accent"
+                          ? "text-accent border-accent bg-accent/5"
                           : "text-muted",
                       ]}
                     >
@@ -121,8 +148,8 @@ const ctaLink = navLinks.find((l) => l.cta);
                       <a
                         href={item.href}
                         class:list={[
-                          "block px-4 py-2.5 text-sm font-medium transition-colors hover:bg-white/5 hover:text-accent",
-                          isActive(item.href) ? "text-accent" : "text-muted",
+                          "block px-4 py-2.5 text-sm font-bold transition-colors hover:bg-fire/5 hover:text-fire border-l-2 border-transparent hover:border-fire",
+                          isActive(item.href) ? "text-fire border-fire bg-fire/5" : "text-muted",
                         ]}
                       >
                         {item.label}
@@ -135,8 +162,8 @@ const ctaLink = navLinks.find((l) => l.cta);
               <a
                 href={link.href}
                 class:list={[
-                  "rounded-md px-3 py-2 text-sm font-medium transition-colors hover:text-accent",
-                  isActive(link.href) ? "text-accent" : "text-muted",
+                  "border-2 border-transparent px-3 py-2 text-sm font-bold transition-all hover:border-ink/15",
+                  isActive(link.href) ? "text-accent border-accent/20 bg-accent/5" : "text-muted",
                 ]}
               >
                 {link.label}
@@ -149,10 +176,10 @@ const ctaLink = navLinks.find((l) => l.cta);
       <!-- Hamburger label — the CSS toggle trigger -->
       <label
         for="nav-toggle"
-        class="relative z-[80] flex h-11 w-11 cursor-pointer touch-manipulation flex-col items-center justify-center gap-[5px] rounded-lg text-white md:hidden"
-        aria-label="Toggle menu"
+        class="relative z-[80] flex h-11 w-11 cursor-pointer touch-manipulation flex-col items-center justify-center gap-[5px] border-2 border-ink/15 text-ink md:hidden"
+        aria-label={L("nav.toggleMenu")}
       >
-        <span class="ham-bar ham-bar-1 block h-[2px] w-6 origin-center rounded-full bg-current transition-all duration-300 ease-out" />
+        <span class="ham-bar ham-bar-1 block h-[2px] w-6 origin-center bg-current transition-all duration-300 ease-out" />
         <span class="ham-bar ham-bar-2 block h-[2px] w-6 rounded-full bg-current transition-all duration-300 ease-out" />
         <span class="ham-bar ham-bar-3 block h-[2px] w-6 origin-center rounded-full bg-current transition-all duration-300 ease-out" />
       </label>
@@ -161,32 +188,31 @@ const ctaLink = navLinks.find((l) => l.cta);
 </nav>
 
 <!-- ── Full-screen mobile menu ─────────────────────────────────────────── -->
-<!-- Slides in from the right, driven entirely by #nav-toggle:checked via peer -->
 <div
   id="mobile-panel"
-  class="fixed inset-0 z-[70] flex flex-col bg-primary transition-transform duration-300 ease-in-out translate-x-full peer-checked:translate-x-0 md:hidden"
+  class="fixed inset-0 z-[70] flex flex-col bg-ink transition-transform duration-300 ease-in-out translate-x-full peer-checked:translate-x-0 md:hidden"
   role="dialog"
   aria-modal="true"
   aria-label="Navigation"
 >
-  <!-- Decorative accent blobs -->
+  <!-- Decorative dual-tone accent blobs -->
   <div class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-    <div class="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-accent/8 blur-3xl"></div>
-    <div class="absolute bottom-0 -left-16 w-64 h-64 rounded-full bg-accent/5 blur-3xl"></div>
+    <div class="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-accent/15 blur-3xl"></div>
+    <div class="absolute bottom-0 -left-16 w-64 h-64 rounded-full bg-fire/10 blur-3xl"></div>
   </div>
 
   <!-- Top bar: logo + close button -->
-  <div class="relative flex h-16 shrink-0 items-center justify-between px-6 border-b border-white/5">
-    <a href={base || "/"} class="flex h-10 items-center">
+  <div class="relative flex h-16 shrink-0 items-center justify-between px-6 border-b border-white/10">
+    <a href={p("/")} class="flex h-10 items-center">
       <img src="/logo-small.svg" alt="ENET Systems LTD" class="h-12 py-2 md:h-16" />
     </a>
     <label
       for="nav-toggle"
-      class="flex h-11 w-11 cursor-pointer items-center justify-center rounded-lg text-muted transition-colors hover:text-white"
-      aria-label="Close menu"
+      class="flex h-11 w-11 cursor-pointer items-center justify-center border-2 border-white/20 text-white/80 transition-colors hover:text-white hover:border-white/40"
+      aria-label={L("nav.closeMenu")}
     >
       <svg class="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
       </svg>
     </label>
   </div>
@@ -200,31 +226,31 @@ const ctaLink = navLinks.find((l) => l.cta);
             <li>
               <details class="group/ms">
                 <summary class:list={[
-                  "flex cursor-pointer list-none items-center justify-between py-4 text-4xl font-bold font-[family-name:var(--font-display)] tracking-tight transition-colors [&::-webkit-details-marker]:hidden hover:text-accent",
-                  isLinkActive(link) ? "text-accent" : "text-white",
+                  "flex cursor-pointer list-none items-center justify-between py-4 text-4xl font-bold font-[family-name:var(--font-display)] tracking-tight transition-colors [&::-webkit-details-marker]:hidden hover:text-accent text-white",
+                  isLinkActive(link) && "text-accent",
                 ]}>
                   <span>{link.label}</span>
                   <svg
-                    class="size-7 shrink-0 text-muted transition-transform duration-200 group-open/ms:rotate-180"
+                    class="size-7 shrink-0 text-white/50 transition-transform duration-200 group-open/ms:rotate-180"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
                     aria-hidden="true"
                   >
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
                   </svg>
                 </summary>
 
                 <!-- Sub-links -->
-                <ul class="mt-1 mb-3 flex flex-col border-l-2 border-border pl-5 gap-0">
+                <ul class="mt-1 mb-3 flex flex-col border-l-2 border-accent/30 pl-5 gap-0">
                   <li>
                     <a
                       href={link.href}
                       class:list={[
-                        "flex items-center py-3 text-lg font-medium transition-colors hover:text-accent",
+                        "flex items-center py-3 text-lg font-bold transition-colors hover:text-accent",
                         isActive(link.href) && !link.items.some((i) => isActive(i.href))
                           ? "text-accent"
-                          : "text-muted",
+                          : "text-white/60",
                       ]}
                     >
                       All services
@@ -235,8 +261,8 @@ const ctaLink = navLinks.find((l) => l.cta);
                       <a
                         href={item.href}
                         class:list={[
-                          "flex items-center py-3 text-lg font-medium transition-colors hover:text-accent",
-                          isActive(item.href) ? "text-accent" : "text-muted",
+                          "flex items-center py-3 text-lg font-bold transition-colors hover:text-fire",
+                          isActive(item.href) ? "text-fire" : "text-white/60",
                         ]}
                       >
                         {item.label}
@@ -265,20 +291,30 @@ const ctaLink = navLinks.find((l) => l.cta);
   </div>
 
   <!-- Bottom: CTA + social -->
-  <div class="relative shrink-0 border-t border-white/5 px-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-6 space-y-5">
+  <div class="relative shrink-0 border-t border-white/10 px-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-6 space-y-5">
     {
       ctaLink && (
         <a
           href={ctaLink.href}
-          class="btn-primary flex min-h-[3.25rem] w-full items-center justify-center text-base font-semibold"
+          class="btn-fire flex min-h-[3.25rem] w-full items-center justify-center text-base font-bold"
         >
           {ctaLink.label}
         </a>
       )
     }
     <div class="flex items-center justify-between">
-      <p class="text-[13px] font-medium text-muted uppercase tracking-widest">Connect</p>
-      <SocialIcons size="sm" />
+      <p class="text-[13px] font-bold text-white/50 uppercase tracking-widest">{L("nav.connect")}</p>
+      <div class="flex items-center gap-2">
+        <a
+          href={switchUrl}
+          class="inline-flex items-center justify-center border-2 border-white/20 bg-white/5 px-3 h-9 text-xs font-bold text-white/70 transition-colors hover:border-accent hover:text-accent"
+          hreflang={otherLocale}
+          lang={otherLocale}
+        >
+          {locale === 'ar' ? 'English' : 'العربية'}
+        </a>
+        <SocialIcons size="sm" />
+      </div>
     </div>
   </div>
 </div>
@@ -296,7 +332,6 @@ const ctaLink = navLinks.find((l) => l.cta);
     transform: translateY(-7px) rotate(-45deg);
   }
 
-  /* Prevent body scroll while menu is open (set via JS for reliability) */
   body.menu-open {
     overflow: hidden;
   }
@@ -308,16 +343,13 @@ const ctaLink = navLinks.find((l) => l.cta);
 
     if (!toggle) return;
 
-    /* Reset state on each init (handles view-transition navigation) */
     toggle.checked = false;
     document.body.classList.remove("menu-open");
 
-    /* Scroll lock */
     toggle.addEventListener("change", () => {
       document.body.classList.toggle("menu-open", toggle.checked);
     });
 
-    /* Escape to close */
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && toggle.checked) {
         toggle.checked = false;
@@ -325,7 +357,6 @@ const ctaLink = navLinks.find((l) => l.cta);
       }
     });
 
-    /* Close when navigating via a link */
     document.querySelectorAll("#mobile-panel a").forEach((el) => {
       el.addEventListener("click", () => {
         toggle.checked = false;
@@ -333,7 +364,6 @@ const ctaLink = navLinks.find((l) => l.cta);
       });
     });
 
-    /* Close desktop dropdowns when clicking outside */
     document.addEventListener("click", (e) => {
       const target = e.target as Node;
       document.querySelectorAll("#site-nav details").forEach((d) => {

@@ -1,0 +1,528 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Navbar from "../../components/Navbar.astro";
+import Footer from "../../components/Footer.astro";
+import LogoPlaceholder from "../../components/LogoPlaceholder.astro";
+import TechnologyMarquee from "../../components/TechnologyMarquee.astro";
+import PixelGrid from "../../components/PixelGrid";
+import {
+  getServices,
+  getCaseStudies,
+  getBlogPosts,
+  serviceColors,
+  serviceLabel,
+} from "../../lib/collections";
+import { buildWebPage, siteUrl } from "../../lib/jsonld";
+import { ArrowRightCircleIcon } from "@heroicons/react/24/outline";
+import OdooIcon from "../../components/icons/odoo-logo.astro";
+import WebIcon from "../../components/icons/web_icon.astro";
+import MobileIcon from "../../components/icons/mobile_icon.astro";
+import { TextEffect } from "../../components/text-effect";
+import { t, type Locale } from "../../i18n/i18n";
+
+const { locale } = Astro.props as { locale: Locale };
+const L = (k: Parameters<typeof t>[1]) => t(locale, k);
+const p = (path: string) => `/${locale}${path === "/" ? "" : path}`;
+
+const servicesEntries = await getServices(locale);
+const caseStudies = await getCaseStudies(locale);
+const featuredStudies = caseStudies.slice(0, 6);
+const latestBlogPosts = (await getBlogPosts(locale)).slice(0, 3);
+
+const formatBlogDate = (d: Date) =>
+  d.toLocaleDateString(locale === "ar" ? "ar-EG" : "en-GB", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+
+const testimonials = [
+  {
+    quote:
+      "We needed Odoo live without freezing day-to-day operations. ENET planned the cutover, trained our staff, and stayed close after go-live — the kind of partner you want when ERP touches every department.",
+    name: "Ahmad R.",
+    title: "Group IT Manager",
+    org: "Multi-branch retail · Kuwait",
+  },
+  {
+    quote:
+      "Our storefront was fast in the office and slow for customers on mobile. They profiled the stack, fixed the real bottlenecks, and gave us a checklist so we do not slide backwards after launch.",
+    name: "Layla M.",
+    title: "Head of E-commerce",
+    org: "Fashion & beauty brand · GCC",
+  },
+  {
+    quote:
+      "Clear communication, realistic timelines, and engineers who understand both product and infrastructure. They have shipped multiple releases for us and remain our first call for complex builds.",
+    name: "Faisal T.",
+    title: "Managing Director",
+    org: "Industrial supplies · Kuwait",
+  },
+];
+
+const testimonialTranslations = {
+  ar: {
+    quotes: [
+      'احتاجنا إلى تفعيل نظام أودو دون تعطيل العمليات اليومية. خططت ENET للترحيل ودرّبت فريقنا وبقيت قريبة بعد الإطلاق — النوع الذي تريده من الشريك حين تمسّ ERP كل قسم.',
+      'كان متجرنا سريعاً في المكتب وبطيئاً لعملاء الجوال. حلّلوا المنظومة وأصلحوا الاختناقات الحقيقية وقدّموا لنا قائمة تحقق حتى لا نتراجع بعد الإطلاق.',
+      'تواصل واضح وجداول زمنية واقعية ومهندسون يفهمون المنتج والبنية التحتية. أطلقوا لنا إصدارات متعددة وبقوا خيارنا الأول للمشاريع المعقدة.',
+    ],
+    titles: ['مدير تقنية معلومات المجموعة', 'رئيسة التجارة الإلكترونية', 'المدير الإداري'],
+    orgs: ['تجارة تجزئة متعددة الفروع · الكويت', 'علامة أزياء وتجميل · الخليج', 'مستلزمات صناعية · الكويت'],
+  },
+};
+
+const localizedTestimonials = testimonials.map((item, i) => ({
+  quote:
+    (locale === "ar"
+      ? testimonialTranslations.ar.quotes[i]
+      : item.quote) ?? item.quote,
+  name: item.name,
+  title:
+    (locale === "ar"
+      ? testimonialTranslations.ar.titles[i]
+      : item.title) ?? item.title,
+  org:
+    (locale === "ar"
+      ? testimonialTranslations.ar.orgs[i]
+      : item.org) ?? item.org,
+}));
+
+const stats = [
+  { number: "10+", label: L("home.statYears") },
+  { number: "150+", label: L("home.statProjects") },
+  { number: "50+", label: L("home.statClients") },
+  { number: "24/7", label: L("home.statSupport") },
+];
+
+const homeDescription =
+  "ENET Systems LTD delivers enterprise web solutions, Odoo ERP implementations, and mobile applications that transform businesses across Kuwait and the MENA region.";
+const homeDescriptionAr =
+  'تقدم ENET Systems LTD حلول الويب المؤسسية وأنظمة أودو ERP وتطبيقات الجوال التي تحوّل الأعمال في الكويت ومنطقة الشرق الأوسط وشمال أفريقيا.';
+---
+
+<Layout
+  title="ENET Systems LTD | Digital Transformation Partner"
+  description={locale === "ar" ? homeDescriptionAr : homeDescription}
+  jsonLd={buildWebPage({
+    name: "ENET Systems LTD | Digital Transformation Partner",
+    description: locale === "ar" ? homeDescriptionAr : homeDescription,
+    url: siteUrl(p("/")),
+  })}
+>
+  <Navbar />
+
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <!-- HERO SECTION — Bold, oversized, dual-tone -->
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <section class="relative min-h-[calc(100vh-100px)] flex items-center overflow-hidden bg-ink">
+    <img
+      src="/images/hero.webp"
+      alt="Hero Background"
+      class="absolute inset-0 w-full h-full object-cover opacity-20"
+      fetchpriority="high"
+    />
+    <!-- Background Effects -->
+    <div class="absolute inset-0">
+      <div class="absolute top-1/4 -left-32 w-96 h-96 bg-accent/20 rounded-full blur-3xl"></div>
+      <div class="absolute bottom-1/4 -right-32 w-96 h-96 bg-fire/15 rounded-full blur-3xl"></div>
+      <div class="pointer-events-none absolute inset-0 halftone halftone-light opacity-20" aria-hidden="true"></div>
+      <div class="pointer-events-none absolute top-0 right-0 h-full w-1/2 halftone-organic-accent opacity-30 ht-mask-r" aria-hidden="true"></div>
+      <div class="absolute inset-0 bg-linear-to-b from-transparent to-ink"></div>
+    </div>
+
+    <div class="container-custom relative z-10">
+      <div class="flex items-center gap-10 xl:gap-16">
+        <!-- Desktop pixel grid — left column (lg+) -->
+        <div class="hidden lg:flex shrink-0 opacity-0 animate-fade-in animate-delay-200">
+          <PixelGrid client:load cellSize={16} gap={2} />
+        </div>
+
+        <!-- Hero text — flex-1 so it fills remaining space -->
+        <div class="flex-1 min-w-0 max-w-2xl relative">
+          <!-- Mobile: pixel grid faded behind text -->
+          <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-10 lg:hidden">
+            <PixelGrid client:load cellSize={13} gap={2} />
+          </div>
+
+          <!-- Badge -->
+          <div class="relative mb-6 opacity-0 animate-slide-up">
+            <span class="inline-flex items-center gap-2 px-4 py-2 border-2 border-accent/40 bg-accent/10 text-accent text-xs font-bold uppercase tracking-wider">
+              <span class="w-2 h-2 bg-accent rounded-full animate-pulse"></span>
+              Kuwait · MENA Region
+            </span>
+          </div>
+
+          <h1
+            class="text-5xl md:text-7xl lg:text-8xl font-bold font-heading leading-[1.05] text-white opacity-0 animate-slide-up animate-delay-100"
+          >
+            {L("home.softwareThat")}<br/>
+            <span class="text-gradient-dual">{L("home.drivesGrowth")}</span>
+          </h1>
+
+          <p
+            class="text-base md:text-lg text-white/60 mt-8 max-w-2xl leading-relaxed mb-8 opacity-0 animate-slide-up animate-delay-200"
+          >
+            {L("home.subtitle")}
+          </p>
+
+          <div
+            class="flex flex-wrap gap-4 opacity-0 animate-slide-up animate-delay-300 items-center"
+          >
+            <a href={p("/contact")} class="btn-fire text-lg px-4 md:px-8 py-2 md:py-3">
+              {L("common.getInTouch")}
+            </a>
+            <a
+              href={p("/portfolio")}
+              class="text-lg text-white/70 hover:text-white transition-colors duration-300 px-4 md:px-8 py-2 md:py-4 flex items-center gap-2 group border-2 border-transparent hover:border-white/20"
+            >
+              {L("home.viewOurWork")}
+              <ArrowRightCircleIcon
+                className="w-5 h-5 group-hover:translate-x-1 rtl:-translate-x-1 rtl:rotate-180 opacity-50 group-hover:opacity-100 transition duration-300"
+              />
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 opacity-0 animate-slide-up animate-delay-500">
+      <div class="w-6 h-10 border-2 border-white/30 flex justify-center pt-2">
+        <div class="w-1 h-3 bg-accent animate-bounce"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <!-- TECHNOLOGY MARQUEE — Bold strip -->
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <section class="py-8 bg-white border-y-2 border-ink/10">
+    <div class="container-custom">
+      <p class="text-center text-xs font-bold uppercase tracking-widest text-ink/40 mb-6">
+        {L("home.techHighlight")}
+      </p>
+      <TechnologyMarquee />
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <!-- SERVICES SECTION — Bold cards with dual accents -->
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <section class="section-padding bg-secondary">
+    <div class="container-custom">
+      <div class="mb-16 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+        <div>
+          <span class="badge badge-accent mb-4 opacity-0 animate-slide-up">{L("home.whatWeDo")}</span>
+          <h2 class="text-5xl md:text-6xl font-bold font-[family-name:var(--font-display)] mt-4 opacity-0 animate-slide-up animate-delay-100 leading-[1.05]">
+            {L("home.ourServices")}
+          </h2>
+        </div>
+        <p class="text-muted text-lg max-w-md opacity-0 animate-slide-up animate-delay-200">
+          {L("home.servicesSub")}
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6">
+        {
+          servicesEntries.map((entry, i) => {
+            const service = entry.data;
+            const desc = service.shortDescription ?? service.description;
+            const isAlt = i % 2 === 1;
+            return (
+              <a
+                href={p(`/services/${entry.id}`)}
+                class:list={[
+                  "group relative bg-white p-8 border-2 border-ink/10 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl opacity-0 animate-slide-up",
+                  isAlt ? "hover:border-fire hover:shadow-fire/15" : "hover:border-accent hover:shadow-accent/15",
+                ]}
+                style={`animation-delay: ${(i + 3) * 100}ms`}
+              >
+                <!-- Accent corner -->
+                <div class:list={[
+                  "absolute top-0 left-0 w-16 h-1.5",
+                  isAlt ? "bg-fire" : "bg-accent",
+                ]}></div>
+
+                <div
+                  class:list={[
+                    "w-16 h-16 flex items-center justify-center mb-6 transition-all duration-300 [&_svg]:w-8 [&_svg]:h-8",
+                    isAlt
+                      ? "bg-fire/10 text-fire group-hover:bg-fire group-hover:text-white"
+                      : "bg-accent/10 text-accent group-hover:bg-accent group-hover:text-white",
+                  ]}
+                  set:html={service.icon}
+                />
+                <h3 class="text-2xl font-bold font-[family-name:var(--font-display)] mb-4">
+                  {service.title}
+                </h3>
+                <p class="text-muted leading-relaxed mb-6">{desc}</p>
+                <div class:list={[
+                  "inline-flex items-center gap-2 text-sm font-bold border-b-2 pb-0.5 transition-all group-hover:gap-3",
+                  isAlt ? "text-fire border-fire/30" : "text-accent border-accent/30",
+                ]}>
+                  {L("common.learnMore")}
+                  <svg class="w-4 h-4 transition-transform group-hover:translate-x-1 rtl:group-hover:-translate-x-1 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                  </svg>
+                </div>
+              </a>
+            );
+          })
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <!-- CASE STUDIES SECTION — Ink background, bold cards -->
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <section class="section-padding bg-ink relative overflow-hidden">
+    <!-- Decorative halftone -->
+    <div class="pointer-events-none absolute inset-0 halftone-organic-accent opacity-20" aria-hidden="true"></div>
+    <div class="pointer-events-none absolute -top-32 -right-32 w-96 h-96 bg-fire/10 rounded-full blur-3xl" aria-hidden="true"></div>
+
+    <div class="container-custom relative z-10">
+      <div class="mb-16 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+        <div>
+          <span class="badge badge-fire mb-4 opacity-0 animate-slide-up" style="border-color: var(--color-fire); color: var(--color-fire); background: rgba(255,107,53,0.1);">Client Stories</span>
+          <h2 class="text-5xl md:text-6xl font-bold font-[family-name:var(--font-display)] mt-4 text-white opacity-0 animate-slide-up animate-delay-100 leading-[1.05]">
+            {L("home.caseStudies")}
+          </h2>
+        </div>
+        <p class="text-white/60 text-lg max-w-md opacity-0 animate-slide-up animate-delay-200">
+          {L("home.caseStudiesSub")}
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {
+          featuredStudies.map((cs, i) => {
+            const study = cs.data;
+            return (
+              <a
+                href={p(`/case-studies/${cs.id}`)}
+                class="group relative bg-ink-soft p-6 border border-white/10 hover:border-accent/50 transition-all duration-400 hover:-translate-y-1 hover:shadow-2xl hover:shadow-accent/10 opacity-0 animate-slide-up"
+                style={`animation-delay: ${(i + 2) * 80}ms`}
+                aria-label={`${L("common.readCaseStudy")}: ${study.name}`}
+              >
+                <div class="flex items-start justify-between gap-3 mb-5">
+                  <LogoPlaceholder
+                    name={study.name}
+                    size="md"
+                    gradient={study.gradient as any}
+                  />
+                  <div class="flex flex-wrap gap-1.5 justify-end">
+                    {study.services.map((svc) => (
+                      <span class={`inline-flex items-center px-2 py-0.5 text-xs font-bold border ${serviceColors[svc]}`}>
+                        {serviceLabel(svc, locale)}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <h3 class="font-bold text-lg font-[family-name:var(--font-display)] mb-1.5 text-white group-hover:text-accent transition-colors">
+                  {study.name}
+                </h3>
+                <p class="text-white/50 text-sm leading-relaxed line-clamp-2">{study.desc}</p>
+
+                <div class="mt-5 flex items-center gap-1.5 text-xs font-bold text-white/40 group-hover:text-accent transition-colors group-hover:gap-2.5 duration-300">
+                  {L("common.readCaseStudy")}
+                  <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                  </svg>
+                </div>
+              </a>
+            );
+          })
+        }
+      </div>
+
+      <div class="text-center mt-12 opacity-0 animate-slide-up animate-delay-500">
+        <a href={p("/case-studies")} class="btn-outline-accent">{L("common.viewAllCaseStudies")}</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <!-- STATS SECTION — Dual gradient band -->
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <section class="relative overflow-hidden py-20 section-gradient-dual">
+    <div class="pointer-events-none absolute inset-0 halftone-organic-light opacity-30 ht-mask-tb" aria-hidden="true"></div>
+    <div class="container-custom relative z-10">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-white/30">
+        {
+          stats.map((stat, i) => (
+            <div class="text-center opacity-0 animate-slide-up" style={`animation-delay: ${(i + 5) * 100}ms`}>
+              <div class="text-5xl md:text-7xl font-bold font-[family-name:var(--font-display)] text-white mb-2 tracking-tight">
+                {stat.number}
+              </div>
+              <div class="text-white/80 font-bold text-sm uppercase tracking-wider">{stat.label}</div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <!-- TESTIMONIALS SECTION -->
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <section class="section-padding bg-white relative overflow-hidden">
+    <div class="pointer-events-none absolute top-1/2 left-0 w-[min(90vw,520px)] h-[min(90vw,520px)] -translate-y-1/2 -translate-x-1/2 rounded-full bg-fire/5 blur-3xl" aria-hidden="true" />
+    <div class="pointer-events-none absolute inset-0 halftone halftone-accent opacity-30 ht-mask-tb" aria-hidden="true" />
+
+    <!-- Giant background quotation mark -->
+    <div class="pointer-events-none select-none absolute inset-0 flex items-center justify-center overflow-hidden" aria-hidden="true">
+      <span class="font-[family-name:var(--font-display)] text-[32rem] md:text-[42rem] leading-none font-bold text-ink/[0.04] -translate-y-8" style="line-height:1">
+        &ldquo;
+      </span>
+    </div>
+
+    <div class="container-custom relative z-10">
+      <div class="text-center mb-16">
+        <span class="badge badge-accent mb-4 opacity-0 animate-slide-up">{L("home.clientVoices")}</span>
+        <h2 class="text-5xl md:text-6xl font-bold font-[family-name:var(--font-display)] mt-4 opacity-0 animate-slide-up animate-delay-100 leading-[1.05]">
+          {L("home.whatPartnersSay")}
+        </h2>
+        <p class="text-muted text-lg mt-4 max-w-2xl mx-auto opacity-0 animate-slide-up animate-delay-200">
+          {L("home.partnersSub")}
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6 lg:gap-8">
+        {
+          localizedTestimonials.map((t, i) => (
+            <figure
+              class:list={[
+                "relative bg-white p-6 md:p-8 flex flex-col border-2 transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl opacity-0 animate-slide-up",
+                i % 2 === 1 ? "border-fire/20 hover:border-fire hover:shadow-fire/10" : "border-accent/20 hover:border-accent hover:shadow-accent/10",
+              ]}
+              style={`animation-delay: ${(i + 2) * 100}ms`}
+            >
+              <span class:list={[
+                "font-[family-name:var(--font-display)] text-5xl leading-none select-none",
+                i % 2 === 1 ? "text-fire/30" : "text-accent/30",
+              ]} aria-hidden="true">
+                &ldquo;
+              </span>
+              <blockquote class="text-[0.95rem] md:text-base leading-relaxed text-ink/70 -mt-4 flex-1">
+                <p>{t.quote}</p>
+              </blockquote>
+              <figcaption class="mt-8 pt-6 border-t-2 border-ink/5">
+                <cite class="not-italic font-bold text-ink font-[family-name:var(--font-display)]">
+                  {t.name}
+                </cite>
+                <p class="text-sm text-muted mt-1">
+                  {t.title}
+                  <span class="text-border" aria-hidden="true">{" · "}</span>
+                  {t.org}
+                </p>
+              </figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <!-- LATEST BLOG -->
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  {
+    latestBlogPosts.length > 0 && (
+      <section class="section-padding bg-secondary border-t-2 border-ink/5">
+        <div class="container-custom">
+          <div class="mb-16 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+            <div>
+              <span class="badge badge-fire mb-4 opacity-0 animate-slide-up">{L("home.insights")}</span>
+              <h2 class="text-5xl md:text-6xl font-bold font-[family-name:var(--font-display)] mt-4 opacity-0 animate-slide-up animate-delay-100 leading-[1.05]">
+                {L("home.fromTheBlog")}
+              </h2>
+            </div>
+            <p class="text-muted text-lg max-w-md opacity-0 animate-slide-up animate-delay-200">
+              {L("home.blogSub")}
+            </p>
+          </div>
+
+          <div class="grid md:grid-cols-3 gap-6">
+            {latestBlogPosts.map((post, i) => {
+              const { title, description, pubDate, author } = post.data;
+              return (
+                <a
+                  href={p(`/blog/${post.id}`)}
+                  class="group flex flex-col bg-white p-6 md:p-7 border-2 border-ink/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-ink/10 hover:border-accent opacity-0 animate-slide-up"
+                  style={`animation-delay: ${(i + 2) * 90}ms`}
+                >
+                  <time
+                    datetime={pubDate.toISOString()}
+                    class="text-xs font-bold uppercase tracking-wide text-muted mb-3"
+                  >
+                    {formatBlogDate(pubDate)}
+                    {author ? ` · ${author}` : ""}
+                  </time>
+                  <h3 class="text-lg md:text-xl font-bold font-[family-name:var(--font-display)] mb-3 group-hover:text-accent transition-colors leading-snug">
+                    {title}
+                  </h3>
+                  <p class="text-muted text-sm leading-relaxed line-clamp-3 flex-1 mb-5">
+                    {description}
+                  </p>
+                  <span class="text-sm font-bold text-accent inline-flex items-center gap-1.5 mt-auto group-hover:gap-2.5 transition-all border-b-2 border-accent/30 pb-0.5">
+                    {L("common.readArticle")}
+                    <svg
+                      class="w-4 h-4 transition-transform group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 rtl:rotate-180"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                    </svg>
+                  </span>
+                </a>
+              );
+            })}
+          </div>
+
+          <div class="text-center mt-12 opacity-0 animate-slide-up animate-delay-500">
+            <a href={p("/blog")} class="btn-outline">
+              {L("common.viewAllArticles")}
+            </a>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <!-- CTA SECTION — Bold ink with dual glow -->
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <section class="section-padding bg-ink relative overflow-hidden">
+    <div class="absolute inset-0">
+      <div class="absolute top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[260px] bg-accent/10 rounded-full blur-3xl"></div>
+      <div class="absolute top-1/2 right-1/4 translate-x-1/2 -translate-y-1/2 w-[600px] h-[260px] bg-fire/10 rounded-full blur-3xl"></div>
+    </div>
+    <div class="pointer-events-none absolute inset-0 halftone halftone-light opacity-15 ht-mask-tb" aria-hidden="true"></div>
+    <div class="container-custom relative z-10 text-center">
+      <h2 class="text-5xl md:text-7xl font-bold font-[family-name:var(--font-display)] text-white opacity-0 animate-slide-up leading-[1.05]">
+        {L("home.readyToTransform")}
+      </h2>
+      <p class="text-white/60 text-lg mt-6 max-w-xl mx-auto opacity-0 animate-slide-up animate-delay-100">
+        {L("home.letsDiscuss")}
+      </p>
+      <div class="flex flex-wrap justify-center gap-4 mt-10 opacity-0 animate-slide-up animate-delay-200 items-center">
+        <a href={p("/contact")} class="btn-fire text-lg px-8 py-3">
+          {L("common.getInTouch")}
+        </a>
+        <a
+          href={p("/services")}
+          class="text-lg text-white/70 hover:text-white transition-colors duration-300 px-8 py-3 border-2 border-white/20 hover:border-white/40"
+        >
+          {L("common.ourServices")}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+</Layout>

@@ -1,0 +1,13 @@
+---
+import { getCollection } from 'astro:content';
+import { entryLocale, entrySlug } from '../../../lib/collections';
+import PortfolioDetailPage from '../../../components/pages/PortfolioDetailPage.astro';
+
+export async function getStaticPaths() {
+  const entries = (await getCollection('portfolio')).filter((e) => entryLocale(e) === 'en');
+  return entries.map((entry) => ({ params: { slug: entrySlug(entry.id) }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+---
+<PortfolioDetailPage entry={entry} locale="en" />

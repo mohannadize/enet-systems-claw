@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import { business } from './src/data/business.ts';
 
 import tailwindcss from '@tailwindcss/vite';
 
@@ -11,8 +12,17 @@ import mdx from '@astrojs/mdx';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://enet.systems',
+  site: business.publicSiteUrl,
   base: '/',
+
+  i18n: {
+    locales: ['en', 'ar'],
+    defaultLocale: 'en',
+    routing: {
+      prefixDefaultLocale: true,
+      redirectToDefaultLocale: true,
+    },
+  },
 
   vite: {
     plugins: [tailwindcss()],

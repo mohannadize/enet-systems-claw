@@ -1,5 +1,6 @@
 ---
-import { ORGANIZATION_ID, SITE_URL, WEBSITE_ID, type JsonLdObject } from "../lib/jsonld";
+import { business } from "../data/business";
+import { ORGANIZATION_ID, WEBSITE_ID, type JsonLdObject } from "../lib/jsonld";
 
 interface Props {
   description: string;
@@ -8,27 +9,30 @@ interface Props {
 
 const { description, jsonLd } = Astro.props;
 
-const orgUrl = SITE_URL;
-const logoUrl = `${SITE_URL}/logo.svg`;
+const orgUrl = business.publicSiteUrl;
+const logoUrl = `${orgUrl}${business.logoPath}`;
 
 const organizationSchema: JsonLdObject = {
   "@context": "https://schema.org",
   "@id": ORGANIZATION_ID,
   "@type": "Organization",
-  name: "ENET Systems LTD",
+  name: business.legalName,
   url: orgUrl,
   logo: logoUrl,
-  description:
-    "ENET Systems LTD - Your trusted partner for digital transformation, providing Odoo ERP, Web Development, and Mobile App solutions.",
+  email: business.email,
+  telephone: business.phoneE164,
+  description: business.organizationDescription,
   address: {
     "@type": "PostalAddress",
-    addressCountry: "KW",
+    addressCountry: business.address.addressCountry,
   },
   contactPoint: {
     "@type": "ContactPoint",
     contactType: "customer service",
-    areaServed: "KW",
-    availableLanguage: ["English", "Arabic"],
+    telephone: business.phoneE164,
+    email: business.email,
+    areaServed: business.areaServed,
+    availableLanguage: [...business.availableLanguages],
   },
 };
 
@@ -36,7 +40,7 @@ const websiteSchema: JsonLdObject = {
   "@context": "https://schema.org",
   "@id": WEBSITE_ID,
   "@type": "WebSite",
-  name: "ENET Systems",
+  name: business.shortName,
   url: orgUrl,
   description: description,
   publisher: { "@id": ORGANIZATION_ID },
