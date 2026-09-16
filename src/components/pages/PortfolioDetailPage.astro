@@ -4,13 +4,10 @@ import Layout from '../../layouts/Layout.astro';
 import Navbar from '../../components/Navbar.astro';
 import Footer from '../../components/Footer.astro';
 import LogoPlaceholder from '../../components/LogoPlaceholder.astro';
-import { serviceLabel, entrySlug } from '../../lib/collections';
+import { serviceLabel } from '../../lib/collections';
 import { buildPortfolioProject, siteUrl } from '../../lib/jsonld';
-import { t, type Locale } from '../../i18n/i18n';
 
-const { entry, locale } = Astro.props as { entry: any; locale: Locale };
-const L = (k: Parameters<typeof t>[1]) => t(locale as Locale, k);
-const p = (path: string) => `/${locale}${path === "/" ? "" : path}`;
+const { entry } = Astro.props as { entry: any };
 const { Content } = await render(entry);
 
 const categoryColors: Record<string, string> = {
@@ -20,18 +17,18 @@ const categoryColors: Record<string, string> = {
   mobile: 'bg-emerald-500/10 text-emerald-700 border-emerald-500/20',
 };
 
-const categoryLabel = serviceLabel(entry.data.category, locale as Locale);
+const categoryLabel = serviceLabel(entry.data.category);
 const categoryColor = categoryColors[entry.data.category] ?? 'bg-accent/10 text-accent border-accent/20';
 
 const liveUrl = entry.data.url
   ? (entry.data.url.startsWith('http') ? entry.data.url : `https://${entry.data.url}`)
   : null;
 
-const portfolioPageUrl = siteUrl(p(`/portfolio/${entrySlug(entry.id)}`));
+const portfolioPageUrl = siteUrl(`/portfolio/${entry.id}`);
 ---
 
 <Layout
-  title={`${entry.data.name} | ${L('common.portfolio')} | ENET Systems`}
+  title={`${entry.data.name} | ${'Portfolio'} | ENET Systems`}
   description={entry.data.desc}
   jsonLd={buildPortfolioProject({
     name: entry.data.name,
@@ -53,13 +50,13 @@ const portfolioPageUrl = siteUrl(p(`/portfolio/${entrySlug(entry.id)}`));
     <div class="container-custom relative z-10">
       <!-- Back link -->
       <a
-        href={p('/portfolio')}
+        href={'/portfolio'}
         class="inline-flex items-center gap-2 text-white/50 hover:text-accent transition-colors mb-10 group"
       >
         <svg class="w-4 h-4 transition-transform group-hover:-translate-x-1 rtl:group-hover:translate-x-1 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
-        {L('common.backToPortfolio')}
+        {'Portfolio'}
       </a>
 
       <div class="flex flex-col md:flex-row md:items-center gap-8">
@@ -89,7 +86,7 @@ const portfolioPageUrl = siteUrl(p(`/portfolio/${entrySlug(entry.id)}`));
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
               </svg>
-              {L('common.visitWebsite')}
+              {'Visit Website'}
               <svg class="w-4 h-4 transition-transform group-hover:translate-x-1 rtl:group-hover:-translate-x-1 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
               </svg>
@@ -116,14 +113,14 @@ const portfolioPageUrl = siteUrl(p(`/portfolio/${entrySlug(entry.id)}`));
     </div>
     <div class="container-custom relative z-10 text-center">
       <h2 class="text-4xl md:text-6xl font-bold font-[family-name:var(--font-display)] mb-4 text-white leading-[1.05]">
-        {L('detail.readyToBuildPortfolio')}
+        {'Ready to build something like this?'}
       </h2>
       <p class="text-white/60 mb-8 max-w-xl mx-auto text-lg">
-        {L('detail.pfCtaDesc')}
+        {'Let\'s talk about what we can create together.'}
       </p>
       <div class="flex flex-wrap justify-center gap-4">
-        <a href={p('/contact')} class="btn-fire text-lg px-8 py-4">{L('common.getInTouch')}</a>
-        <a href={p('/portfolio')} class="btn-outline-accent text-lg px-8 py-4">{L('common.moreProjects')}</a>
+        <a href={'/contact'} class="btn-fire text-lg px-8 py-4">{'Get in Touch'}</a>
+        <a href={'/portfolio'} class="btn-outline-accent text-lg px-8 py-4">{'More Projects'}</a>
       </div>
     </div>
   </section>

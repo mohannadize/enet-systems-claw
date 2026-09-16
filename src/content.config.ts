@@ -45,10 +45,9 @@ const services = defineCollection({
   loader: glob({
     pattern: '**/*.mdx',
     base: './src/content/services',
-    locale: true,
     generateId: ({ entry }) => {
-      // en/web-development/index.mdx → en/web-development
-      // en/web-development/performance.mdx → en/web-development/performance
+      // web-development/index.mdx → web-development
+      // web-development/performance.mdx → web-development/performance
       return entry.replace(/\/index\.mdx$/, '').replace(/\.mdx$/, '');
     },
   }),
@@ -59,7 +58,6 @@ const portfolio = defineCollection({
   loader: glob({
     pattern: '**/*.mdx',
     base: './src/content/portfolio',
-    locale: true,
     generateId: ({ entry }) => entry.replace(/\.mdx$/, ''),
   }),
   schema: portfolioProjectSchema,
@@ -69,7 +67,6 @@ const caseStudies = defineCollection({
   loader: glob({
     pattern: '**/*.mdx',
     base: './src/content/case-studies',
-    locale: true,
     generateId: ({ entry }) => entry.replace(/\.mdx$/, ''),
   }),
   schema: caseStudySchema,
@@ -79,7 +76,6 @@ const blog = defineCollection({
   loader: glob({
     pattern: '**/*.mdx',
     base: './src/content/blog',
-    locale: true,
     generateId: ({ entry }) => entry.replace(/\.mdx$/, ''),
   }),
   schema: blogPostSchema,

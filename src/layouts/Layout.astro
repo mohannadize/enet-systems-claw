@@ -4,7 +4,6 @@ import SEO from '../components/SEO.astro';
 import { ClientRouter } from "astro:transitions";
 import type { JsonLdObject } from '../lib/jsonld';
 import { business } from '../data/business';
-import { getLocaleFromUrl, dir } from '../i18n/i18n';
 
 interface Props {
   title: string;
@@ -13,12 +12,10 @@ interface Props {
 }
 
 const { title, description = business.defaultPageDescription, jsonLd } = Astro.props;
-const locale = getLocaleFromUrl(Astro.url);
-const direction = dir(locale);
 ---
 
 <!DOCTYPE html>
-<html lang={locale} dir={direction}>
+<html lang="en" dir="ltr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -26,7 +23,7 @@ const direction = dir(locale);
     <link rel="icon" type="image/svg+xml" href="/logo-small.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Syne:wght@400..800&family=Cairo:wght@400..800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Syne:wght@400..800&display=swap" rel="stylesheet" />
     <title>{title}</title>
     <SEO description={description} jsonLd={jsonLd} />
     <ClientRouter />

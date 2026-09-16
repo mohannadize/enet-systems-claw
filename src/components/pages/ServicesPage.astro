@@ -5,38 +5,31 @@ import Footer from '../../components/Footer.astro';
 import TechnologyMarquee from '../../components/TechnologyMarquee.astro';
 import { getServices } from '../../lib/collections';
 import { buildWebPage, siteUrl } from '../../lib/jsonld';
-import { t, type Locale } from '../../i18n/i18n';
 
-const { locale } = Astro.props as { locale: Locale };
-const L = (k: Parameters<typeof t>[1]) => t(locale, k);
-const p = (path: string) => `/${locale}${path === "/" ? "" : path}`;
 
-const servicesEntries = await getServices(locale);
+const servicesEntries = await getServices();
 
 const servicesPageDescription =
   "Comprehensive digital solutions to power your business growth — web development, Odoo ERP, mobile apps, SEO, and more.";
-const servicesPageDescriptionAr =
-  'حلول رقمية متكاملة لدفع نمو أعمالك — تطوير الويب، أودو ERP، تطبيقات الجوال، تحسين محركات البحث والمزيد.';
-const servicesSeo = locale === 'ar' ? servicesPageDescriptionAr : servicesPageDescription;
 
 const process = [
-  { step: '01', title: L('services.process.1'), desc: L('services.process.1.desc') },
-  { step: '02', title: L('services.process.2'), desc: L('services.process.2.desc') },
-  { step: '03', title: L('services.process.3'), desc: L('services.process.3.desc') },
-  { step: '04', title: L('services.process.4'), desc: L('services.process.4.desc') },
-  { step: '05', title: L('services.process.5'), desc: L('services.process.5.desc') },
-  { step: '06', title: L('services.process.6'), desc: L('services.process.6.desc') }
+  { step: '01', title: 'Discovery', desc: 'We analyze requirements and create a detailed project roadmap.' },
+  { step: '02', title: 'Design', desc: 'Our design team creates intuitive interfaces aligned with your brand.' },
+  { step: '03', title: 'Development', desc: 'Expert developers build using best practices and cutting-edge tech.' },
+  { step: '04', title: 'Testing', desc: 'Rigorous QA ensures your product is bug-free and optimal.' },
+  { step: '05', title: 'Deployment', desc: 'We deploy to production and ensure smooth launch.' },
+  { step: '06', title: 'Support', desc: 'Ongoing maintenance to keep your solution running at peak.' }
 ];
 
 ---
 
 <Layout
-  title={locale === 'ar' ? 'خدماتنا | ENET Systems' : 'Services | ENET Systems LTD'}
-  description={servicesSeo}
+  title="Services | ENET Systems LTD"
+  description={servicesPageDescription}
   jsonLd={buildWebPage({
-    name: locale === 'ar' ? 'خدماتنا | ENET Systems' : 'Services | ENET Systems LTD',
-    description: servicesSeo,
-    url: siteUrl(p('/services')),
+    name: 'Services | ENET Systems LTD',
+    description: servicesPageDescription,
+    url: siteUrl('/services'),
   })}
 >
   <Navbar />
@@ -50,10 +43,10 @@ const process = [
     </div>
     <div class="container-custom relative z-10 text-center">
       <span class="badge mb-6 opacity-0 animate-slide-up" style="border: 2px solid var(--color-fire); color: var(--color-fire); background: rgba(255,107,53,0.1);">
-        {L('services.subtitle')}
+        {'Comprehensive digital solutions to power your business growth'}
       </span>
       <h1 class="text-6xl md:text-8xl font-bold font-[family-name:var(--font-display)] text-white mb-4 opacity-0 animate-slide-up animate-delay-100 leading-[1.05]">
-        {L('services.title')}
+        {'Our Services'}
       </h1>
     </div>
   </section>
@@ -80,8 +73,8 @@ const process = [
                 </span>
               ))}
             </div>
-            <a href={p(`/services/${entry.id}`)} class="btn-fire inline-flex items-center gap-2 group">
-              {L('common.learnMore')}
+            <a href={`/services/${entry.id}`} class="btn-fire inline-flex items-center gap-2 group">
+              {'Learn More'}
               <svg class="w-4 h-4 transition-transform group-hover:translate-x-1 rtl:group-hover:-translate-x-1 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
               </svg>
@@ -166,7 +159,7 @@ const process = [
   <!-- Tech Stack -->
   <section class="py-12 bg-white border-y-2 border-ink/10">
     <div class="container-custom text-center">
-      <p class="text-xs font-bold uppercase tracking-widest text-ink/40 mb-6">{L('services.techSub')}</p>
+      <p class="text-xs font-bold uppercase tracking-widest text-ink/40 mb-6">{'Technologies We Use'}</p>
       <TechnologyMarquee />
     </div>
   </section>
@@ -175,9 +168,9 @@ const process = [
   <section class="section-padding">
     <div class="container-custom">
       <div class="text-center mb-16">
-        <span class="text-accent text-sm font-medium uppercase tracking-wider">{L('services.howWeWork')}</span>
+        <span class="text-accent text-sm font-medium uppercase tracking-wider">{'How We Work'}</span>
         <h2 class="text-3xl md:text-4xl font-bold font-[family-name:var(--font-display)] mt-4">
-          {L('services.process')}
+          {'Our Development Process'}
         </h2>
       </div>
       
@@ -203,12 +196,12 @@ const process = [
     </div>
     <div class="container-custom relative z-10 text-center">
       <h2 class="text-4xl md:text-6xl font-bold font-[family-name:var(--font-display)] mb-6 text-white leading-[1.05]">
-        {L('services.readyToStart')}
+        {'Ready to Start Your Project?'}
       </h2>
       <p class="text-white/60 mb-8 max-w-xl mx-auto text-lg">
-        {L('services.ctaDesc')}
+        {'Let\'s discuss how we can help bring your vision to life.'}
       </p>
-      <a href={p('/contact')} class="btn-fire inline-block">{L('common.getInTouch')}</a>
+      <a href={'/contact'} class="btn-fire inline-block">{'Get in Touch'}</a>
     </div>
   </section>
 

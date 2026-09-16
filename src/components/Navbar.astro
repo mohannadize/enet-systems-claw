@@ -1,39 +1,31 @@
 ---
 import SocialIcons from "./SocialIcons.astro";
 import { getServices } from "../lib/collections";
-import { t, dir, locales, getLocaleFromUrl, getLocaleUrl, type Locale } from "../i18n/i18n";
 
 const currentPath = Astro.url.pathname;
 const base = (import.meta.env.BASE_URL || "/").replace(/\/$/, "") + "/";
 
-const locale: Locale = getLocaleFromUrl(Astro.url);
-const L = (k: Parameters<typeof t>[1]) => t(locale, k);
-const otherLocale: Locale = locale === 'ar' ? 'en' : 'ar';
-const switchUrl = getLocaleUrl(Astro.url, otherLocale);
-
-/** Prefix a raw path with the active locale, e.g. "/about" -> "/ar/about". */
-const p = (path: string) => `/${locale}${path === "/" ? "" : path}`;
 
 type NavItem = { href: string; label: string };
 type NavLink = NavItem & { items?: NavItem[]; cta?: boolean };
 
-const serviceEntries = await getServices(locale);
+const serviceEntries = await getServices();
 const serviceItems: NavItem[] = serviceEntries.map((entry) => ({
-  href: p(`/services/${entry.id}`),
+  href: `/services/${entry.id}`,
   label: entry.data.title,
 }));
 
 const navLinks: NavLink[] = [
-  { href: p("/"), label: L("nav.home") },
-  { href: p("/about"), label: L("nav.about") },
-  { href: p("/case-studies"), label: L("nav.caseStudies") },
+  { href: "/", label: 'Home' },
+  { href: "/about", label: 'About' },
+  { href: "/case-studies", label: 'Case Studies' },
   {
-    href: p("/services"),
-    label: L("nav.services"),
+    href: "/services",
+    label: 'Services',
     items: serviceItems,
   },
-  { href: p("/blog"), label: L("nav.blog") },
-  { href: p("/contact"), label: L("nav.getStarted"), cta: true },
+  { href: "/blog", label: 'Blog' },
+  { href: "/contact", label: 'Get started', cta: true },
 ];
 
 const norm = (s: string) => s.replace(/\/+$/, "") || "/";
@@ -73,18 +65,8 @@ const ctaLink = navLinks.find((l) => l.cta);
 
   <div class="container-custom">
     <div class="flex h-16 items-center justify-between md:h-20">
-      <a href={p("/")} class="flex h-12 items-center md:h-16">
+      <a href={"/"} class="flex h-12 items-center md:h-16">
         <img src="/logo-dark.svg" alt="ENET Systems LTD" class="h-12 py-2 md:h-16" />
-      </a>
-
-      <!-- Language switcher (desktop) -->
-      <a
-        href={switchUrl}
-        class="ml-2 hidden shrink-0 items-center gap-1 border-2 border-ink/15 px-3 py-1 text-xs font-bold text-muted transition-all hover:border-accent hover:text-accent md:inline-flex"
-        hreflang={otherLocale}
-        lang={otherLocale}
-      >
-        {locale === 'ar' ? 'EN' : 'ع'}<span aria-hidden="true">↔</span>
       </a>
 
       <!-- Desktop nav -->
@@ -177,7 +159,7 @@ const ctaLink = navLinks.find((l) => l.cta);
       <label
         for="nav-toggle"
         class="relative z-[80] flex h-11 w-11 cursor-pointer touch-manipulation flex-col items-center justify-center gap-[5px] border-2 border-ink/15 text-ink md:hidden"
-        aria-label={L("nav.toggleMenu")}
+        aria-label={'Toggle menu'}
       >
         <span class="ham-bar ham-bar-1 block h-[2px] w-6 origin-center bg-current transition-all duration-300 ease-out" />
         <span class="ham-bar ham-bar-2 block h-[2px] w-6 rounded-full bg-current transition-all duration-300 ease-out" />
@@ -203,13 +185,13 @@ const ctaLink = navLinks.find((l) => l.cta);
 
   <!-- Top bar: logo + close button -->
   <div class="relative flex h-16 shrink-0 items-center justify-between px-6 border-b border-white/10">
-    <a href={p("/")} class="flex h-10 items-center">
+    <a href={"/"} class="flex h-10 items-center">
       <img src="/logo-small.svg" alt="ENET Systems LTD" class="h-12 py-2 md:h-16" />
     </a>
     <label
       for="nav-toggle"
       class="flex h-11 w-11 cursor-pointer items-center justify-center border-2 border-white/20 text-white/80 transition-colors hover:text-white hover:border-white/40"
-      aria-label={L("nav.closeMenu")}
+      aria-label={'Close menu'}
     >
       <svg class="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
@@ -303,18 +285,8 @@ const ctaLink = navLinks.find((l) => l.cta);
       )
     }
     <div class="flex items-center justify-between">
-      <p class="text-[13px] font-bold text-white/50 uppercase tracking-widest">{L("nav.connect")}</p>
-      <div class="flex items-center gap-2">
-        <a
-          href={switchUrl}
-          class="inline-flex items-center justify-center border-2 border-white/20 bg-white/5 px-3 h-9 text-xs font-bold text-white/70 transition-colors hover:border-accent hover:text-accent"
-          hreflang={otherLocale}
-          lang={otherLocale}
-        >
-          {locale === 'ar' ? 'English' : 'العربية'}
-        </a>
-        <SocialIcons size="sm" />
-      </div>
+      <p class="text-[13px] font-bold text-white/50 uppercase tracking-widest">{'Connect'}</p>
+      <SocialIcons size="sm" />
     </div>
   </div>
 </div>

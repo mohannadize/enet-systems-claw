@@ -15,15 +15,6 @@ export default defineConfig({
   site: business.publicSiteUrl,
   base: '/',
 
-  i18n: {
-    locales: ['en', 'ar'],
-    defaultLocale: 'en',
-    routing: {
-      prefixDefaultLocale: true,
-      redirectToDefaultLocale: true,
-    },
-  },
-
   vite: {
     plugins: [tailwindcss()],
     resolve: {

@@ -3,32 +3,29 @@ import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import Navbar from '../../components/Navbar.astro';
 import Footer from '../../components/Footer.astro';
-import { getBlogPosts, entrySlug } from '../../lib/collections';
+import { getBlogPosts } from '../../lib/collections';
 import { buildBlogPosting, siteUrl } from '../../lib/jsonld';
-import { t, type Locale } from '../../i18n/i18n';
 
-const { entry, locale } = Astro.props as { entry: any; locale: Locale };
-const L = (k: Parameters<typeof t>[1]) => t(locale as Locale, k);
-const p = (path: string) => `/${locale}${path === "/" ? "" : path}`;
+const { entry } = Astro.props as { entry: any };
 const { Content } = await render(entry);
 
 const { title, description, pubDate, updatedDate, author, tags } = entry.data;
 
 const formatDate = (d: Date) =>
-  d.toLocaleDateString(locale === 'ar' ? 'ar-EG' : 'en-GB', {
+  d.toLocaleDateString('en-GB', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
   });
 
-const allPosts = await getBlogPosts(locale as Locale);
-const related = allPosts.filter((p) => p.id !== entrySlug(entry.id)).slice(0, 3);
+const allPosts = await getBlogPosts();
+const related = allPosts.filter((p) => p.id !== entry.id).slice(0, 3);
 
-const postUrl = siteUrl(p(`/blog/${entrySlug(entry.id)}`));
+const postUrl = siteUrl(`/blog/${entry.id}`);
 ---
 
 <Layout
-  title={`${title} | ${L('blog.title')} | ENET Systems`}
+  title={`${title} | ${'Blog'} | ENET Systems`}
   description={description}
   jsonLd={buildBlogPosting({
     headline: title,
@@ -52,11 +49,11 @@ const postUrl = siteUrl(p(`/blog/${entrySlug(entry.id)}`));
 
       <div class="container-custom relative z-10 max-w-3xl">
         <nav class="flex items-center gap-2 text-sm text-white/50 mb-10" aria-label="Breadcrumb">
-          <a href={p('/blog')} class="hover:text-accent transition-colors flex items-center gap-1.5 group">
+          <a href={'/blog'} class="hover:text-accent transition-colors flex items-center gap-1.5 group">
             <svg class="w-4 h-4 transition-transform group-hover:-translate-x-0.5 rtl:group-hover:translate-x-0.5 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
             </svg>
-            {L('blog.title')}
+            {'Blog'}
           </a>
         </nav>
 
@@ -71,7 +68,7 @@ const postUrl = siteUrl(p(`/blog/${entrySlug(entry.id)}`));
           {updatedDate && (
             <>
               <span class="text-border" aria-hidden="true">·</span>
-              <span>{L('blog.updated')} {formatDate(updatedDate)}</span>
+              <span>{'Updated'} {formatDate(updatedDate)}</span>
             </>
           )}
         </div>
@@ -106,18 +103,18 @@ const postUrl = siteUrl(p(`/blog/${entrySlug(entry.id)}`));
         <div class="container-custom max-w-3xl">
           <div class="flex items-center gap-3 mb-8 pt-12">
             <div class="h-px flex-1 bg-border"></div>
-            <span class="text-xs font-medium uppercase tracking-widest text-muted px-3">{L('blog.morePosts')}</span>
+            <span class="text-xs font-medium uppercase tracking-widest text-muted px-3">{'More posts'}</span>
             <div class="h-px flex-1 bg-border"></div>
           </div>
           <ul class="flex flex-col gap-4">
             {related.map((rp) => (
               <li>
                 <a
-                  href={p(`/blog/${rp.id}`)}
+                  href={`/blog/${rp.id}`}
                   class="group flex flex-col border-2 border-ink/10 bg-white px-5 py-4 transition-all hover:border-accent hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent/10"
                 >
                   <span class="text-xs text-muted mb-1">
-                    {rp.data.pubDate.toLocaleDateString(locale === 'ar' ? 'ar-EG' : 'en-GB', {
+                    {rp.data.pubDate.toLocaleDateString('en-GB', {
                       year: 'numeric',
                       month: 'short',
                       day: 'numeric',

@@ -18,19 +18,15 @@ import OdooIcon from "../../components/icons/odoo-logo.astro";
 import WebIcon from "../../components/icons/web_icon.astro";
 import MobileIcon from "../../components/icons/mobile_icon.astro";
 import { TextEffect } from "../../components/text-effect";
-import { t, type Locale } from "../../i18n/i18n";
 
-const { locale } = Astro.props as { locale: Locale };
-const L = (k: Parameters<typeof t>[1]) => t(locale, k);
-const p = (path: string) => `/${locale}${path === "/" ? "" : path}`;
 
-const servicesEntries = await getServices(locale);
-const caseStudies = await getCaseStudies(locale);
+const servicesEntries = await getServices();
+const caseStudies = await getCaseStudies();
 const featuredStudies = caseStudies.slice(0, 6);
-const latestBlogPosts = (await getBlogPosts(locale)).slice(0, 3);
+const latestBlogPosts = (await getBlogPosts()).slice(0, 3);
 
 const formatBlogDate = (d: Date) =>
-  d.toLocaleDateString(locale === "ar" ? "ar-EG" : "en-GB", {
+  d.toLocaleDateString("en-GB", {
     year: "numeric",
     month: "short",
     day: "numeric",
@@ -60,54 +56,24 @@ const testimonials = [
   },
 ];
 
-const testimonialTranslations = {
-  ar: {
-    quotes: [
-      'احتاجنا إلى تفعيل نظام أودو دون تعطيل العمليات اليومية. خططت ENET للترحيل ودرّبت فريقنا وبقيت قريبة بعد الإطلاق — النوع الذي تريده من الشريك حين تمسّ ERP كل قسم.',
-      'كان متجرنا سريعاً في المكتب وبطيئاً لعملاء الجوال. حلّلوا المنظومة وأصلحوا الاختناقات الحقيقية وقدّموا لنا قائمة تحقق حتى لا نتراجع بعد الإطلاق.',
-      'تواصل واضح وجداول زمنية واقعية ومهندسون يفهمون المنتج والبنية التحتية. أطلقوا لنا إصدارات متعددة وبقوا خيارنا الأول للمشاريع المعقدة.',
-    ],
-    titles: ['مدير تقنية معلومات المجموعة', 'رئيسة التجارة الإلكترونية', 'المدير الإداري'],
-    orgs: ['تجارة تجزئة متعددة الفروع · الكويت', 'علامة أزياء وتجميل · الخليج', 'مستلزمات صناعية · الكويت'],
-  },
-};
-
-const localizedTestimonials = testimonials.map((item, i) => ({
-  quote:
-    (locale === "ar"
-      ? testimonialTranslations.ar.quotes[i]
-      : item.quote) ?? item.quote,
-  name: item.name,
-  title:
-    (locale === "ar"
-      ? testimonialTranslations.ar.titles[i]
-      : item.title) ?? item.title,
-  org:
-    (locale === "ar"
-      ? testimonialTranslations.ar.orgs[i]
-      : item.org) ?? item.org,
-}));
-
 const stats = [
-  { number: "10+", label: L("home.statYears") },
-  { number: "150+", label: L("home.statProjects") },
-  { number: "50+", label: L("home.statClients") },
-  { number: "24/7", label: L("home.statSupport") },
+  { number: "10+", label: 'Years Experience' },
+  { number: "150+", label: 'Projects Delivered' },
+  { number: "50+", label: 'Happy Clients' },
+  { number: "24/7", label: '24/7 Support' },
 ];
 
 const homeDescription =
   "ENET Systems LTD delivers enterprise web solutions, Odoo ERP implementations, and mobile applications that transform businesses across Kuwait and the MENA region.";
-const homeDescriptionAr =
-  'تقدم ENET Systems LTD حلول الويب المؤسسية وأنظمة أودو ERP وتطبيقات الجوال التي تحوّل الأعمال في الكويت ومنطقة الشرق الأوسط وشمال أفريقيا.';
 ---
 
 <Layout
   title="ENET Systems LTD | Digital Transformation Partner"
-  description={locale === "ar" ? homeDescriptionAr : homeDescription}
+  description={homeDescription}
   jsonLd={buildWebPage({
     name: "ENET Systems LTD | Digital Transformation Partner",
-    description: locale === "ar" ? homeDescriptionAr : homeDescription,
-    url: siteUrl(p("/")),
+    description: homeDescription,
+    url: siteUrl("/"),
   })}
 >
   <Navbar />
@@ -156,27 +122,27 @@ const homeDescriptionAr =
           <h1
             class="text-5xl md:text-7xl lg:text-8xl font-bold font-heading leading-[1.05] text-white opacity-0 animate-slide-up animate-delay-100"
           >
-            {L("home.softwareThat")}<br/>
-            <span class="text-gradient-dual">{L("home.drivesGrowth")}</span>
+            {'Software that'}<br/>
+            <span class="text-gradient-dual">{'Drives Growth.'}</span>
           </h1>
 
           <p
             class="text-base md:text-lg text-white/60 mt-8 max-w-2xl leading-relaxed mb-8 opacity-0 animate-slide-up animate-delay-200"
           >
-            {L("home.subtitle")}
+            {'We build software that transforms businesses across Kuwait and the MENA region.'}
           </p>
 
           <div
             class="flex flex-wrap gap-4 opacity-0 animate-slide-up animate-delay-300 items-center"
           >
-            <a href={p("/contact")} class="btn-fire text-lg px-4 md:px-8 py-2 md:py-3">
-              {L("common.getInTouch")}
+            <a href={"/contact"} class="btn-fire text-lg px-4 md:px-8 py-2 md:py-3">
+              {'Get in Touch'}
             </a>
             <a
-              href={p("/portfolio")}
+              href={"/portfolio"}
               class="text-lg text-white/70 hover:text-white transition-colors duration-300 px-4 md:px-8 py-2 md:py-4 flex items-center gap-2 group border-2 border-transparent hover:border-white/20"
             >
-              {L("home.viewOurWork")}
+              {'View Our Work'}
               <ArrowRightCircleIcon
                 className="w-5 h-5 group-hover:translate-x-1 rtl:-translate-x-1 rtl:rotate-180 opacity-50 group-hover:opacity-100 transition duration-300"
               />
@@ -200,7 +166,7 @@ const homeDescriptionAr =
   <section class="py-8 bg-white border-y-2 border-ink/10">
     <div class="container-custom">
       <p class="text-center text-xs font-bold uppercase tracking-widest text-ink/40 mb-6">
-        {L("home.techHighlight")}
+        {'Technologies We Work With'}
       </p>
       <TechnologyMarquee />
     </div>
@@ -213,13 +179,13 @@ const homeDescriptionAr =
     <div class="container-custom">
       <div class="mb-16 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
         <div>
-          <span class="badge badge-accent mb-4 opacity-0 animate-slide-up">{L("home.whatWeDo")}</span>
+          <span class="badge badge-accent mb-4 opacity-0 animate-slide-up">{'What We Do'}</span>
           <h2 class="text-5xl md:text-6xl font-bold font-[family-name:var(--font-display)] mt-4 opacity-0 animate-slide-up animate-delay-100 leading-[1.05]">
-            {L("home.ourServices")}
+            {'Our Services'}
           </h2>
         </div>
         <p class="text-muted text-lg max-w-md opacity-0 animate-slide-up animate-delay-200">
-          {L("home.servicesSub")}
+          {'Comprehensive digital solutions tailored to elevate your business in the modern landscape.'}
         </p>
       </div>
 
@@ -231,7 +197,7 @@ const homeDescriptionAr =
             const isAlt = i % 2 === 1;
             return (
               <a
-                href={p(`/services/${entry.id}`)}
+                href={`/services/${entry.id}`}
                 class:list={[
                   "group relative bg-white p-8 border-2 border-ink/10 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl opacity-0 animate-slide-up",
                   isAlt ? "hover:border-fire hover:shadow-fire/15" : "hover:border-accent hover:shadow-accent/15",
@@ -261,7 +227,7 @@ const homeDescriptionAr =
                   "inline-flex items-center gap-2 text-sm font-bold border-b-2 pb-0.5 transition-all group-hover:gap-3",
                   isAlt ? "text-fire border-fire/30" : "text-accent border-accent/30",
                 ]}>
-                  {L("common.learnMore")}
+                  {'Learn More'}
                   <svg class="w-4 h-4 transition-transform group-hover:translate-x-1 rtl:group-hover:-translate-x-1 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
                   </svg>
@@ -287,11 +253,11 @@ const homeDescriptionAr =
         <div>
           <span class="badge badge-fire mb-4 opacity-0 animate-slide-up" style="border-color: var(--color-fire); color: var(--color-fire); background: rgba(255,107,53,0.1);">Client Stories</span>
           <h2 class="text-5xl md:text-6xl font-bold font-[family-name:var(--font-display)] mt-4 text-white opacity-0 animate-slide-up animate-delay-100 leading-[1.05]">
-            {L("home.caseStudies")}
+            {'Case Studies'}
           </h2>
         </div>
         <p class="text-white/60 text-lg max-w-md opacity-0 animate-slide-up animate-delay-200">
-          {L("home.caseStudiesSub")}
+          {'Real projects, real results. See how we\'ve helped businesses transform their digital operations.'}
         </p>
       </div>
 
@@ -301,10 +267,10 @@ const homeDescriptionAr =
             const study = cs.data;
             return (
               <a
-                href={p(`/case-studies/${cs.id}`)}
+                href={`/case-studies/${cs.id}`}
                 class="group relative bg-ink-soft p-6 border border-white/10 hover:border-accent/50 transition-all duration-400 hover:-translate-y-1 hover:shadow-2xl hover:shadow-accent/10 opacity-0 animate-slide-up"
                 style={`animation-delay: ${(i + 2) * 80}ms`}
-                aria-label={`${L("common.readCaseStudy")}: ${study.name}`}
+                aria-label={`${'Read case study'}: ${study.name}`}
               >
                 <div class="flex items-start justify-between gap-3 mb-5">
                   <LogoPlaceholder
@@ -315,7 +281,7 @@ const homeDescriptionAr =
                   <div class="flex flex-wrap gap-1.5 justify-end">
                     {study.services.map((svc) => (
                       <span class={`inline-flex items-center px-2 py-0.5 text-xs font-bold border ${serviceColors[svc]}`}>
-                        {serviceLabel(svc, locale)}
+                        {serviceLabel(svc)}
                       </span>
                     ))}
                   </div>
@@ -327,7 +293,7 @@ const homeDescriptionAr =
                 <p class="text-white/50 text-sm leading-relaxed line-clamp-2">{study.desc}</p>
 
                 <div class="mt-5 flex items-center gap-1.5 text-xs font-bold text-white/40 group-hover:text-accent transition-colors group-hover:gap-2.5 duration-300">
-                  {L("common.readCaseStudy")}
+                  {'Read case study'}
                   <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
                   </svg>
@@ -339,7 +305,7 @@ const homeDescriptionAr =
       </div>
 
       <div class="text-center mt-12 opacity-0 animate-slide-up animate-delay-500">
-        <a href={p("/case-studies")} class="btn-outline-accent">{L("common.viewAllCaseStudies")}</a>
+        <a href={"/case-studies"} class="btn-outline-accent">{'View All Case Studies'}</a>
       </div>
     </div>
   </section>
@@ -381,18 +347,18 @@ const homeDescriptionAr =
 
     <div class="container-custom relative z-10">
       <div class="text-center mb-16">
-        <span class="badge badge-accent mb-4 opacity-0 animate-slide-up">{L("home.clientVoices")}</span>
+        <span class="badge badge-accent mb-4 opacity-0 animate-slide-up">{'Client voices'}</span>
         <h2 class="text-5xl md:text-6xl font-bold font-[family-name:var(--font-display)] mt-4 opacity-0 animate-slide-up animate-delay-100 leading-[1.05]">
-          {L("home.whatPartnersSay")}
+          {'What partners say'}
         </h2>
         <p class="text-muted text-lg mt-4 max-w-2xl mx-auto opacity-0 animate-slide-up animate-delay-200">
-          {L("home.partnersSub")}
+          {'Long-term relationships matter to us — here is how teams describe working with ENET on the ground.'}
         </p>
       </div>
 
       <div class="grid md:grid-cols-3 gap-6 lg:gap-8">
         {
-          localizedTestimonials.map((t, i) => (
+          testimonials.map((t, i) => (
             <figure
               class:list={[
                 "relative bg-white p-6 md:p-8 flex flex-col border-2 transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl opacity-0 animate-slide-up",
@@ -435,13 +401,13 @@ const homeDescriptionAr =
         <div class="container-custom">
           <div class="mb-16 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
             <div>
-              <span class="badge badge-fire mb-4 opacity-0 animate-slide-up">{L("home.insights")}</span>
+              <span class="badge badge-fire mb-4 opacity-0 animate-slide-up">{'Insights'}</span>
               <h2 class="text-5xl md:text-6xl font-bold font-[family-name:var(--font-display)] mt-4 opacity-0 animate-slide-up animate-delay-100 leading-[1.05]">
-                {L("home.fromTheBlog")}
+                {'From the blog'}
               </h2>
             </div>
             <p class="text-muted text-lg max-w-md opacity-0 animate-slide-up animate-delay-200">
-              {L("home.blogSub")}
+              {'Notes on ERP, commerce, and shipping software that holds up in production across Kuwait and the wider region.'}
             </p>
           </div>
 
@@ -450,7 +416,7 @@ const homeDescriptionAr =
               const { title, description, pubDate, author } = post.data;
               return (
                 <a
-                  href={p(`/blog/${post.id}`)}
+                  href={`/blog/${post.id}`}
                   class="group flex flex-col bg-white p-6 md:p-7 border-2 border-ink/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-ink/10 hover:border-accent opacity-0 animate-slide-up"
                   style={`animation-delay: ${(i + 2) * 90}ms`}
                 >
@@ -468,7 +434,7 @@ const homeDescriptionAr =
                     {description}
                   </p>
                   <span class="text-sm font-bold text-accent inline-flex items-center gap-1.5 mt-auto group-hover:gap-2.5 transition-all border-b-2 border-accent/30 pb-0.5">
-                    {L("common.readArticle")}
+                    {'Read article'}
                     <svg
                       class="w-4 h-4 transition-transform group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 rtl:rotate-180"
                       fill="none"
@@ -485,8 +451,8 @@ const homeDescriptionAr =
           </div>
 
           <div class="text-center mt-12 opacity-0 animate-slide-up animate-delay-500">
-            <a href={p("/blog")} class="btn-outline">
-              {L("common.viewAllArticles")}
+            <a href={"/blog"} class="btn-outline">
+              {'View all articles'}
             </a>
           </div>
         </div>
@@ -505,20 +471,20 @@ const homeDescriptionAr =
     <div class="pointer-events-none absolute inset-0 halftone halftone-light opacity-15 ht-mask-tb" aria-hidden="true"></div>
     <div class="container-custom relative z-10 text-center">
       <h2 class="text-5xl md:text-7xl font-bold font-[family-name:var(--font-display)] text-white opacity-0 animate-slide-up leading-[1.05]">
-        {L("home.readyToTransform")}
+        {'Ready to Transform Your Business?'}
       </h2>
       <p class="text-white/60 text-lg mt-6 max-w-xl mx-auto opacity-0 animate-slide-up animate-delay-100">
-        {L("home.letsDiscuss")}
+        {'Let\'s discuss how we can help you achieve your digital transformation goals.'}
       </p>
       <div class="flex flex-wrap justify-center gap-4 mt-10 opacity-0 animate-slide-up animate-delay-200 items-center">
-        <a href={p("/contact")} class="btn-fire text-lg px-8 py-3">
-          {L("common.getInTouch")}
+        <a href={"/contact"} class="btn-fire text-lg px-8 py-3">
+          {'Get in Touch'}
         </a>
         <a
-          href={p("/services")}
+          href={"/services"}
           class="text-lg text-white/70 hover:text-white transition-colors duration-300 px-8 py-3 border-2 border-white/20 hover:border-white/40"
         >
-          {L("common.ourServices")}
+          {'Our Services'}
         </a>
       </div>
     </div>

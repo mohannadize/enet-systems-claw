@@ -26,7 +26,7 @@ export interface BusinessInfo {
   organizationDescription: string;
   logoPath: string;
   address: { addressCountry: string };
-  availableLanguages: readonly [string, string];
+  availableLanguages: readonly [string];
   areaServed: string;
 }
 
@@ -57,7 +57,7 @@ export const business = {
   address: {
     addressCountry: "KW",
   },
-  availableLanguages: ["English", "Arabic"] as const,
+  availableLanguages: ["English"] as const,
   areaServed: "KW",
 } as const satisfies BusinessInfo;
 

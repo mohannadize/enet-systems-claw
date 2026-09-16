@@ -4,26 +4,23 @@ import Layout from '../../layouts/Layout.astro';
 import Navbar from '../../components/Navbar.astro';
 import Footer from '../../components/Footer.astro';
 import { buildServicePage, siteUrl } from '../../lib/jsonld';
-import { getServiceSubpages, serviceLabel, entryLocale, entrySlug } from '../../lib/collections';
-import { t, type Locale } from '../../i18n/i18n';
+import { getServiceSubpages, serviceLabel } from '../../lib/collections';
 
-const { entry, locale } = Astro.props as { entry: any; locale: Locale };
-const L = (k: Parameters<typeof t>[1]) => t(locale as Locale, k);
-const p = (path: string) => `/${locale}${path === "/" ? "" : path}`;
+const { entry } = Astro.props as { entry: any };
 const { Content } = await render(entry);
 
-const slug = entrySlug(entry.id);
+const slug = entry.id;
 
 // Determine whether this is a hub (top-level, no slash) or a subpage
 const isHub = !slug.includes('/');
 const serviceRoot = isHub ? slug : slug.split('/')[0];
 
 // Load siblings for the sub-nav (all entries sharing the same root, excluding the hub itself)
-const siblings = await getServiceSubpages(serviceRoot, locale as Locale);
+const siblings = await getServiceSubpages(serviceRoot);
 
 // Hub entry for breadcrumb/sub-nav
 const allEntries = await getCollection('services');
-const hubEntry = allEntries.find((e) => entryLocale(e) === locale && entrySlug(e.id) === serviceRoot);
+const hubEntry = allEntries.find((e) => e.id === serviceRoot);
 
 // Service root labels for the hub badge
 const serviceRootColors: Record<string, string> = {
@@ -39,16 +36,16 @@ const rootLabelKey: Record<string, 'web' | 'odoo' | 'mobile'> = {
   'seo-optimization': 'web',
 };
 const badgeLabel = rootLabelKey[serviceRoot]
-  ? serviceLabel(rootLabelKey[serviceRoot], locale as Locale)
+  ? serviceLabel(rootLabelKey[serviceRoot])
   : (hubEntry?.data.title ?? serviceRoot);
 const badgeColor = serviceRootColors[serviceRoot] ?? 'bg-accent/10 text-accent border-accent/20';
 const badge = { label: badgeLabel, color: badgeColor };
 
-const servicePageUrl = siteUrl(p(`/services/${slug}`));
+const servicePageUrl = siteUrl(`/services/${slug}`);
 ---
 
 <Layout
-  title={`${entry.data.title} | ${L('nav.services')} | ENET Systems`}
+  title={`${entry.data.title} | ${'Services'} | ENET Systems`}
   description={entry.data.description}
   jsonLd={buildServicePage({
     title: entry.data.title,
@@ -70,16 +67,16 @@ const servicePageUrl = siteUrl(p(`/services/${slug}`));
     <div class="container-custom relative z-10">
       <!-- Breadcrumb -->
       <nav class="flex items-center gap-2 text-sm text-white/50 mb-10" aria-label="Breadcrumb">
-        <a href={p('/services')} class="hover:text-accent transition-colors group inline-flex items-center gap-1">
+        <a href={'/services'} class="hover:text-accent transition-colors group inline-flex items-center gap-1">
           <svg class="w-4 h-4 transition-transform group-hover:-translate-x-0.5 rtl:group-hover:translate-x-0.5 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
           </svg>
-          {L('nav.services')}
+          {'Services'}
         </a>
         {!isHub && hubEntry && (
           <>
             <span class="opacity-30">/</span>
-            <a href={p(`/services/${serviceRoot}`)} class="hover:text-accent transition-colors">
+            <a href={`/services/${serviceRoot}`} class="hover:text-accent transition-colors">
               {hubEntry.data.title}
             </a>
           </>
@@ -119,20 +116,20 @@ const servicePageUrl = siteUrl(p(`/services/${slug}`));
       <div class="container-custom">
         <nav class="flex items-center gap-1 overflow-x-auto py-3 no-scrollbar" aria-label="Service sub-navigation">
           <a
-            href={p(`/services/${serviceRoot}`)}
+            href={`/services/${serviceRoot}`}
             class={`shrink-0 px-4 py-2 text-sm font-bold transition-all border-2 ${
               isHub
                 ? 'bg-accent/10 text-accent border-accent/30'
                 : 'text-muted border-transparent hover:text-accent hover:border-accent/20 hover:bg-accent/5'
             }`}
           >
-            {L('services.overview')}
+            {'Overview'}
           </a>
           {siblings.map((sibling) => (
             <a
-              href={p(`/services/${sibling.id}`)}
+              href={`/services/${sibling.id}`}
               class={`shrink-0 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                entrySlug(entry.id) === sibling.id
+                entry.id === sibling.id
                   ? 'bg-accent/10 text-accent border border-accent/20'
                   : 'text-muted hover:text-zinc-900 hover:bg-zinc-100'
               }`}
@@ -161,14 +158,14 @@ const servicePageUrl = siteUrl(p(`/services/${slug}`));
     </div>
     <div class="container-custom relative z-10 text-center">
       <h2 class="text-4xl md:text-6xl font-bold font-[family-name:var(--font-display)] mb-4 text-white leading-[1.05]">
-        {L('detail.readyToGetStarted')}
+        {'Ready to Get Started?'}
       </h2>
       <p class="text-white/60 mb-8 max-w-xl mx-auto text-lg">
-        {L('detail.svcCtaDesc')}
+        {'Let\'s talk about your project and how we can help bring it to life.'}
       </p>
       <div class="flex flex-wrap justify-center gap-4">
-        <a href={p('/contact')} class="btn-fire text-lg px-8 py-4">{L('common.getInTouch')}</a>
-        <a href={p('/services')} class="btn-outline-accent text-lg px-8 py-4">{L('common.allServices')}</a>
+        <a href={'/contact'} class="btn-fire text-lg px-8 py-4">{'Get in Touch'}</a>
+        <a href={'/services'} class="btn-outline-accent text-lg px-8 py-4">{'All Services'}</a>
       </div>
     </div>
   </section>

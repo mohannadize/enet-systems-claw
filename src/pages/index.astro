@@ -1,6 +1,4 @@
 ---
-export const prerender = false;
-export function GET() {
-  return new Response(null, { status: 307, headers: { Location: '/en/' } });
-}
+import HomePage from '../components/pages/HomePage.astro';
 ---
+<HomePage />

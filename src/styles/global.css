@@ -33,31 +33,6 @@
     font-family: var(--font-display);
   }
 
-  /* Arabic: swap display/body stacks for the Cairo font in RTL */
-  [dir="rtl"] {
-    --font-display: "Cairo", "Syne", sans-serif;
-    --font-body: "Cairo", "DM Sans", sans-serif;
-  }
-
-  [dir="rtl"] .font-display,
-  [dir="rtl"] .font-heading,
-  [dir="rtl"] h1,
-  [dir="rtl"] h2,
-  [dir="rtl"] h3,
-  [dir="rtl"] h4,
-  [dir="rtl"] h5,
-  [dir="rtl"] h6 {
-    letter-spacing: 0 !important;
-  }
-
-  [dir="rtl"] .tracking-tight,
-  [dir="rtl"] .tracking-wide,
-  [dir="rtl"] .tracking-wider,
-  [dir="rtl"] .tracking-widest,
-  [dir="rtl"] .tracking-normal {
-    letter-spacing: 0 !important;
-  }
-
   /* Bold selection color */
   ::selection {
     background: var(--color-accent);

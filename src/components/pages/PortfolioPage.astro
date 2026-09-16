@@ -4,33 +4,26 @@ import Layout from '../../layouts/Layout.astro';
 import Navbar from '../../components/Navbar.astro';
 import Footer from '../../components/Footer.astro';
 import LogoPlaceholder from '../../components/LogoPlaceholder.astro';
-import { getPortfolioByCategory, getPortfolioCategories, entryLocale } from '../../lib/collections';
+import { getPortfolioByCategory, portfolioCategories } from '../../lib/collections';
 import { buildPortfolioIndex, siteUrl } from '../../lib/jsonld';
-import { t, type Locale } from '../../i18n/i18n';
 
-const { locale } = Astro.props as { locale: Locale };
-const L = (k: Parameters<typeof t>[1]) => t(locale, k);
-const p = (path: string) => `/${locale}${path === "/" ? "" : path}`;
 
-const portfolioByCategory = await getPortfolioByCategory(locale);
+const portfolioByCategory = await getPortfolioByCategory();
 
 const portfolioIndexDescription =
   "A selection of web, e-commerce, Odoo ERP, and mobile work delivered by ENET Systems across Kuwait and the MENA region.";
-const portfolioIndexDescriptionAr =
-  'مجموعة مختارة من أعمال الويب والتجارة الإلكترونية وأودو ERP وتطبيقات الجوال التي نفذتها ENET Systems في الكويت ومنطقة الشرق الأوسط وشمال أفريقيا.';
-const portfolioSeo = locale === 'ar' ? portfolioIndexDescriptionAr : portfolioIndexDescription;
-const categories = getPortfolioCategories(locale);
-const allEntries = (await getCollection('portfolio')).filter((e) => entryLocale(e) === locale);
+const categories = portfolioCategories;
+const allEntries = await getCollection('portfolio');
 const projectCount = allEntries.length;
 ---
 
 <Layout
-  title={locale === 'ar' ? 'أعمالنا | ENET Systems' : 'Portfolio | ENET Systems LTD'}
-  description={portfolioSeo}
+  title="Portfolio | ENET Systems LTD"
+  description={portfolioIndexDescription}
   jsonLd={buildPortfolioIndex({
-    name: locale === 'ar' ? 'أعمالنا | ENET Systems' : 'Portfolio | ENET Systems LTD',
-    description: portfolioSeo,
-    url: siteUrl(p('/portfolio')),
+    name: 'Portfolio | ENET Systems LTD',
+    description: portfolioIndexDescription,
+    url: siteUrl('/portfolio'),
   })}
 >
   <Navbar />
@@ -45,13 +38,13 @@ const projectCount = allEntries.length;
     <div class="container-custom relative z-10 text-center">
       <span class="inline-flex items-center gap-2 px-4 py-2 border-2 border-accent/40 bg-accent/10 text-accent text-sm font-bold mb-6 opacity-0 animate-slide-up">
         <span class="w-2 h-2 bg-accent animate-pulse"></span>
-        {projectCount}+ {L('portfolio.projectsDelivered')}
+        {projectCount}+ {'Projects Delivered'}
       </span>
       <h1 class="text-6xl md:text-8xl font-bold font-[family-name:var(--font-display)] text-white mb-4 opacity-0 animate-slide-up animate-delay-100 leading-[1.05]">
-        {L('portfolio.title')}
+        {'Our Portfolio'}
       </h1>
       <p class="text-white/60 text-lg max-w-2xl mx-auto opacity-0 animate-slide-up animate-delay-200">
-        {L('portfolio.subtitle')}
+        {'A showcase of our work across e-commerce, corporate websites, and ERP solutions.'}
       </p>
     </div>
   </section>
@@ -76,10 +69,10 @@ const projectCount = allEntries.length;
               const project = entry.data;
               return (
               <a 
-                href={p(`/portfolio/${entry.id}`)}
+                href={`/portfolio/${entry.id}`}
                 class="portfolio-card group relative bg-white p-6 border-2 border-ink/10 hover:border-accent transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-accent/10 opacity-0 animate-slide-up"
                 style={`animation-delay: ${(catIndex * 4 + i) * 50}ms`}
-                aria-label={`${L('portfolio.viewCaseStudy')} · ${project.name}`}
+                aria-label={`${'View case study'} · ${project.name}`}
               >
                 <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 
@@ -95,7 +88,7 @@ const projectCount = allEntries.length;
                     <svg class="w-3 h-3 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                     </svg>
-                    {L('portfolio.viewCaseStudy')}
+                    {'View case study'}
                   </span>
                 </div>
               </a>
@@ -106,10 +99,10 @@ const projectCount = allEntries.length;
               const project = entry.data;
               return (
               <a 
-                href={p(`/portfolio/${entry.id}`)}
+                href={`/portfolio/${entry.id}`}
                 class="portfolio-card group relative bg-secondary rounded-2xl p-6 border border-border hover:border-blue-500/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-xl hover:shadow-blue-500/5 opacity-0 animate-slide-up"
                 style={`animation-delay: ${(catIndex * 4 + i) * 50}ms`}
-                aria-label={`${L('portfolio.viewCaseStudy')} · ${project.name}`}
+                aria-label={`${'View case study'} · ${project.name}`}
               >
                 <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 
@@ -125,7 +118,7 @@ const projectCount = allEntries.length;
                     <svg class="w-3 h-3 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                     </svg>
-                    {L('portfolio.viewCaseStudy')}
+                    {'View case study'}
                   </span>
                 </div>
               </a>
@@ -136,10 +129,10 @@ const projectCount = allEntries.length;
               const project = entry.data;
               return (
               <a 
-                href={p(`/portfolio/${entry.id}`)}
+                href={`/portfolio/${entry.id}`}
                 class="portfolio-card group relative bg-secondary rounded-2xl p-6 border border-border hover:border-purple-500/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-xl hover:shadow-purple-500/5 opacity-0 animate-slide-up"
                 style={`animation-delay: ${(catIndex * 4 + i) * 50}ms`}
-                aria-label={`${L('portfolio.viewCaseStudy')} · ${project.name}`}
+                aria-label={`${'View case study'} · ${project.name}`}
               >
                 <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 
@@ -155,7 +148,7 @@ const projectCount = allEntries.length;
                     <svg class="w-3 h-3 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                     </svg>
-                    {L('portfolio.viewCaseStudy')}
+                    {'View case study'}
                   </span>
                 </div>
               </a>
@@ -175,25 +168,25 @@ const projectCount = allEntries.length;
           <div class="text-4xl md:text-5xl font-bold font-[family-name:var(--font-display)] text-accent mb-2">
             {projectCount}+
           </div>
-          <div class="text-muted">{L('portfolio.projectsDelivered')}</div>
+          <div class="text-muted">{'Projects Delivered'}</div>
         </div>
         <div class="text-center opacity-0 animate-slide-up animate-delay-100">
           <div class="text-4xl md:text-5xl font-bold font-[family-name:var(--font-display)] text-accent mb-2">
             3
           </div>
-          <div class="text-muted">{L('portfolio.serviceCategories')}</div>
+          <div class="text-muted">{'Service Categories'}</div>
         </div>
         <div class="text-center opacity-0 animate-slide-up animate-delay-200">
           <div class="text-4xl md:text-5xl font-bold font-[family-name:var(--font-display)] text-accent mb-2">
             10+
           </div>
-          <div class="text-muted">{L('portfolio.yearsExperience')}</div>
+          <div class="text-muted">{'Years Experience'}</div>
         </div>
         <div class="text-center opacity-0 animate-slide-up animate-delay-300">
           <div class="text-4xl md:text-5xl font-bold font-[family-name:var(--font-display)] text-accent mb-2">
             50+
           </div>
-          <div class="text-muted">{L('portfolio.happyClients')}</div>
+          <div class="text-muted">{'Happy Clients'}</div>
         </div>
       </div>
     </div>
@@ -206,14 +199,14 @@ const projectCount = allEntries.length;
     </div>
     <div class="container-custom relative z-10 text-center">
       <h2 class="text-4xl md:text-6xl font-bold font-[family-name:var(--font-display)] mb-6 text-white opacity-0 animate-slide-up leading-[1.05]">
-        {L('portfolio.startYourProject')}
+        {'Start Your Project'}
       </h2>
       <p class="text-white/60 mb-8 max-w-xl mx-auto text-lg opacity-0 animate-slide-up animate-delay-100">
-        {L('portfolio.ctaDesc')}
+        {'Ready to build something amazing? Let\'s discuss your next project and bring your vision to life.'}
       </p>
       <div class="flex flex-wrap justify-center gap-4 opacity-0 animate-slide-up animate-delay-200">
-        <a href={p('/contact')} class="btn-fire text-lg px-8 py-4">{L('common.getInTouch')}</a>
-        <a href={p('/services')} class="btn-outline-accent text-lg px-8 py-4">{L('common.ourServices')}</a>
+        <a href={'/contact'} class="btn-fire text-lg px-8 py-4">{'Get in Touch'}</a>
+        <a href={'/services'} class="btn-outline-accent text-lg px-8 py-4">{'Our Services'}</a>
       </div>
     </div>
   </section>
