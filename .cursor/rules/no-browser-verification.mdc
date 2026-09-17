@@ -1,0 +1,20 @@
+---
+description: Do not verify UI or flows in the browser; the user verifies manually.
+alwaysApply: true
+---
+
+# No browser verification
+
+Do not open, drive, or screenshot a browser to verify work. The user verifies everything in the browser themselves.
+
+- Do not use browser automation tools (navigate, click, type, snapshot, screenshot) to check pages, layout, or behavior.
+- After UI or web changes, say what to check and on which routes; do not run that check yourself in a browser.
+- Use non-browser checks only when they are needed to implement the change (tests, build, types, curl against an API you already started). Do not start a site "just to look at it."
+
+```text
+# ❌ BAD
+Open localhost, click through Contact, screenshot the success state.
+
+# ✅ GOOD
+Contact form is wired to POST /contact.php. Please confirm submit success and error states in the browser.
+```

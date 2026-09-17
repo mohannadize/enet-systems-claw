@@ -1,0 +1,25 @@
+---
+import GoalEcommerce from "./GoalEcommerce.astro";
+import GoalIntegrations from "./GoalIntegrations.astro";
+import GoalOperations from "./GoalOperations.astro";
+import GoalWebsite from "./GoalWebsite.astro";
+
+interface Props {
+  kind: "operations" | "ecommerce" | "website" | "integrations";
+}
+
+const { kind } = Astro.props;
+---
+
+{
+  kind === "operations" && <GoalOperations />
+}
+{
+  kind === "ecommerce" && <GoalEcommerce />
+}
+{
+  kind === "website" && <GoalWebsite />
+}
+{
+  kind === "integrations" && <GoalIntegrations />
+}

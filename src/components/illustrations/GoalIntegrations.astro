@@ -1,0 +1,249 @@
+---
+---
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 640 360"
+  role="presentation"
+  aria-hidden="true"
+  class="h-full w-full"
+  fill="none"
+  stroke="#0a0a12"
+  stroke-width="1.75"
+  stroke-linecap="square"
+  stroke-linejoin="miter"
+>
+  <rect width="640" height="360" fill="#f4f4f5" stroke="none" />
+
+  <g class="int-guides" stroke="#0a0a12" opacity="0.1">
+    <line x1="320" y1="24" x2="320" y2="336" />
+    <line x1="40" y1="180" x2="600" y2="180" />
+    <rect x="48" y="36" width="544" height="288" />
+    <line x1="48" y1="36" x2="80" y2="8" />
+    <line x1="592" y1="324" x2="624" y2="352" />
+  </g>
+
+  <!-- Left system -->
+  <g class="int-system">
+    <rect x="64" y="68" width="168" height="224" fill="#ffffff" />
+    <line x1="64" y1="100" x2="232" y2="100" />
+    <rect x="80" y="80" width="14" height="14" />
+    <line class="int-bar-a" x1="84" y1="132" x2="200" y2="132" stroke="#71717a" />
+    <line class="int-bar-b" x1="84" y1="164" x2="176" y2="164" stroke="#71717a" />
+    <line class="int-bar-c" x1="84" y1="196" x2="212" y2="196" stroke="#71717a" />
+    <rect x="84" y="228" width="72" height="28" stroke="#71717a" />
+    <rect x="216" y="172" width="16" height="16" fill="#ffffff" />
+  </g>
+
+  <!-- Right system -->
+  <g class="int-system">
+    <rect x="408" y="68" width="168" height="224" fill="#ffffff" />
+    <line x1="408" y1="100" x2="576" y2="100" />
+    <rect x="546" y="80" width="14" height="14" />
+    <line class="int-bar-a" x1="428" y1="132" x2="544" y2="132" stroke="#71717a" />
+    <line class="int-bar-b" x1="452" y1="164" x2="544" y2="164" stroke="#71717a" />
+    <line class="int-bar-c" x1="428" y1="196" x2="520" y2="196" stroke="#71717a" />
+    <rect x="484" y="228" width="72" height="28" stroke="#71717a" />
+    <rect x="408" y="172" width="16" height="16" fill="#ffffff" />
+  </g>
+
+  <!-- Disconnected route -->
+  <g class="int-break">
+    <polyline
+      points="232,180 268,148 300,214 336,140 372,204 408,180"
+      stroke="#71717a"
+      stroke-dasharray="7 7"
+    />
+    <rect x="316" y="154" width="10" height="10" stroke="#FF6B35" />
+  </g>
+
+  <!-- Connected route -->
+  <g class="int-link">
+    <polyline points="232,180 292,180 320,152 348,180 408,180" stroke="#28AFA2" />
+  </g>
+
+  <!-- Center node: three squares -->
+  <g class="int-node">
+    <rect x="308" y="168" width="22" height="22" fill="#ffffff" stroke="#71717a" />
+    <rect x="316" y="160" width="22" height="22" fill="#ffffff" stroke="#71717a" />
+    <rect x="324" y="176" width="22" height="22" fill="#ffffff" class="int-node-accent" stroke="#28AFA2" />
+  </g>
+
+  <!-- Packets along the connected L/horizontal path -->
+  <rect class="int-packet int-packet-a" x="226" y="174" width="12" height="12" fill="#28AFA2" stroke="none" />
+  <rect class="int-packet int-packet-b" x="226" y="174" width="12" height="12" fill="#0a0a12" stroke="none" />
+</svg>
+
+<style>
+  .int-bar-a {
+    animation: int-bar-idle 10s ease-in-out infinite;
+  }
+
+  .int-bar-b {
+    animation: int-bar-idle 10s ease-in-out infinite;
+    animation-delay: 1.4s;
+  }
+
+  .int-bar-c {
+    animation: int-bar-idle 10s ease-in-out infinite;
+    animation-delay: 2.8s;
+  }
+
+  .int-break {
+    animation: int-break-fade 12s ease-in-out infinite;
+  }
+
+  .int-link {
+    animation: int-link-in 12s ease-in-out infinite;
+  }
+
+  .int-node {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: int-node-pulse 12s ease-in-out infinite;
+  }
+
+  .int-node-accent {
+    animation: int-accent-swap 12s ease-in-out infinite;
+  }
+
+  .int-packet {
+    opacity: 0;
+  }
+
+  .int-packet-a {
+    animation: int-packet-run 12s ease-in-out infinite;
+  }
+
+  .int-packet-b {
+    animation: int-packet-run 12s ease-in-out infinite;
+    animation-delay: 1.8s;
+  }
+
+  @keyframes int-bar-idle {
+    0%,
+    100% {
+      opacity: 0.45;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes int-break-fade {
+    0%,
+    18% {
+      opacity: 1;
+    }
+    38%,
+    82% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes int-link-in {
+    0%,
+    22% {
+      opacity: 0;
+    }
+    40%,
+    78% {
+      opacity: 1;
+    }
+    92%,
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes int-node-pulse {
+    0%,
+    28% {
+      opacity: 0.55;
+      transform: scale(1);
+    }
+    42%,
+    58% {
+      opacity: 1;
+      transform: scale(1.06);
+    }
+    70% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    88%,
+    100% {
+      opacity: 0.55;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes int-accent-swap {
+    0%,
+    28% {
+      opacity: 0.35;
+    }
+    42%,
+    76% {
+      opacity: 1;
+    }
+    90%,
+    100% {
+      opacity: 0.35;
+    }
+  }
+
+  @keyframes int-packet-run {
+    0%,
+    34% {
+      opacity: 0;
+      transform: translate(0, 0);
+    }
+    40% {
+      opacity: 1;
+      transform: translate(60px, 0);
+    }
+    48% {
+      opacity: 1;
+      transform: translate(88px, -28px);
+    }
+    56% {
+      opacity: 1;
+      transform: translate(116px, 0);
+    }
+    72% {
+      opacity: 1;
+      transform: translate(176px, 0);
+    }
+    78%,
+    100% {
+      opacity: 0;
+      transform: translate(176px, 0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    svg * {
+      animation: none;
+    }
+
+    .int-break,
+    .int-link,
+    .int-packet,
+    .int-node,
+    .int-node-accent {
+      opacity: 1;
+      transform: none;
+    }
+
+    .int-break {
+      opacity: 0;
+    }
+
+    .int-packet {
+      opacity: 0;
+    }
+  }
+</style>

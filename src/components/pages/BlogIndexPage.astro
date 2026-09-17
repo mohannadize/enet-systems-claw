@@ -8,6 +8,10 @@ import { blogImages, localizedEntryId } from '../../data/editorial-images';
 
 
 const posts = await getBlogPosts();
+const [featured, ...rest] = posts;
+const featuredImage = featured
+  ? blogImages[localizedEntryId(featured.id)]
+  : undefined;
 
 const blogIndexDescription =
   "Insights on Odoo ERP, e-commerce, web development, and digital transformation from the ENET Systems team.";
@@ -31,58 +35,116 @@ const formatDate = (d: Date) =>
 >
   <Navbar />
 
-  <section class="pt-16 pb-16 relative overflow-hidden bg-ink">
+  <section class="pt-32 pb-16 relative overflow-hidden bg-ink">
     <div class="absolute inset-0">
       <div class="absolute inset-0 halftone halftone-light opacity-15" aria-hidden="true"></div>
       <div class="absolute top-1/4 -right-32 w-96 h-96 bg-accent/15 rounded-full blur-3xl"></div>
       <div class="absolute bottom-0 left-1/4 w-64 h-64 bg-fire/10 rounded-full blur-3xl"></div>
     </div>
-    <div class="container-custom relative z-10 text-center">
-      <span class="inline-flex items-center gap-2 px-4 py-2 border-2 border-accent/40 bg-accent/10 text-accent text-sm font-bold mb-6 opacity-0 animate-slide-up">
-        <span class="w-2 h-2 bg-accent animate-pulse"></span>
-        {posts.length} {'Articles'}
-      </span>
-      <h1 class="text-6xl md:text-8xl font-bold font-[family-name:var(--font-display)] text-white mb-4 opacity-0 animate-slide-up animate-delay-100 leading-[1.05]">
-        {'Blog'}
-      </h1>
-      <p class="text-white/60 text-lg max-w-2xl mx-auto opacity-0 animate-slide-up animate-delay-200">
-        {'Practical notes on building software that runs businesses — ERP, commerce, and the web stack in between.'}
-      </p>
+    <div class="container-custom relative z-10">
+      <div class="max-w-3xl">
+        <span class="inline-flex items-center gap-2 px-4 py-2 border-2 border-accent/40 bg-accent/10 text-accent text-sm font-bold mb-6 opacity-0 animate-slide-up">
+          <span class="w-2 h-2 bg-accent animate-pulse"></span>
+          {posts.length} {'Articles'}
+        </span>
+        <h1 class="text-6xl md:text-8xl font-bold font-[family-name:var(--font-display)] text-white mb-4 opacity-0 animate-slide-up animate-delay-100 leading-[1.05]">
+          {'Blog'}
+        </h1>
+        <p class="text-white/60 text-lg max-w-2xl opacity-0 animate-slide-up animate-delay-200">
+          {'Practical notes on building software that runs businesses — ERP, commerce, and the web stack in between.'}
+        </p>
+      </div>
     </div>
   </section>
 
-  <section class="section-padding bg-secondary border-t-2 border-ink/5">
-    <div class="container-custom max-w-3xl">
-      <ul class="flex flex-col gap-6">
-        {
-          posts.map((post, i) => {
+  <section class="bg-secondary border-t-2 border-ink/5 pt-8 pb-16 md:pt-12 md:pb-24">
+    <div class="container-custom">
+      {featured && (
+        <article class="mb-10 md:mb-14 opacity-0 animate-slide-up">
+          <a
+            href={`/blog/${featured.id}`}
+            class="group grid overflow-hidden border-2 border-ink/10 bg-white transition-all duration-300 hover:border-accent hover:-translate-y-1 hover:shadow-2xl hover:shadow-accent/10 lg:grid-cols-[1.15fr_1fr]"
+          >
+            {featuredImage && (
+              <div class="relative aspect-[16/10] overflow-hidden bg-ink lg:aspect-auto lg:min-h-[22rem]">
+                <img
+                  src={featuredImage.src}
+                  alt={featuredImage.alt}
+                  width="1024"
+                  height="576"
+                  fetchpriority="high"
+                  decoding="async"
+                  class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                />
+                <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/40 to-transparent lg:bg-gradient-to-r lg:from-transparent lg:to-ink/20" aria-hidden="true"></div>
+              </div>
+            )}
+            <div class="flex flex-col justify-center p-7 md:p-10 lg:p-12">
+              <div class="mb-4 flex flex-wrap items-center gap-3">
+                <span class="badge-fire">Latest</span>
+                <time datetime={featured.data.pubDate.toISOString()} class="text-sm font-bold uppercase tracking-wide text-muted">
+                  {formatDate(featured.data.pubDate)}
+                </time>
+                {featured.data.author && (
+                  <span class="text-sm text-muted">{featured.data.author}</span>
+                )}
+              </div>
+              <h2 class="mb-4 text-3xl font-bold leading-[1.1] transition-colors group-hover:text-accent md:text-4xl lg:text-5xl">
+                {featured.data.title}
+              </h2>
+              <p class="mb-6 max-w-xl text-lg leading-relaxed text-muted">
+                {featured.data.description}
+              </p>
+              {featured.data.tags && featured.data.tags.length > 0 && (
+                <div class="mb-6 flex flex-wrap gap-2">
+                  {featured.data.tags.map((tag) => (
+                    <span class="border-2 border-ink/10 bg-secondary px-2.5 py-0.5 text-xs font-medium text-muted">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+              <span class="mt-auto inline-flex items-center gap-1.5 border-b-2 border-accent/30 pb-0.5 text-sm font-bold text-accent transition-all group-hover:gap-2.5">
+                {'Read article'}
+                <svg class="h-4 w-4 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+                </svg>
+              </span>
+            </div>
+          </a>
+        </article>
+      )}
+
+      {rest.length > 0 && (
+        <ul class="grid gap-6 md:grid-cols-2">
+          {rest.map((post, i) => {
             const { title, description, pubDate, author, tags } = post.data;
             const image = blogImages[localizedEntryId(post.id)];
             return (
               <li
                 class="opacity-0 animate-slide-up"
-                style={`animation-delay: ${i * 80}ms`}
+                style={`animation-delay: ${(i + 1) * 80}ms`}
               >
-                <article>
+                <article class="h-full">
                   <a
                     href={`/blog/${post.id}`}
-                    class="group grid overflow-hidden border-2 border-ink/10 bg-white transition-all duration-300 hover:border-accent hover:-translate-y-1 hover:shadow-2xl hover:shadow-accent/10 md:grid-cols-[14rem_1fr]"
+                    class="group flex h-full flex-col overflow-hidden border-2 border-ink/10 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-accent hover:shadow-2xl hover:shadow-accent/10"
                   >
                     {image && (
-                      <div class="aspect-video overflow-hidden bg-ink md:aspect-auto">
+                      <div class="aspect-video overflow-hidden border-b-2 border-ink/10 bg-ink">
                         <img
                           src={image.src}
                           alt={image.alt}
                           width="1024"
                           height="576"
-                          loading={i === 0 ? 'eager' : 'lazy'}
+                          loading="lazy"
                           decoding="async"
                           class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                         />
                       </div>
                     )}
-                    <div class="p-6 md:p-8">
-                      <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted mb-3">
+                    <div class="flex flex-1 flex-col p-6 md:p-8">
+                      <div class="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted">
                         <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
                         {author && (
                           <>
@@ -91,27 +153,33 @@ const formatDate = (d: Date) =>
                           </>
                         )}
                       </div>
-                      <h2 class="text-xl md:text-2xl font-bold font-[family-name:var(--font-display)] mb-2 group-hover:text-accent transition-colors">
+                      <h2 class="mb-2 text-xl font-bold font-[family-name:var(--font-display)] transition-colors group-hover:text-accent md:text-2xl">
                         {title}
                       </h2>
-                      <p class="text-muted leading-relaxed mb-4">{description}</p>
+                      <p class="mb-4 line-clamp-3 flex-1 leading-relaxed text-muted">{description}</p>
                       {tags && tags.length > 0 && (
-                        <div class="flex flex-wrap gap-2">
+                        <div class="mb-5 flex flex-wrap gap-2">
                           {tags.map((tag) => (
-                            <span class="px-2.5 py-0.5 text-xs font-medium text-muted border-2 border-ink/10 bg-secondary">
+                            <span class="border-2 border-ink/10 bg-secondary px-2.5 py-0.5 text-xs font-medium text-muted">
                               {tag}
                             </span>
                           ))}
                         </div>
                       )}
+                      <span class="mt-auto inline-flex items-center gap-1.5 border-b-2 border-accent/30 pb-0.5 text-sm font-bold text-accent transition-all group-hover:gap-2.5">
+                        {'Read article'}
+                        <svg class="h-4 w-4 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+                        </svg>
+                      </span>
                     </div>
                   </a>
                 </article>
               </li>
             );
-          })
-        }
-      </ul>
+          })}
+        </ul>
+      )}
     </div>
   </section>
 

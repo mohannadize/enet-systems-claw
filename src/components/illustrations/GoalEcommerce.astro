@@ -1,0 +1,195 @@
+---
+---
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 640 360"
+  fill="none"
+  stroke-width="1.75"
+  stroke-linecap="square"
+  stroke-linejoin="miter"
+  role="presentation"
+  aria-hidden="true"
+  class="h-full w-full"
+>
+  <rect width="640" height="360" fill="#f4f4f5" stroke="none" />
+
+  <g stroke="#0a0a12" opacity="0.08">
+    <line x1="0" y1="48" x2="640" y2="48" />
+    <line x1="0" y1="312" x2="640" y2="312" />
+    <line x1="48" y1="0" x2="48" y2="360" />
+    <line x1="592" y1="0" x2="592" y2="360" />
+    <line x1="320" y1="48" x2="320" y2="312" />
+  </g>
+
+  <g stroke="#0a0a12">
+    <rect x="88" y="64" width="352" height="228" />
+    <line x1="88" y1="92" x2="440" y2="92" />
+    <rect x="104" y="72" width="8" height="8" />
+    <rect x="120" y="72" width="8" height="8" />
+    <rect x="136" y="72" width="8" height="8" />
+  </g>
+
+  <g stroke="#0a0a12">
+    <rect x="112" y="112" width="176" height="148" fill="#ffffff" />
+    <rect x="124" y="124" width="152" height="72" />
+    <line x1="124" y1="212" x2="220" y2="212" stroke="#71717a" />
+    <line x1="124" y1="224" x2="188" y2="224" stroke="#71717a" />
+    <rect x="124" y="236" width="44" height="8" stroke="#28AFA2" />
+  </g>
+
+  <rect
+    class="ecom-cta"
+    x="184"
+    y="232"
+    width="88"
+    height="16"
+    fill="#FF6B35"
+    stroke="#FF6B35"
+  />
+
+  <g class="ecom-phone" stroke="#0a0a12">
+    <rect x="392" y="88" width="112" height="208" fill="#ffffff" />
+    <rect x="428" y="96" width="40" height="6" />
+    <rect x="404" y="112" width="88" height="168" />
+    <rect x="416" y="128" width="64" height="40" />
+    <line x1="416" y1="180" x2="464" y2="180" stroke="#71717a" />
+    <line x1="416" y1="192" x2="444" y2="192" stroke="#71717a" />
+  </g>
+
+  <rect x="112" y="278" width="304" height="4" stroke="#71717a" />
+  <rect
+    class="ecom-bar"
+    x="112"
+    y="278"
+    width="304"
+    height="4"
+    fill="#28AFA2"
+    stroke="none"
+  />
+
+  <g class="ecom-bag" stroke="#0a0a12">
+    <path d="M508 262 V250 H548 V262" />
+    <path d="M500 262 H556 L548 304 H508 Z" />
+  </g>
+
+  <rect
+    class="ecom-item"
+    x="522"
+    y="268"
+    width="12"
+    height="12"
+    stroke="#28AFA2"
+  />
+</svg>
+
+<style>
+  .ecom-cta,
+  .ecom-phone,
+  .ecom-bar,
+  .ecom-bag,
+  .ecom-item {
+    transform-box: fill-box;
+  }
+
+  .ecom-cta {
+    transform-origin: center;
+    animation: ecom-pulse 10s ease-in-out 1.2s infinite;
+  }
+
+  .ecom-phone {
+    transform-origin: center;
+    animation: ecom-float 11s ease-in-out 0.8s infinite;
+  }
+
+  .ecom-bar {
+    transform-origin: left center;
+    animation: ecom-fill 12s ease-in-out 0.4s infinite;
+  }
+
+  .ecom-bag {
+    transform-origin: center bottom;
+    animation: ecom-catch 9s ease-in-out 2s infinite;
+  }
+
+  .ecom-item {
+    transform-origin: center;
+    animation: ecom-drop 9s ease-in-out 2s infinite;
+  }
+
+  @keyframes ecom-pulse {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.04);
+      opacity: 0.72;
+    }
+  }
+
+  @keyframes ecom-float {
+    0%,
+    100% {
+      transform: translateY(0);
+      opacity: 0.88;
+    }
+    50% {
+      transform: translateY(-4px);
+      opacity: 1;
+    }
+  }
+
+  @keyframes ecom-fill {
+    0%,
+    100% {
+      transform: scaleX(0.14);
+      opacity: 0.55;
+    }
+    58% {
+      transform: scaleX(1);
+      opacity: 1;
+    }
+  }
+
+  @keyframes ecom-drop {
+    0% {
+      transform: translateY(-56px);
+      opacity: 0;
+    }
+    16% {
+      opacity: 1;
+    }
+    48% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    62% {
+      transform: translateY(3px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(-56px);
+      opacity: 0;
+    }
+  }
+
+  @keyframes ecom-catch {
+    0%,
+    44%,
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    52% {
+      transform: scale(1.03);
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    svg * {
+      animation: none;
+    }
+  }
+</style>

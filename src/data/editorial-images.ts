@@ -8,25 +8,6 @@ export const heroImage: EditorialImage = {
   alt: "E-commerce, operations, analytics, and mobile app interfaces across connected devices",
 };
 
-export const goalImages = {
-  operations: {
-    src: "/images/editorial/goal-operations.webp",
-    alt: "Minimal illustration of a warehouse aisle with a single operations dashboard",
-  },
-  ecommerce: {
-    src: "/images/editorial/goal-ecommerce.webp",
-    alt: "Minimal illustration of shopping bags suggesting an online store",
-  },
-  website: {
-    src: "/images/editorial/goal-website.webp",
-    alt: "Minimal illustration of a simple website layout in a browser window",
-  },
-  integrations: {
-    src: "/images/editorial/goal-integrations.webp",
-    alt: "Minimal illustration of two systems connected by a single line",
-  },
-} as const satisfies Record<string, EditorialImage>;
-
 export const serviceImages: Record<string, EditorialImage> = {
   "web-development": {
     src: "/images/editorial/service-web-development.webp",
@@ -85,6 +66,10 @@ export const blogImages: Record<string, EditorialImage> = {
   "mobile-first-b2b": {
     src: "/images/editorial/blog-mobile-b2b.webp",
     alt: "Warehouse professional checking inventory from a mobile business app",
+  },
+  "typesafe-jev-business-implications": {
+    src: "/images/editorial/service-agentic-automation.webp",
+    alt: "Workflow automation dashboard with connected agents displayed on a desktop in an office",
   },
 };
 

@@ -1,0 +1,273 @@
+---
+---
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 640 360"
+  fill="none"
+  role="presentation"
+  aria-hidden="true"
+  class="h-full w-full"
+>
+  <rect width="640" height="360" fill="#f4f4f5" />
+
+  <g class="web-guides" stroke="#0a0a12">
+    <line x1="0" y1="180" x2="640" y2="180" opacity="0.08" />
+    <line x1="320" y1="0" x2="320" y2="360" opacity="0.08" />
+    <rect x="96" y="36" width="448" height="288" opacity="0.06" />
+    <line x1="96" y1="108" x2="544" y2="108" opacity="0.05" />
+  </g>
+
+  <g class="web-chrome" stroke="#0a0a12" stroke-width="1.75" stroke-linecap="square" stroke-linejoin="miter">
+    <rect x="148" y="68" width="344" height="224" fill="#ffffff" />
+    <line x1="148" y1="100" x2="492" y2="100" />
+    <rect x="164" y="80" width="10" height="10" />
+    <rect x="182" y="80" width="10" height="10" />
+    <rect x="200" y="80" width="10" height="10" />
+    <rect x="228" y="84" width="176" height="8" stroke="#71717a" />
+  </g>
+
+  <g class="web-messy" stroke="#71717a" stroke-width="1.75" stroke-linecap="square" stroke-linejoin="miter">
+    <g transform="rotate(3 294 124)">
+      <rect class="web-messy-a" x="196" y="116" width="196" height="16" />
+    </g>
+    <g transform="rotate(-2.5 280 154)">
+      <rect class="web-messy-b" x="162" y="150" width="236" height="9" />
+    </g>
+    <g transform="rotate(4 262 180)">
+      <rect class="web-messy-c" x="208" y="176" width="108" height="8" />
+    </g>
+    <g transform="rotate(-3 268 225)">
+      <rect class="web-messy-d" x="236" y="214" width="64" height="22" />
+    </g>
+  </g>
+
+  <g class="web-clear" stroke="#0a0a12" stroke-width="1.75" stroke-linecap="square" stroke-linejoin="miter">
+    <rect class="web-clear-a" x="176" y="124" width="248" height="18" />
+    <rect class="web-clear-b" x="176" y="156" width="152" height="8" />
+    <rect class="web-clear-c" x="176" y="172" width="96" height="8" />
+  </g>
+
+  <rect
+    class="web-cta"
+    x="176"
+    y="206"
+    width="84"
+    height="26"
+    stroke="#28AFA2"
+    stroke-width="1.75"
+    stroke-linecap="square"
+    stroke-linejoin="miter"
+  />
+
+  <rect
+    class="web-cursor"
+    x="428"
+    y="268"
+    width="8"
+    height="8"
+    stroke="#0a0a12"
+    stroke-width="1.75"
+    stroke-linecap="square"
+    stroke-linejoin="miter"
+  />
+</svg>
+<style>
+  svg {
+    stroke-linecap: square;
+    stroke-linejoin: miter;
+  }
+
+  .web-messy,
+  .web-clear,
+  .web-cta,
+  .web-cursor,
+  .web-messy-a,
+  .web-messy-b,
+  .web-messy-c,
+  .web-messy-d,
+  .web-clear-a,
+  .web-clear-b,
+  .web-clear-c {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  .web-messy {
+    animation: web-messy-out 10s ease-in-out infinite;
+  }
+
+  .web-messy-a {
+    animation: web-messy-drift 10s ease-in-out infinite;
+  }
+
+  .web-messy-b {
+    animation: web-messy-drift 10s ease-in-out 0.18s infinite;
+  }
+
+  .web-messy-c {
+    animation: web-messy-drift 10s ease-in-out 0.32s infinite;
+  }
+
+  .web-messy-d {
+    animation: web-messy-drift 10s ease-in-out 0.46s infinite;
+  }
+
+  .web-clear {
+    opacity: 0;
+    animation: web-clear-in 10s ease-in-out infinite;
+  }
+
+  .web-clear-a {
+    animation: web-clear-rise 10s ease-in-out infinite;
+  }
+
+  .web-clear-b {
+    animation: web-clear-rise 10s ease-in-out 0.16s infinite;
+  }
+
+  .web-clear-c {
+    animation: web-clear-rise 10s ease-in-out 0.28s infinite;
+  }
+
+  .web-cta {
+    animation: web-cta-pulse 10s ease-in-out infinite;
+  }
+
+  .web-cursor {
+    animation: web-cursor-travel 10s ease-in-out infinite;
+  }
+
+  @keyframes web-messy-out {
+    0%,
+    26% {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+    40%,
+    86% {
+      opacity: 0;
+      transform: translate(14px, -8px);
+    }
+    100% {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+  }
+
+  @keyframes web-messy-drift {
+    0%,
+    26% {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+    40%,
+    86% {
+      opacity: 0;
+      transform: translate(10px, -6px);
+    }
+    100% {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+  }
+
+  @keyframes web-clear-in {
+    0%,
+    26% {
+      opacity: 0;
+      transform: translate(-10px, 6px);
+    }
+    40%,
+    86% {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-10px, 6px);
+    }
+  }
+
+  @keyframes web-clear-rise {
+    0%,
+    26% {
+      opacity: 0;
+      transform: translate(-8px, 5px);
+    }
+    40%,
+    86% {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-8px, 5px);
+    }
+  }
+
+  @keyframes web-cursor-travel {
+    0%,
+    16% {
+      opacity: 0.85;
+      transform: translate(0, 0);
+    }
+    38% {
+      opacity: 1;
+      transform: translate(-218px, -55px);
+    }
+    44% {
+      opacity: 1;
+      transform: translate(-218px, -55px) scale(0.82);
+    }
+    50%,
+    84% {
+      opacity: 1;
+      transform: translate(-218px, -55px);
+    }
+    100% {
+      opacity: 0.85;
+      transform: translate(0, 0);
+    }
+  }
+
+  @keyframes web-cta-pulse {
+    0%,
+    42% {
+      transform: scale(1);
+    }
+    46% {
+      transform: scale(1.08);
+    }
+    54%,
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    svg * {
+      animation: none;
+    }
+
+    .web-messy,
+    .web-messy-a,
+    .web-messy-b,
+    .web-messy-c,
+    .web-messy-d {
+      opacity: 0;
+    }
+
+    .web-clear,
+    .web-clear-a,
+    .web-clear-b,
+    .web-clear-c {
+      opacity: 1;
+      transform: none;
+    }
+
+    .web-cta,
+    .web-cursor {
+      transform: none;
+    }
+  }
+</style>

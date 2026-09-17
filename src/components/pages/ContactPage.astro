@@ -9,6 +9,8 @@ import { buildContactPage, siteUrl } from '../../lib/jsonld';
 
 const contactDescription =
   "Get in touch with the ENET Systems team for a free consultation on web, mobile, and Odoo ERP projects.";
+const turnstileSiteKey =
+  import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? "1x00000000000000000000AA";
 ---
 
 <Layout
@@ -99,7 +101,13 @@ const contactDescription =
 
         <!-- Contact Form -->
         <div class="lg:col-span-3 opacity-0 animate-slide-up animate-delay-200">
-          <form class="bg-white border-2 border-ink/10 p-8" id="contact-form">
+          <form
+            class="bg-white border-2 border-ink/10 p-8"
+            id="contact-form"
+            action="/contact.php"
+            method="POST"
+            novalidate
+          >
             <h3 class="text-2xl font-bold font-[family-name:var(--font-display)] mb-6">
               {'Send Us a Message'}
             </h3>
@@ -110,7 +118,10 @@ const contactDescription =
                 <input
                   type="text"
                   id="name"
+                  name="name"
                   required
+                  maxlength="200"
+                  autocomplete="name"
                   class="w-full px-4 py-3 bg-secondary border-2 border-ink/10 focus:border-accent focus:outline-none transition-colors"
                   placeholder="Your name"
                 />
@@ -120,7 +131,10 @@ const contactDescription =
                 <input
                   type="email"
                   id="email"
+                  name="email"
                   required
+                  maxlength="200"
+                  autocomplete="email"
                   class="w-full px-4 py-3 bg-secondary border-2 border-ink/10 focus:border-accent focus:outline-none transition-colors"
                   placeholder="your@email.com"
                 />
@@ -133,6 +147,9 @@ const contactDescription =
                 <input
                   type="tel"
                   id="phone"
+                  name="phone"
+                  maxlength="50"
+                  autocomplete="tel"
                   class="w-full px-4 py-3 bg-secondary border-2 border-ink/10 focus:border-accent focus:outline-none transition-colors"
                   placeholder="+20 XXX XXX XXXX"
                 />
@@ -141,12 +158,14 @@ const contactDescription =
                 <label class="block text-sm font-bold mb-2" for="service">{'Service Interested In'}</label>
                 <select
                   id="service"
+                  name="service"
                   class="w-full px-4 py-3 bg-secondary border-2 border-ink/10 focus:border-accent focus:outline-none transition-colors"
                 >
                   <option value="">{'Select a service'}</option>
                   <option value="web">{'Web Development'}</option>
                   <option value="odoo">{'Odoo ERP'}</option>
                   <option value="mobile">{'Mobile Apps'}</option>
+                  <option value="agentic">{'Agentic Automation'}</option>
                   <option value="other">{'Other'}</option>
                 </select>
               </div>
@@ -156,14 +175,32 @@ const contactDescription =
               <label class="block text-sm font-bold mb-2" for="message">{'Message *'}</label>
               <textarea
                 id="message"
+                name="message"
                 required
                 rows="5"
+                maxlength="5000"
                 class="w-full px-4 py-3 bg-secondary border-2 border-ink/10 focus:border-accent focus:outline-none transition-colors resize-none"
                 placeholder="Tell us about your project..."
               ></textarea>
             </div>
 
-            <button type="submit" class="btn-fire w-full">
+            <div class="mb-6">
+              <div
+                id="cf-turnstile"
+                class="cf-turnstile"
+                data-sitekey={turnstileSiteKey}
+                data-theme="light"
+              ></div>
+            </div>
+
+            <p
+              id="contact-form-status"
+              class="mb-4 text-sm font-medium min-h-5"
+              role="status"
+              aria-live="polite"
+            ></p>
+
+            <button type="submit" id="contact-submit" class="btn-fire w-full">
               {'Send Message'}
             </button>
           </form>
@@ -176,10 +213,151 @@ const contactDescription =
 </Layout>
 
 <script>
-  const form = document.getElementById('contact-form');
-  form?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    alert('Thank you for your message! We will get back to you soon.');
-    (e.target as HTMLFormElement).reset();
+  declare global {
+    interface Window {
+      turnstile?: {
+        render: (container: string | HTMLElement, options: Record<string, unknown>) => string;
+        reset: (widgetId?: string) => void;
+        remove: (widgetId: string) => void;
+      };
+    }
+  }
+
+  const TURNSTILE_SRC = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+
+  let widgetId: string | undefined;
+  let boundForm: HTMLFormElement | null = null;
+
+  function statusEl() {
+    return document.getElementById("contact-form-status");
+  }
+
+  function setStatus(message: string, kind: "idle" | "error" | "success") {
+    const el = statusEl();
+    if (!el) return;
+    el.textContent = message;
+    el.classList.remove("text-fire", "text-accent", "text-muted");
+    if (kind === "error") el.classList.add("text-fire");
+    if (kind === "success") el.classList.add("text-accent");
+    if (kind === "idle") el.classList.add("text-muted");
+  }
+
+  function loadTurnstile(): Promise<NonNullable<Window["turnstile"]>> {
+    if (window.turnstile) return Promise.resolve(window.turnstile);
+
+    return new Promise((resolve, reject) => {
+      const existing = document.querySelector<HTMLScriptElement>(
+        `script[src="${TURNSTILE_SRC}"]`,
+      );
+      const onReady = () => {
+        if (window.turnstile) resolve(window.turnstile);
+        else reject(new Error("Turnstile failed to load"));
+      };
+
+      if (existing) {
+        if (window.turnstile) onReady();
+        else existing.addEventListener("load", onReady, { once: true });
+        existing.addEventListener("error", () => reject(new Error("Turnstile failed to load")), {
+          once: true,
+        });
+        return;
+      }
+
+      const script = document.createElement("script");
+      script.src = TURNSTILE_SRC;
+      script.async = true;
+      script.onload = onReady;
+      script.onerror = () => reject(new Error("Turnstile failed to load"));
+      document.head.appendChild(script);
+    });
+  }
+
+  async function renderWidget() {
+    const container = document.getElementById("cf-turnstile");
+    if (!container) return;
+
+    const sitekey = container.getAttribute("data-sitekey");
+    if (!sitekey) return;
+
+    const turnstile = await loadTurnstile();
+    if (widgetId) {
+      try {
+        turnstile.remove(widgetId);
+      } catch {
+        // Widget may already be gone after a client-side navigation.
+      }
+      widgetId = undefined;
+    }
+    container.innerHTML = "";
+    widgetId = turnstile.render(container, {
+      sitekey,
+      theme: "light",
+    });
+  }
+
+  async function onSubmit(event: Event) {
+    event.preventDefault();
+    const form = event.currentTarget as HTMLFormElement;
+    const submit = document.getElementById("contact-submit") as HTMLButtonElement | null;
+    const tokenInput = form.querySelector<HTMLInputElement>('[name="cf-turnstile-response"]');
+
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+    if (!tokenInput?.value) {
+      setStatus("Please complete the verification challenge.", "error");
+      return;
+    }
+
+    setStatus("Sending…", "idle");
+    if (submit) submit.disabled = true;
+
+    try {
+      const response = await fetch(form.action, {
+        method: "POST",
+        body: new FormData(form),
+        headers: { Accept: "application/json" },
+      });
+      const data = (await response.json()) as { ok?: boolean; error?: string };
+
+      if (!response.ok || !data.ok) {
+        setStatus(data.error || "Could not send your message. Please try again.", "error");
+        window.turnstile?.reset(widgetId);
+        return;
+      }
+
+      form.reset();
+      window.turnstile?.reset(widgetId);
+      setStatus("Thank you. We will get back to you soon.", "success");
+    } catch {
+      setStatus("Could not send your message. Please try again.", "error");
+      window.turnstile?.reset(widgetId);
+    } finally {
+      if (submit) submit.disabled = false;
+    }
+  }
+
+  async function initContactForm() {
+    const form = document.getElementById("contact-form") as HTMLFormElement | null;
+    if (!form) return;
+
+    if (boundForm && boundForm !== form) {
+      boundForm.removeEventListener("submit", onSubmit);
+    }
+    if (boundForm !== form) {
+      form.addEventListener("submit", onSubmit);
+      boundForm = form;
+    }
+
+    try {
+      await renderWidget();
+    } catch {
+      setStatus("Verification failed to load. Refresh the page and try again.", "error");
+    }
+  }
+
+  document.addEventListener("astro:page-load", () => {
+    void initContactForm();
   });
 </script>

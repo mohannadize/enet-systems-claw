@@ -1,0 +1,53 @@
+---
+title: TypeSafe’s Jev and what cheaper, typed decisions mean for operators
+description: A new class of AI model skips chat and returns structured choices software can act on. Here is what that changes for automation cost, risk, and how teams should design workflows.
+pubDate: 2026-09-18
+author: ENET Systems
+tags: [AI, Automation]
+---
+
+In mid-September, TypeSafe AI came out of stealth with **Jev**, the first of what they call System One models. It is not a chatbot. You give it the current state of a process and a closed set of questions; it returns typed answers with calibrated probabilities — fast enough to sit inside ordinary software, not only a chat window.
+
+That distinction matters more to operators than another “smarter assistant” launch.
+
+## What actually shipped
+
+Chat models are trained to write. To use them in a warehouse, finance, or support workflow you still have to prompt, parse, validate, and hope the string matches your schema. TypeSafe’s bet is that a large share of production AI is not writing at all. It is **classify, route, score, approve, or hand off**.
+
+Jev is built for that slice: unstructured state in, structured decisions out, in parallel, with a claimed 70–500 ms round trip and input pricing around **$0.042 per million tokens**. Outputs are billed as free. It is early access, and the published workflow evals are TypeSafe’s own — treat the 100x speed and cost headlines as a direction of travel, not a guarantee for your stack.
+
+Two caveats are worth keeping in the brief:
+
+- **No type errors is not the same as no wrong answers.** The model will not invent a tool name or a JSON field you never defined. It can still pick the wrong option inside that schema.
+- **You still need generation somewhere.** Drafting an email, a quote narrative, or a product description is still an LLM job. Jev is the decision layer, not the copywriter.
+
+## Why the economics change the architecture
+
+Most businesses we work with stall on AI for a boring reason: the useful tasks fire hundreds or thousands of times a day, and a multi-second, multi-dollar frontier call cannot sit on every order, invoice, or ticket. Teams then either skip automation or wrap a cheap classifier that cannot explain its uncertainty.
+
+If decision calls get cheap and fast enough, three things follow:
+
+1. **Volume becomes the point.** TypeSafe named the model after Jevons: when the cost of a resource drops, total use often rises. Expect more AI inside ERP and commerce — not fewer models, more small judgments per process.
+2. **Confidence scores become operational controls.** A well-calibrated probability is how you set “auto-post this supplier invoice,” “ask a human,” or “block and escalate.” That maps cleanly onto the human-in-the-loop rules we already put on agent work.
+3. **The stack splits.** Frontier models stay on the slow, high-stakes reasoning. A System One layer handles the high-frequency branches: which queue, which warehouse, which payment method, whether the document is complete.
+
+That last point is the business implication. You stop asking one model to be the whole company brain.
+
+## What this looks like on real processes
+
+The fit is the work that already lives between systems and inboxes:
+
+- **Order and ticket routing** — which team, which SLA, whether the request is a return, a stock query, or something else.
+- **Document intake** — is this a delivery note or a tax invoice; is the PO number present; should it post or wait.
+- **Exception triage** in Odoo — hold shipment, split delivery, or proceed when stock, credit, and address data disagree.
+- **Guardrails around agents** — score a draft reply or a proposed stock move before anything is written back.
+
+None of those need a 400-word explanation. They need a decision the surrounding code can trust, log, and reverse.
+
+## How to evaluate it without buying the pitch
+
+Treat Jev like any other automation component. Map the process first. Define the allowed answers. Decide the confidence thresholds with the people who own the outcome. Pilot on one high-volume, reversible flow — not payments on day one.
+
+We design agentic automation that way already: discovery, constrained tools, approval on high-impact steps, and an operations view of the queue. Models like Jev, if they hold up in production, make that pattern cheaper to run at the scale trading and retail teams actually need.
+
+If you are looking at where AI should sit in order-to-cash or document-heavy operations, we can help you pick the decisions worth automating — and keep a person on the ones that are not.

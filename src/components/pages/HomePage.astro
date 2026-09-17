@@ -13,9 +13,9 @@ import {
 import { buildWebPage, siteUrl } from "../../lib/jsonld";
 import { business } from "../../data/business";
 import { clients, clientSectors } from "../../data/clients";
+import GoalIllustration from "../../components/illustrations/GoalIllustration.astro";
 import {
   blogImages,
-  goalImages,
   heroImage,
   localizedEntryId,
   serviceImages,
@@ -30,30 +30,6 @@ const formatBlogDate = (d: Date) =>
     month: "short",
     day: "numeric",
   });
-
-const testimonials = [
-  {
-    quote:
-      "We needed Odoo live without freezing day-to-day operations. ENET planned the cutover, trained our staff, and stayed close after go-live — the kind of partner you want when ERP touches every department.",
-    name: "Ahmad R.",
-    title: "Group IT Manager",
-    org: "Multi-branch retail",
-  },
-  {
-    quote:
-      "Our storefront was fast in the office and slow for customers on mobile. They profiled the stack, fixed the real bottlenecks, and gave us a checklist so we do not slide backwards after launch.",
-    name: "Layla M.",
-    title: "Head of E-commerce",
-    org: "Fashion & beauty brand",
-  },
-  {
-    quote:
-      "Clear communication, realistic timelines, and engineers who understand both product and infrastructure. They have shipped multiple releases for us and remain our first call for complex builds.",
-    name: "Faisal T.",
-    title: "Managing Director",
-    org: "Industrial supplies",
-  },
-];
 
 const stats = [
   { number: "10+", label: "Years helping businesses grow" },
@@ -106,7 +82,7 @@ const goals = [
     result: "One connected system your team trusts day to day.",
     href: "/services/odoo-erp",
     link: "Explore Odoo ERP",
-    image: goalImages.operations,
+    illustration: "operations" as const,
   },
   {
     title: "You want to sell more online",
@@ -114,7 +90,7 @@ const goals = [
     result: "A fast, conversion-ready store built to turn visits into orders.",
     href: "/services/web-development/e-commerce",
     link: "Explore e-commerce",
-    image: goalImages.ecommerce,
+    illustration: "ecommerce" as const,
   },
   {
     title: "Your website doesn't build trust",
@@ -122,7 +98,7 @@ const goals = [
     result: "A clear, credible site that brings qualified enquiries.",
     href: "/services/web-development",
     link: "Explore websites",
-    image: goalImages.website,
+    illustration: "website" as const,
   },
   {
     title: "Work lives in disconnected tools",
@@ -130,7 +106,7 @@ const goals = [
     result: "Connected workflows with less manual reconciliation.",
     href: "/services/odoo-erp/implementation",
     link: "Explore integrations",
-    image: goalImages.integrations,
+    illustration: "integrations" as const,
   },
 ];
 
@@ -196,10 +172,6 @@ const homeDescription =
     <div class="container-custom relative z-10 py-16 md:py-24 lg:py-28">
       <div class="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
         <div>
-          <p class="mb-6 inline-flex items-center gap-2 border-2 border-accent/40 bg-accent/10 px-4 py-2 text-xs font-bold uppercase tracking-wider text-accent">
-            <span class="h-2 w-2 animate-pulse rounded-full bg-accent" aria-hidden="true"></span>
-            Web · E-commerce · Odoo ERP · Mobile apps
-          </p>
           <h1 class="text-4xl font-bold leading-[1.08] text-white sm:text-5xl lg:text-6xl xl:text-7xl">
             Run smoother.<br />
             <span class="text-gradient-dual">Grow faster.</span>
@@ -221,7 +193,7 @@ const homeDescription =
             </a>
           </div>
           <p class="mt-6 text-sm font-medium text-white/45">
-            Free initial consultation · Clear scope and timeline · Support after launch
+            Clear scope and timeline · Support after launch
           </p>
         </div>
 
@@ -278,7 +250,20 @@ const homeDescription =
   <section class="section-padding bg-secondary" aria-labelledby="goals-heading">
     <div class="container-custom">
       <div class="mb-12 max-w-2xl">
-        <span class="badge badge-accent mb-4">Start from your goal</span>
+        <div class="mb-4 flex items-center gap-3">
+          <svg
+            class="h-8 w-8 shrink-0 text-accent"
+            viewBox="0 0 32 32"
+            fill="none"
+            aria-hidden="true"
+          >
+            <circle cx="16" cy="16" r="13" stroke="currentColor" stroke-width="2" />
+            <circle cx="16" cy="16" r="8" stroke="currentColor" stroke-width="2" />
+            <circle cx="16" cy="16" r="2.5" fill="var(--color-fire)" stroke="none" />
+            <path stroke="currentColor" stroke-width="2" d="M16 3v6M16 23v6M3 16h6M23 16h6" />
+          </svg>
+          <span class="text-accent uppercase font-bold tracking-widest">Start from your goal</span>
+        </div>
         <h2 id="goals-heading" class="mt-4 text-4xl font-bold leading-[1.08] md:text-5xl">
           What do you need to improve?
         </h2>
@@ -298,15 +283,7 @@ const homeDescription =
               ]}
             >
               <div class="aspect-video overflow-hidden border-b-2 border-ink/10 bg-secondary">
-                <img
-                  src={goal.image.src}
-                  alt={goal.image.alt}
-                  width="1280"
-                  height="720"
-                  loading="lazy"
-                  decoding="async"
-                  class="h-full w-full object-contain transition-transform duration-700 group-hover:scale-[1.03]"
-                />
+                <GoalIllustration kind={goal.illustration} />
               </div>
               <div class="p-7 md:p-8">
                 <h3 class="text-xl font-bold leading-snug md:text-2xl">{goal.title}</h3>
@@ -336,7 +313,6 @@ const homeDescription =
     <div class="container-custom">
       <div class="mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
         <div class="max-w-xl">
-          <span class="badge badge-accent mb-4">Services</span>
           <h2 id="services-heading" class="mt-4 text-4xl font-bold leading-[1.08] md:text-5xl">
             Everything you need to run and grow
           </h2>
@@ -427,7 +403,6 @@ const homeDescription =
 
     <div class="container-custom relative z-10">
       <div class="mx-auto mb-10 max-w-2xl text-center">
-        <span class="badge badge-fire mb-4">Clients</span>
         <h2 id="clients-heading" class="mt-4 text-4xl font-bold leading-[1.08] text-white md:text-5xl">
           Teams across industries, one partner
         </h2>
@@ -446,15 +421,17 @@ const homeDescription =
         </ul>
       </div>
 
-      <ul class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+      <ul class="flex flex-wrap justify-center gap-8">
         {
           clients.map((client) => (
-            <li class="flex items-center gap-3 border border-white/10 bg-ink-soft p-4">
-              <LogoPlaceholder name={client.name} size="sm" gradient={client.gradient} class="shrink-0" />
-              <div class="min-w-0">
-                <p class="truncate text-sm font-bold text-white">{client.name}</p>
-                <p class="truncate text-xs text-white/45">{client.sector}</p>
-              </div>
+            <li class="flex size-40 p-6 aspect-square rounded-full items-center justify-center border border-white/10 bg-white/20">
+              <img
+                src={client.logo}
+                alt={client.name}
+                class="size-full object-contain"
+                loading="lazy"
+                decoding="async"
+              />
             </li>
           ))
         }
@@ -466,7 +443,6 @@ const homeDescription =
   <section class="section-padding bg-secondary" aria-labelledby="process-heading">
     <div class="container-custom">
       <div class="mb-12 mx-auto max-w-2xl text-center">
-        <span class="badge badge-accent mb-4">How it works</span>
         <h2 id="process-heading" class="mt-4 text-4xl font-bold leading-[1.08] md:text-5xl">
           From first call to ongoing support
         </h2>
@@ -492,39 +468,6 @@ const homeDescription =
         <p class="mt-4 text-sm font-medium text-muted">
           Prefer to look around first? <a href="/#clients" class="font-bold text-accent underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">See who we work with</a>
         </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── TESTIMONIALS — quieter supporting proof ─────────────────────── -->
-  <section class="section-padding bg-white" aria-labelledby="testimonials-heading">
-    <div class="container-custom">
-      <div class="mb-12 mx-auto max-w-2xl text-center">
-        <span class="badge badge-accent mb-4">Client voices</span>
-        <h2 id="testimonials-heading" class="mt-4 text-4xl font-bold leading-[1.08] md:text-5xl">
-          What it's like to work with us
-        </h2>
-      </div>
-
-      <div class="grid gap-6 md:grid-cols-3">
-        {
-          testimonials.map((t) => (
-            <figure class="flex flex-col border-2 border-ink/10 bg-secondary p-7">
-              <span class="text-4xl font-bold leading-none text-accent/40" aria-hidden="true">&ldquo;</span>
-              <blockquote class="mt-2 flex-1 text-[0.95rem] leading-relaxed text-ink/75">
-                <p>{t.quote}</p>
-              </blockquote>
-              <figcaption class="mt-6 border-t-2 border-ink/5 pt-5">
-                <cite class="not-italic font-bold text-ink">{t.name}</cite>
-                <p class="mt-1 text-sm text-muted">
-                  {t.title}
-                  <span class="text-border" aria-hidden="true">{" · "}</span>
-                  {t.org}
-                </p>
-              </figcaption>
-            </figure>
-          ))
-        }
       </div>
     </div>
   </section>

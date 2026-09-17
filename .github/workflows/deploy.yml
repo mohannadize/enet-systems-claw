@@ -1,0 +1,39 @@
+name: Build and deploy to cPanel
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: Production
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.0
+
+      - run: bun install --frozen-lockfile
+      - run: bun run build
+      - run: |
+          mkdir ftp_tmp
+          (cd dist && zip -qr ../ftp_tmp/dist.zip .)
+          cp deploy.php ftp_tmp/
+
+      - name: Upload zip
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          local-dir: ./ftp_tmp/
+          server-dir: ./
+          dangerous-clean-slate: true
+
+      - name: Unzip on server
+        run: |
+          curl -fsS "https://astra-light.net/deploy.php?token=${{ secrets.DEPLOY_TOKEN }}"

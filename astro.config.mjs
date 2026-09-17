@@ -4,7 +4,6 @@ import { business } from './src/data/business.ts';
 
 import tailwindcss from '@tailwindcss/vite';
 
-import node from '@astrojs/node';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 
@@ -14,6 +13,7 @@ import mdx from '@astrojs/mdx';
 export default defineConfig({
   site: business.publicSiteUrl,
   base: '/',
+  output: 'static',
 
   vite: {
     plugins: [tailwindcss()],
@@ -25,10 +25,6 @@ export default defineConfig({
   server: {
     host: true,
   },
-
-  adapter: node({
-    mode: 'standalone'
-  }),
 
   integrations: [react(), sitemap(), mdx()]
 });
