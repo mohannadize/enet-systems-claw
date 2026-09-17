@@ -4,25 +4,24 @@ import Navbar from "../../components/Navbar.astro";
 import Footer from "../../components/Footer.astro";
 import LogoPlaceholder from "../../components/LogoPlaceholder.astro";
 import TechnologyMarquee from "../../components/TechnologyMarquee.astro";
-import PixelGrid from "../../components/PixelGrid";
 import {
   getServices,
-  getCaseStudies,
   getBlogPosts,
   serviceColors,
   serviceLabel,
 } from "../../lib/collections";
 import { buildWebPage, siteUrl } from "../../lib/jsonld";
-import { ArrowRightCircleIcon } from "@heroicons/react/24/outline";
-import OdooIcon from "../../components/icons/odoo-logo.astro";
-import WebIcon from "../../components/icons/web_icon.astro";
-import MobileIcon from "../../components/icons/mobile_icon.astro";
-import { TextEffect } from "../../components/text-effect";
-
+import { business } from "../../data/business";
+import { clients, clientSectors } from "../../data/clients";
+import {
+  blogImages,
+  goalImages,
+  heroImage,
+  localizedEntryId,
+  serviceImages,
+} from "../../data/editorial-images";
 
 const servicesEntries = await getServices();
-const caseStudies = await getCaseStudies();
-const featuredStudies = caseStudies.slice(0, 6);
 const latestBlogPosts = (await getBlogPosts()).slice(0, 3);
 
 const formatBlogDate = (d: Date) =>
@@ -38,292 +37,236 @@ const testimonials = [
       "We needed Odoo live without freezing day-to-day operations. ENET planned the cutover, trained our staff, and stayed close after go-live — the kind of partner you want when ERP touches every department.",
     name: "Ahmad R.",
     title: "Group IT Manager",
-    org: "Multi-branch retail · Kuwait",
+    org: "Multi-branch retail",
   },
   {
     quote:
       "Our storefront was fast in the office and slow for customers on mobile. They profiled the stack, fixed the real bottlenecks, and gave us a checklist so we do not slide backwards after launch.",
     name: "Layla M.",
     title: "Head of E-commerce",
-    org: "Fashion & beauty brand · GCC",
+    org: "Fashion & beauty brand",
   },
   {
     quote:
       "Clear communication, realistic timelines, and engineers who understand both product and infrastructure. They have shipped multiple releases for us and remain our first call for complex builds.",
     name: "Faisal T.",
     title: "Managing Director",
-    org: "Industrial supplies · Kuwait",
+    org: "Industrial supplies",
   },
 ];
 
 const stats = [
-  { number: "10+", label: 'Years Experience' },
-  { number: "150+", label: 'Projects Delivered' },
-  { number: "50+", label: 'Happy Clients' },
-  { number: "24/7", label: '24/7 Support' },
+  { number: "10+", label: "Years helping businesses grow" },
+  { number: "150+", label: "Projects delivered" },
+  { number: "50+", label: "Clients served worldwide" },
+  { number: "24/7", label: "Support after go-live" },
+];
+
+// Plain-language outcomes per service hub. Copy stays truthful to existing
+// service content — no invented metrics, just customer benefits.
+const serviceOutcomes: Record<string, { promise: string; points: string[] }> = {
+  "odoo-erp": {
+    promise: "Operations in one place, without the spreadsheets.",
+    points: [
+      "Inventory, sales, and finance connected",
+      "Processes your team will actually follow",
+      "Training and support after go-live",
+    ],
+  },
+  "web-development": {
+    promise: "A website that brings enquiries, not just visits.",
+    points: [
+      "Clear messaging for first-time visitors",
+      "Fast on mobile, including multilingual storefronts",
+      "Easy for your team to update",
+    ],
+  },
+  "mobile-apps": {
+    promise: "An app customers and teams enjoy using.",
+    points: [
+      "iOS and Android from one plan",
+      "Connected to your store or operations",
+      "Launch, updates, and care handled",
+    ],
+  },
+  "agentic-automation": {
+    promise: "Routine work that finishes without chasing it.",
+    points: [
+      "Agents connected to the tools you already use",
+      "People in the loop on high-impact steps",
+      "Logs, handovers, and support after go-live",
+    ],
+  },
+};
+
+const goals = [
+  {
+    title: "Operations feel chaotic",
+    text: "Stock, sales, and finance live in different places and need constant manual work.",
+    result: "One connected system your team trusts day to day.",
+    href: "/services/odoo-erp",
+    link: "Explore Odoo ERP",
+    image: goalImages.operations,
+  },
+  {
+    title: "You want to sell more online",
+    text: "Your store is slow, hard to use on mobile, or missing the payments and languages your customers need.",
+    result: "A fast, conversion-ready store built to turn visits into orders.",
+    href: "/services/web-development/e-commerce",
+    link: "Explore e-commerce",
+    image: goalImages.ecommerce,
+  },
+  {
+    title: "Your website doesn't build trust",
+    text: "Visitors leave confused about what you offer or how to contact you.",
+    result: "A clear, credible site that brings qualified enquiries.",
+    href: "/services/web-development",
+    link: "Explore websites",
+    image: goalImages.website,
+  },
+  {
+    title: "Work lives in disconnected tools",
+    text: "Orders, inventory, and accounting need re-typing between systems.",
+    result: "Connected workflows with less manual reconciliation.",
+    href: "/services/odoo-erp/implementation",
+    link: "Explore integrations",
+    image: goalImages.integrations,
+  },
+];
+
+const process = [
+  {
+    step: "01",
+    title: "Listen and diagnose",
+    text: "A focused conversation about your goals, current tools, and where work gets stuck.",
+  },
+  {
+    step: "02",
+    title: "Clear roadmap",
+    text: "Scope, timeline, and options in plain language — so you can decide with confidence.",
+  },
+  {
+    step: "03",
+    title: "Build and launch",
+    text: "Design, build, and testing with regular updates. We handle migration and training.",
+  },
+  {
+    step: "04",
+    title: "Support and improve",
+    text: "We stay after go-live to fix issues, train your team, and add what you need next.",
+  },
+];
+
+const consultationPoints = [
+  "An honest view on whether you need new software at all",
+  "Clear options with scope and timeline in plain language",
+  "Next steps you can use even if we never work together",
 ];
 
 const homeDescription =
-  "ENET Systems LTD delivers enterprise web solutions, Odoo ERP implementations, and mobile applications that transform businesses across Kuwait and the MENA region.";
+  "ENET Systems helps businesses worldwide run operations smoothly, sell online, and launch websites and apps customers trust — Odoo ERP, e-commerce, web development, and mobile apps with ongoing support.";
 ---
 
 <Layout
-  title="ENET Systems LTD | Digital Transformation Partner"
+  title="ENET Systems LTD | Odoo ERP, E-commerce, Websites & Mobile Apps"
   description={homeDescription}
   jsonLd={buildWebPage({
-    name: "ENET Systems LTD | Digital Transformation Partner",
+    name: "ENET Systems LTD | Odoo ERP, E-commerce, Websites & Mobile Apps",
     description: homeDescription,
     url: siteUrl("/"),
   })}
 >
   <Navbar />
 
-  <!-- ═══════════════════════════════════════════════════════════════════ -->
-  <!-- HERO SECTION — Bold, oversized, dual-tone -->
-  <!-- ═══════════════════════════════════════════════════════════════════ -->
-  <section class="relative min-h-[calc(100vh-100px)] flex items-center overflow-hidden bg-ink">
+  <!-- ── HERO — customer promise + consultation path ─────────────────── -->
+  <section class="relative overflow-hidden bg-ink">
     <img
-      src="/images/hero.webp"
-      alt="Hero Background"
-      class="absolute inset-0 w-full h-full object-cover opacity-20"
+      src={heroImage.src}
+      alt={heroImage.alt}
+      class="absolute inset-0 h-full w-full object-cover object-center opacity-35"
       fetchpriority="high"
     />
-    <!-- Background Effects -->
-    <div class="absolute inset-0">
-      <div class="absolute top-1/4 -left-32 w-96 h-96 bg-accent/20 rounded-full blur-3xl"></div>
-      <div class="absolute bottom-1/4 -right-32 w-96 h-96 bg-fire/15 rounded-full blur-3xl"></div>
-      <div class="pointer-events-none absolute inset-0 halftone halftone-light opacity-20" aria-hidden="true"></div>
-      <div class="pointer-events-none absolute top-0 right-0 h-full w-1/2 halftone-organic-accent opacity-30 ht-mask-r" aria-hidden="true"></div>
+    <div class="absolute inset-0" aria-hidden="true">
+      <div class="absolute top-1/4 -left-32 h-96 w-96 rounded-full bg-accent/20 blur-3xl"></div>
+      <div class="absolute bottom-1/4 -right-32 h-96 w-96 rounded-full bg-fire/15 blur-3xl"></div>
+      <div class="pointer-events-none absolute inset-0 halftone halftone-light opacity-15"></div>
       <div class="absolute inset-0 bg-linear-to-b from-transparent to-ink"></div>
     </div>
 
-    <div class="container-custom relative z-10">
-      <div class="flex items-center gap-10 xl:gap-16">
-        <!-- Desktop pixel grid — left column (lg+) -->
-        <div class="hidden lg:flex shrink-0 opacity-0 animate-fade-in animate-delay-200">
-          <PixelGrid client:load cellSize={16} gap={2} />
-        </div>
-
-        <!-- Hero text — flex-1 so it fills remaining space -->
-        <div class="flex-1 min-w-0 max-w-2xl relative">
-          <!-- Mobile: pixel grid faded behind text -->
-          <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-10 lg:hidden">
-            <PixelGrid client:load cellSize={13} gap={2} />
-          </div>
-
-          <!-- Badge -->
-          <div class="relative mb-6 opacity-0 animate-slide-up">
-            <span class="inline-flex items-center gap-2 px-4 py-2 border-2 border-accent/40 bg-accent/10 text-accent text-xs font-bold uppercase tracking-wider">
-              <span class="w-2 h-2 bg-accent rounded-full animate-pulse"></span>
-              Kuwait · MENA Region
-            </span>
-          </div>
-
-          <h1
-            class="text-5xl md:text-7xl lg:text-8xl font-bold font-heading leading-[1.05] text-white opacity-0 animate-slide-up animate-delay-100"
-          >
-            {'Software that'}<br/>
-            <span class="text-gradient-dual">{'Drives Growth.'}</span>
-          </h1>
-
-          <p
-            class="text-base md:text-lg text-white/60 mt-8 max-w-2xl leading-relaxed mb-8 opacity-0 animate-slide-up animate-delay-200"
-          >
-            {'We build software that transforms businesses across Kuwait and the MENA region.'}
+    <div class="container-custom relative z-10 py-16 md:py-24 lg:py-28">
+      <div class="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+        <div>
+          <p class="mb-6 inline-flex items-center gap-2 border-2 border-accent/40 bg-accent/10 px-4 py-2 text-xs font-bold uppercase tracking-wider text-accent">
+            <span class="h-2 w-2 animate-pulse rounded-full bg-accent" aria-hidden="true"></span>
+            Web · E-commerce · Odoo ERP · Mobile apps
           </p>
-
-          <div
-            class="flex flex-wrap gap-4 opacity-0 animate-slide-up animate-delay-300 items-center"
-          >
-            <a href={"/contact"} class="btn-fire text-lg px-4 md:px-8 py-2 md:py-3">
-              {'Get in Touch'}
+          <h1 class="text-4xl font-bold leading-[1.08] text-white sm:text-5xl lg:text-6xl xl:text-7xl">
+            Run smoother.<br />
+            <span class="text-gradient-dual">Grow faster.</span>
+          </h1>
+          <p class="mb-8 mt-6 max-w-xl text-base leading-relaxed text-white/65 md:text-lg">
+            We help companies across industries replace manual work, launch modern
+            storefronts, and connect operations — from the first consultation to
+            ongoing support.
+          </p>
+          <div class="flex flex-wrap items-center gap-4">
+            <a href="/contact" class="btn-fire px-8 py-3 text-base">
+              Book a consultation
             </a>
             <a
-              href={"/portfolio"}
-              class="text-lg text-white/70 hover:text-white transition-colors duration-300 px-4 md:px-8 py-2 md:py-4 flex items-center gap-2 group border-2 border-transparent hover:border-white/20"
+              href="/#clients"
+              class="border-2 border-white/20 px-8 py-3 text-base font-bold text-white/80 transition-colors duration-300 hover:border-white/40 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             >
-              {'View Our Work'}
-              <ArrowRightCircleIcon
-                className="w-5 h-5 group-hover:translate-x-1 rtl:-translate-x-1 rtl:rotate-180 opacity-50 group-hover:opacity-100 transition duration-300"
-              />
+              See who we work with
             </a>
           </div>
+          <p class="mt-6 text-sm font-medium text-white/45">
+            Free initial consultation · Clear scope and timeline · Support after launch
+          </p>
         </div>
-      </div>
-    </div>
 
-    <!-- Scroll indicator -->
-    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 opacity-0 animate-slide-up animate-delay-500">
-      <div class="w-6 h-10 border-2 border-white/30 flex justify-center pt-2">
-        <div class="w-1 h-3 bg-accent animate-bounce"></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════════════ -->
-  <!-- TECHNOLOGY MARQUEE — Bold strip -->
-  <!-- ═══════════════════════════════════════════════════════════════════ -->
-  <section class="py-8 bg-white border-y-2 border-ink/10">
-    <div class="container-custom">
-      <p class="text-center text-xs font-bold uppercase tracking-widest text-ink/40 mb-6">
-        {'Technologies We Work With'}
-      </p>
-      <TechnologyMarquee />
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════════════ -->
-  <!-- SERVICES SECTION — Bold cards with dual accents -->
-  <!-- ═══════════════════════════════════════════════════════════════════ -->
-  <section class="section-padding bg-secondary">
-    <div class="container-custom">
-      <div class="mb-16 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-        <div>
-          <span class="badge badge-accent mb-4 opacity-0 animate-slide-up">{'What We Do'}</span>
-          <h2 class="text-5xl md:text-6xl font-bold font-[family-name:var(--font-display)] mt-4 opacity-0 animate-slide-up animate-delay-100 leading-[1.05]">
-            {'Our Services'}
+        <aside class="border-2 border-white/10 bg-white p-6 md:p-8" aria-label="What you get from a consultation">
+          <p class="text-xs font-bold uppercase tracking-widest text-accent">Start here</p>
+          <h2 class="mt-2 text-2xl font-bold leading-snug text-ink md:text-3xl">
+            What you get from a consultation
           </h2>
-        </div>
-        <p class="text-muted text-lg max-w-md opacity-0 animate-slide-up animate-delay-200">
-          {'Comprehensive digital solutions tailored to elevate your business in the modern landscape.'}
-        </p>
-      </div>
-
-      <div class="grid md:grid-cols-3 gap-6">
-        {
-          servicesEntries.map((entry, i) => {
-            const service = entry.data;
-            const desc = service.shortDescription ?? service.description;
-            const isAlt = i % 2 === 1;
-            return (
-              <a
-                href={`/services/${entry.id}`}
-                class:list={[
-                  "group relative bg-white p-8 border-2 border-ink/10 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl opacity-0 animate-slide-up",
-                  isAlt ? "hover:border-fire hover:shadow-fire/15" : "hover:border-accent hover:shadow-accent/15",
-                ]}
-                style={`animation-delay: ${(i + 3) * 100}ms`}
-              >
-                <!-- Accent corner -->
-                <div class:list={[
-                  "absolute top-0 left-0 w-16 h-1.5",
-                  isAlt ? "bg-fire" : "bg-accent",
-                ]}></div>
-
-                <div
-                  class:list={[
-                    "w-16 h-16 flex items-center justify-center mb-6 transition-all duration-300 [&_svg]:w-8 [&_svg]:h-8",
-                    isAlt
-                      ? "bg-fire/10 text-fire group-hover:bg-fire group-hover:text-white"
-                      : "bg-accent/10 text-accent group-hover:bg-accent group-hover:text-white",
-                  ]}
-                  set:html={service.icon}
-                />
-                <h3 class="text-2xl font-bold font-[family-name:var(--font-display)] mb-4">
-                  {service.title}
-                </h3>
-                <p class="text-muted leading-relaxed mb-6">{desc}</p>
-                <div class:list={[
-                  "inline-flex items-center gap-2 text-sm font-bold border-b-2 pb-0.5 transition-all group-hover:gap-3",
-                  isAlt ? "text-fire border-fire/30" : "text-accent border-accent/30",
-                ]}>
-                  {'Learn More'}
-                  <svg class="w-4 h-4 transition-transform group-hover:translate-x-1 rtl:group-hover:-translate-x-1 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+          <ul class="mt-6 space-y-4">
+            {
+              consultationPoints.map((point) => (
+                <li class="flex items-start gap-3 text-[0.95rem] leading-relaxed text-ink/75">
+                  <svg class="mt-0.5 h-5 w-5 shrink-0 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
                   </svg>
-                </div>
-              </a>
-            );
-          })
-        }
+                  <span>{point}</span>
+                </li>
+              ))
+            }
+          </ul>
+          <div class="mt-8 flex flex-col gap-3 border-t-2 border-ink/5 pt-6 sm:flex-row">
+            <a href="/contact" class="btn-primary flex-1 text-center text-sm">
+              Book a consultation
+            </a>
+            <a
+              href={business.telHref}
+              class="flex-1 border-2 border-ink/15 px-4 py-3 text-center text-sm font-bold text-ink transition-colors hover:border-ink/30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            >
+              {business.phoneDisplay}
+            </a>
+          </div>
+        </aside>
       </div>
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════════════════════════════ -->
-  <!-- CASE STUDIES SECTION — Ink background, bold cards -->
-  <!-- ═══════════════════════════════════════════════════════════════════ -->
-  <section class="section-padding bg-ink relative overflow-hidden">
-    <!-- Decorative halftone -->
-    <div class="pointer-events-none absolute inset-0 halftone-organic-accent opacity-20" aria-hidden="true"></div>
-    <div class="pointer-events-none absolute -top-32 -right-32 w-96 h-96 bg-fire/10 rounded-full blur-3xl" aria-hidden="true"></div>
-
-    <div class="container-custom relative z-10">
-      <div class="mb-16 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-        <div>
-          <span class="badge badge-fire mb-4 opacity-0 animate-slide-up" style="border-color: var(--color-fire); color: var(--color-fire); background: rgba(255,107,53,0.1);">Client Stories</span>
-          <h2 class="text-5xl md:text-6xl font-bold font-[family-name:var(--font-display)] mt-4 text-white opacity-0 animate-slide-up animate-delay-100 leading-[1.05]">
-            {'Case Studies'}
-          </h2>
-        </div>
-        <p class="text-white/60 text-lg max-w-md opacity-0 animate-slide-up animate-delay-200">
-          {'Real projects, real results. See how we\'ve helped businesses transform their digital operations.'}
-        </p>
-      </div>
-
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+  <!-- ── TRUST BAND — compact proof, not tech logos ──────────────────── -->
+  <section class="border-b-2 border-ink/10 bg-white py-10" aria-label="Why businesses choose ENET">
+    <div class="container-custom">
+      <div class="grid grid-cols-2 gap-8 lg:grid-cols-4">
         {
-          featuredStudies.map((cs, i) => {
-            const study = cs.data;
-            return (
-              <a
-                href={`/case-studies/${cs.id}`}
-                class="group relative bg-ink-soft p-6 border border-white/10 hover:border-accent/50 transition-all duration-400 hover:-translate-y-1 hover:shadow-2xl hover:shadow-accent/10 opacity-0 animate-slide-up"
-                style={`animation-delay: ${(i + 2) * 80}ms`}
-                aria-label={`${'Read case study'}: ${study.name}`}
-              >
-                <div class="flex items-start justify-between gap-3 mb-5">
-                  <LogoPlaceholder
-                    name={study.name}
-                    size="md"
-                    gradient={study.gradient as any}
-                  />
-                  <div class="flex flex-wrap gap-1.5 justify-end">
-                    {study.services.map((svc) => (
-                      <span class={`inline-flex items-center px-2 py-0.5 text-xs font-bold border ${serviceColors[svc]}`}>
-                        {serviceLabel(svc)}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                <h3 class="font-bold text-lg font-[family-name:var(--font-display)] mb-1.5 text-white group-hover:text-accent transition-colors">
-                  {study.name}
-                </h3>
-                <p class="text-white/50 text-sm leading-relaxed line-clamp-2">{study.desc}</p>
-
-                <div class="mt-5 flex items-center gap-1.5 text-xs font-bold text-white/40 group-hover:text-accent transition-colors group-hover:gap-2.5 duration-300">
-                  {'Read case study'}
-                  <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
-                  </svg>
-                </div>
-              </a>
-            );
-          })
-        }
-      </div>
-
-      <div class="text-center mt-12 opacity-0 animate-slide-up animate-delay-500">
-        <a href={"/case-studies"} class="btn-outline-accent">{'View All Case Studies'}</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════════════ -->
-  <!-- STATS SECTION — Dual gradient band -->
-  <!-- ═══════════════════════════════════════════════════════════════════ -->
-  <section class="relative overflow-hidden py-20 section-gradient-dual">
-    <div class="pointer-events-none absolute inset-0 halftone-organic-light opacity-30 ht-mask-tb" aria-hidden="true"></div>
-    <div class="container-custom relative z-10">
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-white/30">
-        {
-          stats.map((stat, i) => (
-            <div class="text-center opacity-0 animate-slide-up" style={`animation-delay: ${(i + 5) * 100}ms`}>
-              <div class="text-5xl md:text-7xl font-bold font-[family-name:var(--font-display)] text-white mb-2 tracking-tight">
-                {stat.number}
-              </div>
-              <div class="text-white/80 font-bold text-sm uppercase tracking-wider">{stat.label}</div>
+          stats.map((stat) => (
+            <div class="text-center lg:text-left">
+              <p class="text-4xl font-bold tracking-tight text-ink md:text-5xl">{stat.number}</p>
+              <p class="mt-1 text-sm font-bold uppercase tracking-wider text-muted">{stat.label}</p>
             </div>
           ))
         }
@@ -331,55 +274,249 @@ const homeDescription =
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════════════════════════════ -->
-  <!-- TESTIMONIALS SECTION -->
-  <!-- ═══════════════════════════════════════════════════════════════════ -->
-  <section class="section-padding bg-white relative overflow-hidden">
-    <div class="pointer-events-none absolute top-1/2 left-0 w-[min(90vw,520px)] h-[min(90vw,520px)] -translate-y-1/2 -translate-x-1/2 rounded-full bg-fire/5 blur-3xl" aria-hidden="true" />
-    <div class="pointer-events-none absolute inset-0 halftone halftone-accent opacity-30 ht-mask-tb" aria-hidden="true" />
-
-    <!-- Giant background quotation mark -->
-    <div class="pointer-events-none select-none absolute inset-0 flex items-center justify-center overflow-hidden" aria-hidden="true">
-      <span class="font-[family-name:var(--font-display)] text-[32rem] md:text-[42rem] leading-none font-bold text-ink/[0.04] -translate-y-8" style="line-height:1">
-        &ldquo;
-      </span>
-    </div>
-
-    <div class="container-custom relative z-10">
-      <div class="text-center mb-16">
-        <span class="badge badge-accent mb-4 opacity-0 animate-slide-up">{'Client voices'}</span>
-        <h2 class="text-5xl md:text-6xl font-bold font-[family-name:var(--font-display)] mt-4 opacity-0 animate-slide-up animate-delay-100 leading-[1.05]">
-          {'What partners say'}
+  <!-- ── GOALS — let visitors self-select ────────────────────────────── -->
+  <section class="section-padding bg-secondary" aria-labelledby="goals-heading">
+    <div class="container-custom">
+      <div class="mb-12 max-w-2xl">
+        <span class="badge badge-accent mb-4">Start from your goal</span>
+        <h2 id="goals-heading" class="mt-4 text-4xl font-bold leading-[1.08] md:text-5xl">
+          What do you need to improve?
         </h2>
-        <p class="text-muted text-lg mt-4 max-w-2xl mx-auto opacity-0 animate-slide-up animate-delay-200">
-          {'Long-term relationships matter to us — here is how teams describe working with ENET on the ground.'}
+        <p class="mt-4 text-lg leading-relaxed text-muted">
+          Pick the situation that sounds familiar. We will point you to the
+          simplest solution that solves it — nothing more.
         </p>
       </div>
 
-      <div class="grid md:grid-cols-3 gap-6 lg:gap-8">
+      <div class="grid gap-6 md:grid-cols-2">
         {
-          testimonials.map((t, i) => (
-            <figure
+          goals.map((goal, i) => (
+            <article
               class:list={[
-                "relative bg-white p-6 md:p-8 flex flex-col border-2 transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl opacity-0 animate-slide-up",
-                i % 2 === 1 ? "border-fire/20 hover:border-fire hover:shadow-fire/10" : "border-accent/20 hover:border-accent hover:shadow-accent/10",
+                "group relative overflow-hidden border-2 border-ink/10 bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl",
+                i % 2 === 1 ? "hover:border-fire/40" : "hover:border-accent/40",
               ]}
-              style={`animation-delay: ${(i + 2) * 100}ms`}
             >
-              <span class:list={[
-                "font-[family-name:var(--font-display)] text-5xl leading-none select-none",
-                i % 2 === 1 ? "text-fire/30" : "text-accent/30",
-              ]} aria-hidden="true">
-                &ldquo;
-              </span>
-              <blockquote class="text-[0.95rem] md:text-base leading-relaxed text-ink/70 -mt-4 flex-1">
+              <div class="aspect-video overflow-hidden border-b-2 border-ink/10 bg-secondary">
+                <img
+                  src={goal.image.src}
+                  alt={goal.image.alt}
+                  width="1280"
+                  height="720"
+                  loading="lazy"
+                  decoding="async"
+                  class="h-full w-full object-contain transition-transform duration-700 group-hover:scale-[1.03]"
+                />
+              </div>
+              <div class="p-7 md:p-8">
+                <h3 class="text-xl font-bold leading-snug md:text-2xl">{goal.title}</h3>
+                <p class="mt-3 leading-relaxed text-muted">{goal.text}</p>
+                <p class="mt-4 border-l-2 border-accent/40 bg-accent/5 px-4 py-3 text-[0.95rem] font-medium leading-relaxed text-ink/80">
+                  {goal.result}
+                </p>
+                <a
+                  href={goal.href}
+                  class="mt-5 inline-flex items-center gap-2 text-sm font-bold text-accent transition-all group-hover:gap-3 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+                >
+                  {goal.link}
+                  <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+                  </svg>
+                </a>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SERVICES — outcomes in plain language ───────────────────────── -->
+  <section class="section-padding bg-white" aria-labelledby="services-heading">
+    <div class="container-custom">
+      <div class="mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+        <div class="max-w-xl">
+          <span class="badge badge-accent mb-4">Services</span>
+          <h2 id="services-heading" class="mt-4 text-4xl font-bold leading-[1.08] md:text-5xl">
+            Everything you need to run and grow
+          </h2>
+        </div>
+        <p class="max-w-md text-lg leading-relaxed text-muted">
+          Clear scope, training for your team, and support after launch — included
+          in every engagement.
+        </p>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2">
+        {
+          servicesEntries.map((entry, i) => {
+            const service = entry.data;
+            const outcome = serviceOutcomes[entry.id];
+            const image = serviceImages[localizedEntryId(entry.id)];
+            const isAlt = i % 2 === 1;
+            return (
+              <a
+                href={`/services/${entry.id}`}
+                class:list={[
+                  "group flex flex-col overflow-hidden border-2 border-ink/10 bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl focus-visible:outline-2 focus-visible:outline-offset-4",
+                  isAlt
+                    ? "hover:border-fire/50 focus-visible:outline-fire"
+                    : "hover:border-accent/50 focus-visible:outline-accent",
+                ]}
+              >
+                {image && (
+                  <div class="aspect-4/3 overflow-hidden border-b-2 border-ink/10 bg-ink">
+                    <img
+                      src={image.src}
+                      alt={image.alt}
+                      width="1024"
+                      height="768"
+                      loading="lazy"
+                      decoding="async"
+                      class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                    />
+                  </div>
+                )}
+                <div class="flex flex-1 flex-col p-7">
+                  <h3 class="text-xl font-bold leading-snug">{service.title}</h3>
+                  <p class="mt-2 text-[0.95rem] font-bold leading-snug text-ink/80">
+                    {outcome?.promise ?? service.shortDescription ?? service.description}
+                  </p>
+                  {outcome && (
+                    <ul class="mt-4 flex-1 space-y-2.5">
+                      {outcome.points.map((point) => (
+                        <li class="flex items-start gap-2 text-sm leading-relaxed text-muted">
+                          <svg
+                            class:list={["mt-0.5 h-4 w-4 shrink-0", isAlt ? "text-fire" : "text-accent"]}
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                          >
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+                          </svg>
+                          <span>{point}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  <span
+                    class:list={[
+                      "mt-6 inline-flex items-center gap-2 border-b-2 pb-0.5 text-sm font-bold transition-all group-hover:gap-3",
+                      isAlt ? "border-fire/30 text-fire" : "border-accent/30 text-accent",
+                    ]}
+                  >
+                    Learn more
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                </div>
+              </a>
+            );
+          })
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CLIENTS — range of customers we work with ───────────────────── -->
+  <section id="clients" class="section-padding relative overflow-hidden bg-ink scroll-mt-24" aria-labelledby="clients-heading">
+    <div class="pointer-events-none absolute inset-0 halftone-organic-accent opacity-15" aria-hidden="true"></div>
+    <div class="pointer-events-none absolute -top-32 -right-32 h-96 w-96 rounded-full bg-fire/10 blur-3xl" aria-hidden="true"></div>
+
+    <div class="container-custom relative z-10">
+      <div class="mx-auto mb-10 max-w-2xl text-center">
+        <span class="badge badge-fire mb-4">Clients</span>
+        <h2 id="clients-heading" class="mt-4 text-4xl font-bold leading-[1.08] text-white md:text-5xl">
+          Teams across industries, one partner
+        </h2>
+        <p class="mt-4 text-lg leading-relaxed text-white/60">
+          We work with growing brands and established operators around the world
+          — in retail, trading, operations, and professional services.
+        </p>
+        <ul class="mt-6 flex flex-wrap items-center justify-center gap-2" aria-label="Industries we serve">
+          {
+            clientSectors.map((sector) => (
+              <li class="border border-white/15 px-3 py-1 text-xs font-bold uppercase tracking-wider text-white/55">
+                {sector}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <ul class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+        {
+          clients.map((client) => (
+            <li class="flex items-center gap-3 border border-white/10 bg-ink-soft p-4">
+              <LogoPlaceholder name={client.name} size="sm" gradient={client.gradient} class="shrink-0" />
+              <div class="min-w-0">
+                <p class="truncate text-sm font-bold text-white">{client.name}</p>
+                <p class="truncate text-xs text-white/45">{client.sector}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ── PROCESS — what happens after you contact us ─────────────────── -->
+  <section class="section-padding bg-secondary" aria-labelledby="process-heading">
+    <div class="container-custom">
+      <div class="mb-12 mx-auto max-w-2xl text-center">
+        <span class="badge badge-accent mb-4">How it works</span>
+        <h2 id="process-heading" class="mt-4 text-4xl font-bold leading-[1.08] md:text-5xl">
+          From first call to ongoing support
+        </h2>
+        <p class="mt-4 text-lg leading-relaxed text-muted">
+          You always know what happens next — no surprises, no technical maze.
+        </p>
+      </div>
+
+      <ol class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        {
+          process.map((item) => (
+            <li class="border-2 border-ink/10 bg-white p-7">
+              <p class="text-4xl font-bold text-accent/30" aria-hidden="true">{item.step}</p>
+              <h3 class="mt-3 text-lg font-bold leading-snug">{item.title}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-muted">{item.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+
+      <div class="mt-10 text-center">
+        <a href="/contact" class="btn-fire inline-block">Book a consultation</a>
+        <p class="mt-4 text-sm font-medium text-muted">
+          Prefer to look around first? <a href="/#clients" class="font-bold text-accent underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">See who we work with</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TESTIMONIALS — quieter supporting proof ─────────────────────── -->
+  <section class="section-padding bg-white" aria-labelledby="testimonials-heading">
+    <div class="container-custom">
+      <div class="mb-12 mx-auto max-w-2xl text-center">
+        <span class="badge badge-accent mb-4">Client voices</span>
+        <h2 id="testimonials-heading" class="mt-4 text-4xl font-bold leading-[1.08] md:text-5xl">
+          What it's like to work with us
+        </h2>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-3">
+        {
+          testimonials.map((t) => (
+            <figure class="flex flex-col border-2 border-ink/10 bg-secondary p-7">
+              <span class="text-4xl font-bold leading-none text-accent/40" aria-hidden="true">&ldquo;</span>
+              <blockquote class="mt-2 flex-1 text-[0.95rem] leading-relaxed text-ink/75">
                 <p>{t.quote}</p>
               </blockquote>
-              <figcaption class="mt-8 pt-6 border-t-2 border-ink/5">
-                <cite class="not-italic font-bold text-ink font-[family-name:var(--font-display)]">
-                  {t.name}
-                </cite>
-                <p class="text-sm text-muted mt-1">
+              <figcaption class="mt-6 border-t-2 border-ink/5 pt-5">
+                <cite class="not-italic font-bold text-ink">{t.name}</cite>
+                <p class="mt-1 text-sm text-muted">
                   {t.title}
                   <span class="text-border" aria-hidden="true">{" · "}</span>
                   {t.org}
@@ -392,67 +529,95 @@ const homeDescription =
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════════════════════════════ -->
-  <!-- LATEST BLOG -->
-  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <!-- ── TECHNOLOGY — supporting detail, lower on the page ───────────── -->
+  <section class="border-y-2 border-ink/10 bg-white py-12" aria-label="Technology we use">
+    <div class="container-custom">
+      <p class="mb-2 text-center text-xs font-bold uppercase tracking-widest text-ink/40">
+        Built on proven technology
+      </p>
+      <p class="mx-auto mb-8 max-w-xl text-center text-sm leading-relaxed text-muted">
+        We choose widely-used tools so your business is never locked into
+        something obscure — and your team can always find support.
+      </p>
+      <TechnologyMarquee />
+    </div>
+  </section>
+
+  <!-- ── BLOG — practical, not jargon ────────────────────────────────── -->
   {
     latestBlogPosts.length > 0 && (
-      <section class="section-padding bg-secondary border-t-2 border-ink/5">
+      <section class="section-padding bg-secondary" aria-labelledby="blog-heading">
         <div class="container-custom">
-          <div class="mb-16 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-            <div>
-              <span class="badge badge-fire mb-4 opacity-0 animate-slide-up">{'Insights'}</span>
-              <h2 class="text-5xl md:text-6xl font-bold font-[family-name:var(--font-display)] mt-4 opacity-0 animate-slide-up animate-delay-100 leading-[1.05]">
-                {'From the blog'}
+          <div class="mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+            <div class="max-w-xl">
+              <span class="badge badge-fire mb-4">Practical guides</span>
+              <h2 id="blog-heading" class="mt-4 text-4xl font-bold leading-[1.08] md:text-5xl">
+                Helpful reading, without the jargon
               </h2>
             </div>
-            <p class="text-muted text-lg max-w-md opacity-0 animate-slide-up animate-delay-200">
-              {'Notes on ERP, commerce, and shipping software that holds up in production across Kuwait and the wider region.'}
+            <p class="max-w-md text-lg leading-relaxed text-muted">
+              Short guides on running operations, selling online, and choosing
+              software with confidence.
             </p>
           </div>
 
-          <div class="grid md:grid-cols-3 gap-6">
-            {latestBlogPosts.map((post, i) => {
+          <div class="grid gap-6 md:grid-cols-3">
+            {latestBlogPosts.map((post) => {
               const { title, description, pubDate, author } = post.data;
+              const image = blogImages[localizedEntryId(post.id)];
               return (
                 <a
                   href={`/blog/${post.id}`}
-                  class="group flex flex-col bg-white p-6 md:p-7 border-2 border-ink/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-ink/10 hover:border-accent opacity-0 animate-slide-up"
-                  style={`animation-delay: ${(i + 2) * 90}ms`}
+                  class="group flex flex-col overflow-hidden border-2 border-ink/10 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-accent/50 hover:shadow-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
                 >
-                  <time
-                    datetime={pubDate.toISOString()}
-                    class="text-xs font-bold uppercase tracking-wide text-muted mb-3"
-                  >
-                    {formatBlogDate(pubDate)}
-                    {author ? ` · ${author}` : ""}
-                  </time>
-                  <h3 class="text-lg md:text-xl font-bold font-[family-name:var(--font-display)] mb-3 group-hover:text-accent transition-colors leading-snug">
-                    {title}
-                  </h3>
-                  <p class="text-muted text-sm leading-relaxed line-clamp-3 flex-1 mb-5">
-                    {description}
-                  </p>
-                  <span class="text-sm font-bold text-accent inline-flex items-center gap-1.5 mt-auto group-hover:gap-2.5 transition-all border-b-2 border-accent/30 pb-0.5">
-                    {'Read article'}
-                    <svg
-                      class="w-4 h-4 transition-transform group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 rtl:rotate-180"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
+                  {image && (
+                    <div class="aspect-video overflow-hidden border-b-2 border-ink/10 bg-ink">
+                      <img
+                        src={image.src}
+                        alt={image.alt}
+                        width="1024"
+                        height="576"
+                        loading="lazy"
+                        decoding="async"
+                        class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                      />
+                    </div>
+                  )}
+                  <div class="flex flex-1 flex-col p-7">
+                    <time
+                      datetime={pubDate.toISOString()}
+                      class="mb-3 text-xs font-bold uppercase tracking-wide text-muted"
                     >
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
-                    </svg>
-                  </span>
+                      {formatBlogDate(pubDate)}
+                      {author ? ` · ${author}` : ""}
+                    </time>
+                    <h3 class="mb-3 text-lg font-bold leading-snug transition-colors group-hover:text-accent">
+                      {title}
+                    </h3>
+                    <p class="mb-5 line-clamp-3 flex-1 text-sm leading-relaxed text-muted">
+                      {description}
+                    </p>
+                    <span class="mt-auto inline-flex items-center gap-1.5 border-b-2 border-accent/30 pb-0.5 text-sm font-bold text-accent transition-all group-hover:gap-2.5">
+                      Read article
+                      <svg
+                        class="h-4 w-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                      >
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </span>
+                  </div>
                 </a>
               );
             })}
           </div>
 
-          <div class="text-center mt-12 opacity-0 animate-slide-up animate-delay-500">
-            <a href={"/blog"} class="btn-outline">
-              {'View all articles'}
+          <div class="mt-10 text-center">
+            <a href="/blog" class="btn-outline">
+              View all articles
             </a>
           </div>
         </div>
@@ -460,33 +625,38 @@ const homeDescription =
     )
   }
 
-  <!-- ═══════════════════════════════════════════════════════════════════ -->
-  <!-- CTA SECTION — Bold ink with dual glow -->
-  <!-- ═══════════════════════════════════════════════════════════════════ -->
-  <section class="section-padding bg-ink relative overflow-hidden">
-    <div class="absolute inset-0">
-      <div class="absolute top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[260px] bg-accent/10 rounded-full blur-3xl"></div>
-      <div class="absolute top-1/2 right-1/4 translate-x-1/2 -translate-y-1/2 w-[600px] h-[260px] bg-fire/10 rounded-full blur-3xl"></div>
+  <!-- ── FINAL CTA — explain the consultation ────────────────────────── -->
+  <section class="section-padding relative overflow-hidden bg-ink" aria-labelledby="cta-heading">
+    <div class="absolute inset-0" aria-hidden="true">
+      <div class="absolute left-1/4 top-1/2 h-[260px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/10 blur-3xl"></div>
+      <div class="absolute right-1/4 top-1/2 h-[260px] w-[600px] -translate-y-1/2 translate-x-1/2 rounded-full bg-fire/10 blur-3xl"></div>
     </div>
-    <div class="pointer-events-none absolute inset-0 halftone halftone-light opacity-15 ht-mask-tb" aria-hidden="true"></div>
-    <div class="container-custom relative z-10 text-center">
-      <h2 class="text-5xl md:text-7xl font-bold font-[family-name:var(--font-display)] text-white opacity-0 animate-slide-up leading-[1.05]">
-        {'Ready to Transform Your Business?'}
+    <div class="pointer-events-none absolute inset-0 halftone halftone-light opacity-15" aria-hidden="true"></div>
+    <div class="container-custom relative z-10 mx-auto max-w-3xl text-center">
+      <span class="badge mb-6" style="border: 2px solid var(--color-accent); color: var(--color-accent); background: rgba(40,175,162,0.1);">Free initial consultation</span>
+      <h2 id="cta-heading" class="text-4xl font-bold leading-[1.08] text-white md:text-6xl">
+        Tell us where your business feels stuck
       </h2>
-      <p class="text-white/60 text-lg mt-6 max-w-xl mx-auto opacity-0 animate-slide-up animate-delay-100">
-        {'Let\'s discuss how we can help you achieve your digital transformation goals.'}
+      <p class="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-white/60">
+        You'll leave the first conversation with clear next steps — whether you
+        work with us or not. No pressure, no jargon.
       </p>
-      <div class="flex flex-wrap justify-center gap-4 mt-10 opacity-0 animate-slide-up animate-delay-200 items-center">
-        <a href={"/contact"} class="btn-fire text-lg px-8 py-3">
-          {'Get in Touch'}
+      <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
+        <a href="/contact" class="btn-fire px-8 py-3 text-lg">
+          Book a consultation
         </a>
         <a
-          href={"/services"}
-          class="text-lg text-white/70 hover:text-white transition-colors duration-300 px-8 py-3 border-2 border-white/20 hover:border-white/40"
+          href="/#clients"
+          class="border-2 border-white/20 px-8 py-3 text-lg font-bold text-white/70 transition-colors duration-300 hover:border-white/40 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
         >
-          {'Our Services'}
+          See who we work with
         </a>
       </div>
+      <p class="mt-8 text-sm font-medium text-white/45">
+        <a href={business.telHref} class="transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">{business.phoneDisplay}</a>
+        <span class="mx-2" aria-hidden="true">·</span>
+        <a href={business.mailtoHref} class="transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">{business.emailDisplay}</a>
+      </p>
     </div>
   </section>
 

@@ -4,6 +4,7 @@ import Navbar from '../../components/Navbar.astro';
 import Footer from '../../components/Footer.astro';
 import { getBlogPosts } from '../../lib/collections';
 import { buildBlogIndex, siteUrl } from '../../lib/jsonld';
+import { blogImages, localizedEntryId } from '../../data/editorial-images';
 
 
 const posts = await getBlogPosts();
@@ -56,6 +57,7 @@ const formatDate = (d: Date) =>
         {
           posts.map((post, i) => {
             const { title, description, pubDate, author, tags } = post.data;
+            const image = blogImages[localizedEntryId(post.id)];
             return (
               <li
                 class="opacity-0 animate-slide-up"
@@ -64,30 +66,45 @@ const formatDate = (d: Date) =>
                 <article>
                   <a
                     href={`/blog/${post.id}`}
-                    class="group block border-2 border-ink/10 bg-white p-6 md:p-8 transition-all duration-300 hover:border-accent hover:-translate-y-1 hover:shadow-2xl hover:shadow-accent/10"
+                    class="group grid overflow-hidden border-2 border-ink/10 bg-white transition-all duration-300 hover:border-accent hover:-translate-y-1 hover:shadow-2xl hover:shadow-accent/10 md:grid-cols-[14rem_1fr]"
                   >
-                    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted mb-3">
-                      <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
-                      {author && (
-                        <>
-                          <span class="text-border" aria-hidden="true">·</span>
-                          <span>{author}</span>
-                        </>
-                      )}
-                    </div>
-                    <h2 class="text-xl md:text-2xl font-bold font-[family-name:var(--font-display)] mb-2 group-hover:text-accent transition-colors">
-                      {title}
-                    </h2>
-                    <p class="text-muted leading-relaxed mb-4">{description}</p>
-                    {tags && tags.length > 0 && (
-                      <div class="flex flex-wrap gap-2">
-                        {tags.map((tag) => (
-                          <span class="px-2.5 py-0.5 text-xs font-medium text-muted border-2 border-ink/10 bg-secondary">
-                            {tag}
-                          </span>
-                        ))}
+                    {image && (
+                      <div class="aspect-video overflow-hidden bg-ink md:aspect-auto">
+                        <img
+                          src={image.src}
+                          alt={image.alt}
+                          width="1024"
+                          height="576"
+                          loading={i === 0 ? 'eager' : 'lazy'}
+                          decoding="async"
+                          class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                        />
                       </div>
                     )}
+                    <div class="p-6 md:p-8">
+                      <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted mb-3">
+                        <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
+                        {author && (
+                          <>
+                            <span class="text-border" aria-hidden="true">·</span>
+                            <span>{author}</span>
+                          </>
+                        )}
+                      </div>
+                      <h2 class="text-xl md:text-2xl font-bold font-[family-name:var(--font-display)] mb-2 group-hover:text-accent transition-colors">
+                        {title}
+                      </h2>
+                      <p class="text-muted leading-relaxed mb-4">{description}</p>
+                      {tags && tags.length > 0 && (
+                        <div class="flex flex-wrap gap-2">
+                          {tags.map((tag) => (
+                            <span class="px-2.5 py-0.5 text-xs font-medium text-muted border-2 border-ink/10 bg-secondary">
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </a>
                 </article>
               </li>
@@ -103,8 +120,8 @@ const formatDate = (d: Date) =>
       <p class="text-muted text-sm">
         {'Want to work together?'}{' '}
         <a href={'/contact'} class="text-accent underline-offset-4 hover:underline">{'Get in touch'}</a>
-        {' '}{'or explore'}{' '}
-        <a href={'/case-studies'} class="text-accent underline-offset-4 hover:underline">{'Case Studies'}</a>.
+        {' '}{'or see'}{' '}
+        <a href={'/#clients'} class="text-accent underline-offset-4 hover:underline">{'who we work with'}</a>.
       </p>
     </div>
   </section>

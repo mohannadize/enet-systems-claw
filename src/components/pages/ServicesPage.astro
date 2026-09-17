@@ -5,12 +5,13 @@ import Footer from '../../components/Footer.astro';
 import TechnologyMarquee from '../../components/TechnologyMarquee.astro';
 import { getServices } from '../../lib/collections';
 import { buildWebPage, siteUrl } from '../../lib/jsonld';
+import { localizedEntryId, serviceImages } from '../../data/editorial-images';
 
 
 const servicesEntries = await getServices();
 
 const servicesPageDescription =
-  "Comprehensive digital solutions to power your business growth — web development, Odoo ERP, mobile apps, SEO, and more.";
+  "Comprehensive digital solutions to power your business growth — web development, Odoo ERP, mobile apps, agentic automation, and more.";
 
 const process = [
   { step: '01', title: 'Discovery', desc: 'We analyze requirements and create a detailed project roadmap.' },
@@ -56,6 +57,7 @@ const process = [
     <div class="container-custom space-y-16">
       {servicesEntries.map((entry, i) => {
         const service = entry.data;
+        const image = serviceImages[localizedEntryId(entry.id)];
         return (
         <div class={`grid lg:grid-cols-2 gap-12 items-center`}>
           <div class="opacity-0 animate-slide-up" style={`animation-delay: ${i * 100}ms`}>
@@ -82,72 +84,19 @@ const process = [
           </div>
           
           <div class="opacity-0 animate-slide-up animate-delay-200" style={`animation-delay: ${i * 100 + 100}ms`}>
-            <div class="aspect-square max-w-md mx-auto bg-secondary border-2 border-ink/10 p-8 flex items-center justify-center">
-              <svg viewBox="0 0 400 300" class="w-full" fill="none">
-                {i === 0 && (
-                  <>
-                    <rect x="20" y="40" width="360" height="220" rx="15" fill="var(--color-surface)" stroke="var(--color-border)"/>
-                    <rect x="60" y="80" width="120" height="80" rx="8" fill="var(--color-accent)" opacity="0.3"/>
-                    <rect x="200" y="80" width="140" height="15" rx="4" fill="var(--color-accent)"/>
-                    <rect x="200" y="110" width="100" height="10" rx="3" fill="var(--color-border)"/>
-                    <rect x="200" y="135" width="120" height="10" rx="3" fill="var(--color-border)"/>
-                    <rect x="60" y="190" width="280" height="40" rx="8" fill="var(--color-secondary)" stroke="var(--color-border)"/>
-                  </>
-                )}
-                {i === 1 && (
-                  <>
-                    <rect x="50" y="50" width="140" height="200" rx="10" fill="var(--color-surface)" stroke="var(--color-border)"/>
-                    <rect x="60" y="60" width="120" height="25" rx="5" fill="var(--color-accent)"/>
-                    <rect x="60" y="100" width="80" height="15" rx="3" fill="var(--color-border)"/>
-                    <rect x="60" y="130" width="120" height="15" rx="3" fill="var(--color-border)"/>
-                    <rect x="60" y="160" width="90" height="15" rx="3" fill="var(--color-border)"/>
-                    <rect x="60" y="190" width="110" height="15" rx="3" fill="var(--color-border)"/>
-                    <rect x="210" y="50" width="140" height="200" rx="10" fill="var(--color-surface)" stroke="var(--color-border)"/>
-                    <rect x="220" y="60" width="120" height="25" rx="5" fill="var(--color-accent)" opacity="0.5"/>
-                    <rect x="220" y="100" width="80" height="15" rx="3" fill="var(--color-border)"/>
-                    <rect x="220" y="130" width="120" height="15" rx="3" fill="var(--color-border)"/>
-                    <rect x="220" y="160" width="90" height="15" rx="3" fill="var(--color-border)"/>
-                    <rect x="220" y="190" width="110" height="15" rx="3" fill="var(--color-border)"/>
-                  </>
-                )}
-                {i === 2 && (
-                  <>
-                    <rect x="80" y="40" width="90" height="180" rx="15" fill="var(--color-surface)" stroke="var(--color-border)"/>
-                    <rect x="90" y="55" width="70" height="110" rx="8" fill="var(--color-secondary)"/>
-                    <rect x="100" y="70" width="50" height="30" rx="4" fill="var(--color-accent)" opacity="0.5"/>
-                    <rect x="100" y="110" width="50" height="8" rx="2" fill="var(--color-border)"/>
-                    <rect x="100" y="130" width="40" height="8" rx="2" fill="var(--color-border)"/>
-                    <rect x="230" y="40" width="90" height="180" rx="15" fill="var(--color-surface)" stroke="var(--color-border)"/>
-                    <rect x="240" y="55" width="70" height="110" rx="8" fill="var(--color-secondary)"/>
-                    <rect x="250" y="70" width="50" height="30" rx="4" fill="var(--color-accent)" opacity="0.3"/>
-                    <rect x="250" y="110" width="50" height="8" rx="2" fill="var(--color-border)"/>
-                    <rect x="250" y="130" width="40" height="8" rx="2" fill="var(--color-border)"/>
-                  </>
-                )}
-                {i === 3 && (
-                  <>
-                    {/* Search bar */}
-                    <rect x="40" y="50" width="240" height="36" rx="18" fill="var(--color-surface)" stroke="var(--color-border)"/>
-                    <circle cx="62" cy="68" r="8" fill="none" stroke="var(--color-accent)" stroke-width="2"/>
-                    <line x1="68" y1="74" x2="74" y2="80" stroke="var(--color-accent)" stroke-width="2" stroke-linecap="round"/>
-                    <rect x="80" y="62" width="100" height="8" rx="4" fill="var(--color-border)" opacity="0.6"/>
-                    {/* Ranking bars */}
-                    <rect x="40" y="105" width="280" height="28" rx="6" fill="var(--color-surface)" stroke="var(--color-border)"/>
-                    <rect x="52" y="113" width="12" height="12" rx="2" fill="var(--color-accent)" opacity="0.9"/>
-                    <rect x="72" y="116" width="120" height="6" rx="3" fill="var(--color-accent)" opacity="0.5"/>
-                    <rect x="200" y="116" width="60" height="6" rx="3" fill="var(--color-border)"/>
-                    <rect x="40" y="143" width="280" height="28" rx="6" fill="var(--color-surface)" stroke="var(--color-border)"/>
-                    <rect x="52" y="151" width="12" height="12" rx="2" fill="var(--color-border)"/>
-                    <rect x="72" y="154" width="90" height="6" rx="3" fill="var(--color-border)" opacity="0.7"/>
-                    <rect x="40" y="181" width="280" height="28" rx="6" fill="var(--color-surface)" stroke="var(--color-border)"/>
-                    <rect x="52" y="189" width="12" height="12" rx="2" fill="var(--color-border)"/>
-                    <rect x="72" y="192" width="110" height="6" rx="3" fill="var(--color-border)" opacity="0.5"/>
-                    {/* Upward trend arrow */}
-                    <polyline points="310,230 330,200 350,210 370,170" fill="none" stroke="var(--color-accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    <polygon points="370,160 376,174 364,174" fill="var(--color-accent)"/>
-                  </>
-                )}
-              </svg>
+            <div class="group relative aspect-4/3 max-w-xl mx-auto overflow-hidden border-2 border-ink/10 bg-ink shadow-bold">
+              {image && (
+                <img
+                  src={image.src}
+                  alt={image.alt}
+                  width="1024"
+                  height="768"
+                  loading="lazy"
+                  decoding="async"
+                  class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.025]"
+                />
+              )}
+              <div class="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/10" aria-hidden="true"></div>
             </div>
           </div>
         </div>

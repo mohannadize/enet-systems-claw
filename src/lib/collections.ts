@@ -21,17 +21,6 @@ export const serviceColors: Record<ServiceKey, string> = {
   mobile: 'bg-emerald-500/10 text-emerald-700 border-emerald-500/20',
 };
 
-export async function getCaseStudies(sort = true) {
-  const entries = await getCollection('caseStudies');
-  if (!sort) return entries;
-  return entries.sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
-}
-
-export async function getFeaturedCaseStudies() {
-  const entries = await getCaseStudies();
-  return entries.filter((e) => e.data.featured);
-}
-
 export async function getBlogPosts(sort = true) {
   const entries = await getCollection('blog', ({ data }) => !data.draft);
   if (!sort) return entries;

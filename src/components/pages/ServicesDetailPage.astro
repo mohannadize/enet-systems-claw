@@ -5,6 +5,7 @@ import Navbar from '../../components/Navbar.astro';
 import Footer from '../../components/Footer.astro';
 import { buildServicePage, siteUrl } from '../../lib/jsonld';
 import { getServiceSubpages, serviceLabel } from '../../lib/collections';
+import { serviceImages } from '../../data/editorial-images';
 
 const { entry } = Astro.props as { entry: any };
 const { Content } = await render(entry);
@@ -27,13 +28,12 @@ const serviceRootColors: Record<string, string> = {
   'web-development': 'bg-accent/10 text-accent border-accent/20',
   'odoo-erp': 'bg-purple-500/10 text-purple-700 border-purple-500/20',
   'mobile-apps': 'bg-blue-500/10 text-blue-700 border-blue-500/20',
-  'seo-optimization': 'bg-green-500/10 text-green-700 border-green-500/20',
+  'agentic-automation': 'bg-green-500/10 text-green-700 border-green-500/20',
 };
 const rootLabelKey: Record<string, 'web' | 'odoo' | 'mobile'> = {
   'web-development': 'web',
   'odoo-erp': 'odoo',
   'mobile-apps': 'mobile',
-  'seo-optimization': 'web',
 };
 const badgeLabel = rootLabelKey[serviceRoot]
   ? serviceLabel(rootLabelKey[serviceRoot])
@@ -42,6 +42,7 @@ const badgeColor = serviceRootColors[serviceRoot] ?? 'bg-accent/10 text-accent b
 const badge = { label: badgeLabel, color: badgeColor };
 
 const servicePageUrl = siteUrl(`/services/${slug}`);
+const editorialImage = serviceImages[serviceRoot];
 ---
 
 <Layout
@@ -109,6 +110,24 @@ const servicePageUrl = siteUrl(`/services/${slug}`);
       </div>
     </div>
   </section>
+
+  {editorialImage && (
+    <figure class="bg-ink">
+      <div class="container-custom">
+        <div class="relative aspect-video max-h-144 overflow-hidden border-x-2 border-white/10">
+          <img
+            src={editorialImage.src}
+            alt={editorialImage.alt}
+            width="1024"
+            height="768"
+            fetchpriority="high"
+            class="h-full w-full object-cover"
+          />
+          <div class="pointer-events-none absolute inset-0 bg-linear-to-t from-ink/20 to-transparent" aria-hidden="true"></div>
+        </div>
+      </div>
+    </figure>
+  )}
 
   <!-- Sub-nav (shown when there are sibling subpages) -->
   {siblings.length > 0 && (

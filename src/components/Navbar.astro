@@ -18,14 +18,13 @@ const serviceItems: NavItem[] = serviceEntries.map((entry) => ({
 const navLinks: NavLink[] = [
   { href: "/", label: 'Home' },
   { href: "/about", label: 'About' },
-  { href: "/case-studies", label: 'Case Studies' },
   {
     href: "/services",
     label: 'Services',
     items: serviceItems,
   },
   { href: "/blog", label: 'Blog' },
-  { href: "/contact", label: 'Get started', cta: true },
+  { href: "/contact", label: 'Book a consultation', cta: true },
 ];
 
 const norm = (s: string) => s.replace(/\/+$/, "") || "/";

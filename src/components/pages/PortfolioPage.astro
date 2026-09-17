@@ -6,12 +6,13 @@ import Footer from '../../components/Footer.astro';
 import LogoPlaceholder from '../../components/LogoPlaceholder.astro';
 import { getPortfolioByCategory, portfolioCategories } from '../../lib/collections';
 import { buildPortfolioIndex, siteUrl } from '../../lib/jsonld';
+import { localizedEntryId, portfolioImages } from '../../data/editorial-images';
 
 
 const portfolioByCategory = await getPortfolioByCategory();
 
 const portfolioIndexDescription =
-  "A selection of web, e-commerce, Odoo ERP, and mobile work delivered by ENET Systems across Kuwait and the MENA region.";
+  "A selection of web, e-commerce, Odoo ERP, and mobile work delivered by ENET Systems for clients around the world.";
 const categories = portfolioCategories;
 const allEntries = await getCollection('portfolio');
 const projectCount = allEntries.length;
@@ -67,16 +68,29 @@ const projectCount = allEntries.length;
           <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
             {cat.id === 'ecommerce' && portfolioByCategory.ecommerce.map((entry, i) => {
               const project = entry.data;
+              const image = portfolioImages[localizedEntryId(entry.id)];
               return (
               <a 
                 href={`/portfolio/${entry.id}`}
-                class="portfolio-card group relative bg-white p-6 border-2 border-ink/10 hover:border-accent transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-accent/10 opacity-0 animate-slide-up"
+                class="portfolio-card group relative bg-white border-2 border-ink/10 hover:border-accent transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-accent/10 opacity-0 animate-slide-up"
                 style={`animation-delay: ${(catIndex * 4 + i) * 50}ms`}
-                aria-label={`${'View case study'} · ${project.name}`}
+                aria-label={`${'View project'} · ${project.name}`}
               >
                 <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                
-                <div class="relative">
+                {image && (
+                  <div class="relative aspect-video overflow-hidden border-b-2 border-ink/10 bg-ink">
+                    <img
+                      src={image.src}
+                      alt={image.alt}
+                      width="1024"
+                      height="576"
+                      loading="lazy"
+                      decoding="async"
+                      class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                    />
+                  </div>
+                )}
+                <div class="relative p-6">
                   <div class="mb-4 transform group-hover:scale-110 transition-transform duration-300">
                     <LogoPlaceholder name={project.name} size="md" gradient={project.gradient as any} class="group-hover:shadow-accent/20" />
                   </div>
@@ -88,7 +102,7 @@ const projectCount = allEntries.length;
                     <svg class="w-3 h-3 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                     </svg>
-                    {'View case study'}
+                    {'View project'}
                   </span>
                 </div>
               </a>
@@ -97,16 +111,29 @@ const projectCount = allEntries.length;
             
             {cat.id === 'web' && portfolioByCategory.web.map((entry, i) => {
               const project = entry.data;
+              const image = portfolioImages[localizedEntryId(entry.id)];
               return (
               <a 
                 href={`/portfolio/${entry.id}`}
-                class="portfolio-card group relative bg-secondary rounded-2xl p-6 border border-border hover:border-blue-500/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-xl hover:shadow-blue-500/5 opacity-0 animate-slide-up"
+                class="portfolio-card group relative bg-secondary rounded-2xl border border-border hover:border-blue-500/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-xl hover:shadow-blue-500/5 opacity-0 animate-slide-up"
                 style={`animation-delay: ${(catIndex * 4 + i) * 50}ms`}
-                aria-label={`${'View case study'} · ${project.name}`}
+                aria-label={`${'View project'} · ${project.name}`}
               >
                 <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                
-                <div class="relative">
+                {image && (
+                  <div class="relative aspect-video overflow-hidden border-b border-ink/10 bg-ink">
+                    <img
+                      src={image.src}
+                      alt={image.alt}
+                      width="1024"
+                      height="576"
+                      loading="lazy"
+                      decoding="async"
+                      class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                    />
+                  </div>
+                )}
+                <div class="relative p-6">
                   <div class="mb-4 transform group-hover:scale-110 transition-transform duration-300">
                     <LogoPlaceholder name={project.name} size="md" gradient={project.gradient as any} />
                   </div>
@@ -118,7 +145,7 @@ const projectCount = allEntries.length;
                     <svg class="w-3 h-3 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                     </svg>
-                    {'View case study'}
+                    {'View project'}
                   </span>
                 </div>
               </a>
@@ -127,16 +154,29 @@ const projectCount = allEntries.length;
             
             {cat.id === 'odoo' && portfolioByCategory.odoo.map((entry, i) => {
               const project = entry.data;
+              const image = portfolioImages[localizedEntryId(entry.id)];
               return (
               <a 
                 href={`/portfolio/${entry.id}`}
-                class="portfolio-card group relative bg-secondary rounded-2xl p-6 border border-border hover:border-purple-500/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-xl hover:shadow-purple-500/5 opacity-0 animate-slide-up"
+                class="portfolio-card group relative bg-secondary rounded-2xl border border-border hover:border-purple-500/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-xl hover:shadow-purple-500/5 opacity-0 animate-slide-up"
                 style={`animation-delay: ${(catIndex * 4 + i) * 50}ms`}
-                aria-label={`${'View case study'} · ${project.name}`}
+                aria-label={`${'View project'} · ${project.name}`}
               >
                 <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                
-                <div class="relative">
+                {image && (
+                  <div class="relative aspect-video overflow-hidden border-b border-ink/10 bg-ink">
+                    <img
+                      src={image.src}
+                      alt={image.alt}
+                      width="1024"
+                      height="576"
+                      loading="lazy"
+                      decoding="async"
+                      class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                    />
+                  </div>
+                )}
+                <div class="relative p-6">
                   <div class="mb-4 transform group-hover:scale-110 transition-transform duration-300">
                     <LogoPlaceholder name={project.name} size="md" gradient={project.gradient as any} />
                   </div>
@@ -148,7 +188,7 @@ const projectCount = allEntries.length;
                     <svg class="w-3 h-3 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                     </svg>
-                    {'View case study'}
+                    {'View project'}
                   </span>
                 </div>
               </a>

@@ -22,10 +22,6 @@ const organizationSchema: JsonLdObject = {
   email: business.email,
   telephone: business.phoneE164,
   description: business.organizationDescription,
-  address: {
-    "@type": "PostalAddress",
-    addressCountry: business.address.addressCountry,
-  },
   contactPoint: {
     "@type": "ContactPoint",
     contactType: "customer service",

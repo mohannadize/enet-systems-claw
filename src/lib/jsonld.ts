@@ -117,48 +117,6 @@ export function buildBlogPosting(input: BlogPostingInput): JsonLdObject {
   return obj;
 }
 
-export function buildCaseStudyIndex(input: {
-  name: string;
-  description: string;
-  url: string;
-}): JsonLdObject {
-  return {
-    "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    "@id": `${input.url}#webpage`,
-    name: input.name,
-    description: input.description,
-    url: input.url,
-    isPartOf: websiteRef,
-    publisher: orgRef,
-  };
-}
-
-export interface CaseStudyInput {
-  name: string;
-  desc: string;
-  url: string;
-  liveUrl?: string | null;
-}
-
-export function buildCaseStudy(input: CaseStudyInput): JsonLdObject {
-  const obj: JsonLdObject = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "@id": `${input.url}#article`,
-    headline: input.name,
-    name: input.name,
-    description: input.desc,
-    url: input.url,
-    publisher: orgRef,
-    isPartOf: { "@id": `${siteUrl("/case-studies")}#webpage` },
-  };
-  if (input.liveUrl) {
-    obj.sameAs = input.liveUrl;
-  }
-  return obj;
-}
-
 export interface ServicePageInput {
   title: string;
   description: string;

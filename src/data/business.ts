@@ -25,7 +25,6 @@ export interface BusinessInfo {
   defaultPageDescription: string;
   organizationDescription: string;
   logoPath: string;
-  address: { addressCountry: string };
   availableLanguages: readonly [string];
   areaServed: string;
 }
@@ -45,20 +44,17 @@ export const business = {
   mailtoHref: `mailto:${email}`,
   whatsAppUrl: `https://wa.me/${phoneDigits}`,
 
-  workingHours: "Sunday - Thursday: 9:00 AM - 6:00 PM",
+  workingHours: "Monday - Friday: 9:00 AM - 6:00 PM",
 
   defaultPageDescription:
-    "ENET Systems LTD - Your trusted partner for digital transformation",
+    "ENET Systems LTD — Odoo ERP, web development, and mobile apps for teams around the world.",
   organizationDescription:
-    "ENET Systems LTD - Your trusted partner for digital transformation, providing Odoo ERP, Web Development, and Mobile App solutions.",
+    "ENET Systems LTD helps companies worldwide with digital transformation — Odoo ERP, web development, and mobile applications.",
 
   logoPath: "/logo.svg",
 
-  address: {
-    addressCountry: "KW",
-  },
   availableLanguages: ["English"] as const,
-  areaServed: "KW",
+  areaServed: "Worldwide",
 } as const satisfies BusinessInfo;
 
 /** Absolute URL for a path on the public site (e.g. `/contact`). */

@@ -1,12 +1,10 @@
 ---
 interface Props {
-  /** Optional class applied to the outer wrapper (e.g. section background). */
   class?: string;
-  /** Pause on hover. Defaults to true. */
   pauseOnHover?: boolean;
 }
 
-const { class: className = "", pauseOnHover = true } = Astro.props;
+const { class: className, pauseOnHover = true } = Astro.props;
 
 const technologies = [
   { name: "AWS", src: "/images/technologies/aws.svg" },
@@ -22,32 +20,134 @@ const technologies = [
   { name: "PostgreSQL", src: "/images/technologies/postgresql.svg" },
   { name: "Python", src: "/images/technologies/python.svg" },
   { name: "React", src: "/images/technologies/react.svg" },
-];
-
-const track = (
-  technologies.map(
-    (tech) => `
-      <div class="tech-marquee-item shrink-0 flex items-center justify-center px-8">
-        <img
-          src="${tech.src}"
-          alt="${tech.name}"
-          loading="lazy"
-          class="h-10 md:h-12 w-auto opacity-50 hover:opacity-100 transition-all duration-300 hover:scale-110"
-          title="${tech.name}"
-        />
-      </div>`,
-  )
-);
-
-const duplicated = [...track, ...track].join("");
+] as const;
 ---
 
-<div class={`tech-marquee overflow-hidden ${className}`}>
+<div class:list={["tech-marquee", className]}>
   <div
     class:list={[
-      "tech-marquee-track flex w-max items-center gap-2 animate-tech-marquee",
-      pauseOnHover && "hover:[animation-play-state:paused]",
+      "tech-marquee-track",
+      pauseOnHover && "tech-marquee-track--pausable",
     ]}
-    set:html={duplicated}
-  />
+  >
+    <ul class="tech-marquee-set">
+      {
+        technologies.map((tech) => (
+          <li>
+            <img
+              src={tech.src}
+              alt={tech.name}
+              height="48"
+              loading="lazy"
+              decoding="async"
+            />
+          </li>
+        ))
+      }
+    </ul>
+    <ul class="tech-marquee-set tech-marquee-clone" aria-hidden="true">
+      {
+        technologies.map((tech) => (
+          <li>
+            <img
+              src={tech.src}
+              alt=""
+              height="48"
+              loading="lazy"
+              decoding="async"
+            />
+          </li>
+        ))
+      }
+    </ul>
+  </div>
 </div>
+
+<style>
+  @keyframes tech-marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  .tech-marquee {
+    overflow: hidden;
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 10%,
+      black 90%,
+      transparent
+    );
+  }
+
+  .tech-marquee-track {
+    display: flex;
+    width: max-content;
+    animation: tech-marquee 30s linear infinite;
+  }
+
+  :global([dir="rtl"]) .tech-marquee-track {
+    animation-direction: reverse;
+  }
+
+  .tech-marquee-set {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .tech-marquee-set li {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    padding-inline: 2rem;
+  }
+
+  .tech-marquee-set img {
+    height: 2.5rem;
+    width: auto;
+    opacity: 0.5;
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s ease;
+  }
+
+  @media (min-width: 768px) {
+    .tech-marquee-set img {
+      height: 3rem;
+    }
+  }
+
+  .tech-marquee-set img:hover {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tech-marquee {
+      mask-image: none;
+    }
+
+    .tech-marquee-track {
+      animation: none;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .tech-marquee-clone {
+      display: none;
+    }
+
+    .tech-marquee-set img:hover {
+      transform: none;
+    }
+  }
+</style>

@@ -6,6 +6,7 @@ import Footer from '../../components/Footer.astro';
 import LogoPlaceholder from '../../components/LogoPlaceholder.astro';
 import { serviceLabel } from '../../lib/collections';
 import { buildPortfolioProject, siteUrl } from '../../lib/jsonld';
+import { localizedEntryId, portfolioImages } from '../../data/editorial-images';
 
 const { entry } = Astro.props as { entry: any };
 const { Content } = await render(entry);
@@ -25,6 +26,7 @@ const liveUrl = entry.data.url
   : null;
 
 const portfolioPageUrl = siteUrl(`/portfolio/${entry.id}`);
+const editorialImage = portfolioImages[localizedEntryId(entry.id)];
 ---
 
 <Layout
@@ -96,6 +98,24 @@ const portfolioPageUrl = siteUrl(`/portfolio/${entry.id}`);
       </div>
     </div>
   </section>
+
+  {editorialImage && (
+    <figure class="bg-ink">
+      <div class="container-custom">
+        <div class="relative aspect-video max-h-152 overflow-hidden border-x-2 border-white/10">
+          <img
+            src={editorialImage.src}
+            alt={editorialImage.alt}
+            width="1024"
+            height="576"
+            fetchpriority="high"
+            class="h-full w-full object-cover"
+          />
+          <div class="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/10" aria-hidden="true"></div>
+        </div>
+      </div>
+    </figure>
+  )}
 
   <!-- MDX Content -->
   <section class="section-padding bg-secondary">
